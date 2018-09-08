@@ -1,8 +1,8 @@
 #ifndef CYAN_QUATERNION_H
 #define CYAN_QUATERNION_H
 
-#include <onevision/algebra/matrix.h>
-#include <onevision/algebra/vector3d.h>
+#include <algebra/matrix.h>
+#include <algebra/vector3d.h>
 
 
 typedef struct {
