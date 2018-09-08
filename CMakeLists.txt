@@ -34,7 +34,8 @@ endforeach()
 
 ### Search for Lib/Headers
 
-# find_package( X11)
+set(LAPACKE_ROOT "/usr") # prefer over system
+find_package(LAPACKE)
 
 ### Config File
 
@@ -107,6 +108,6 @@ install( FILES ${hdr_structs}
 
 # Regression tests
 
-# enable_testing()
-# add_subdirectory(tests)
+enable_testing()
+add_subdirectory(tests)
 
