@@ -1,5 +1,5 @@
-#ifndef MALIB_CONFIG_H
-#define MALIB_CONFIG_H
+#ifndef CYAN_CONFIG_H
+#define CYAN_CONFIG_H
 
 #define VERSION_MAJOR @cyan_VERSION_MAJOR@
 #define VERSION_MINOR @cyan_VERSION_MINOR@

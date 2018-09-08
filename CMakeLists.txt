@@ -44,7 +44,7 @@ configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
 ### Set include directories 
         
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
-	             "${CMAKE_CURRENT_BINARY_DIR}" )
+	                 "${CMAKE_CURRENT_BINARY_DIR}" )
 #		     "${X11_X11_INCLUDE_PATH}" )
 
 # link_directories( "${CYAN_LIBRARY_DIR}" )
@@ -107,6 +107,6 @@ install( FILES ${hdr_structs}
 
 # Regression tests
 
-enable_testing()
-add_subdirectory(tests)
+# enable_testing()
+# add_subdirectory(tests)
 
