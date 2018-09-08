@@ -1,15 +1,15 @@
-# - Config file for the malib lib
+# - Config file for the cyan lib
 # It defines the following variables
 #
-#  ONEVISION_INCLUDE_DIRS - include directories
-#  ONEVISION_LIBRARY_DIR  - library directory (normally not used!)
-#  ONEVISION_LIBRARIES    - libraries to link against
+#  CYAN_INCLUDE_DIRS - include directories
+#  CYAN_LIBRARY_DIR  - library directory (normally not used!)
+#  CYAN_LIBRARIES    - libraries to link against
  
 # Tell the user project where to find our headers and libraries
 
-FIND_PACKAGE_MESSAGE(malib "Found malib @malib_VERSION_STRING@" "[${ONEVISION_LIBRARY}][${ONEVISION_INCLUDE_DIR}]" )
+FIND_PACKAGE_MESSAGE(cyan "Found cyan @cyan_VERSION_STRING@" "[${CYAN_LIBRARY}][${CYAN_INCLUDE_DIR}]" )
 
-set(ONEVISION_INCLUDE_DIR "@INSTALL_HEADERS_PATH@" )
-set(ONEVISION_LIBRARY_DIR  "@INSTALL_LIB_PATH@")
-set(ONEVISION_LIBRARY    malib )
+set(CYAN_INCLUDE_DIR "@INSTALL_HEADERS_PATH@" )
+set(CYAN_LIBRARY_DIR  "@INSTALL_LIB_PATH@")
+set(CYAN_LIBRARY    cyan )
     

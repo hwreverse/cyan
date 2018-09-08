@@ -47,7 +47,7 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 	             "${CMAKE_CURRENT_BINARY_DIR}" )
 #		     "${X11_X11_INCLUDE_PATH}" )
 
-# link_directories( "${VISION_LIBRARY_DIR}" )
+# link_directories( "${CYAN_LIBRARY_DIR}" )
 
 ### File lists
 
