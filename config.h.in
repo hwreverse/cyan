@@ -1,0 +1,7 @@
+#ifndef MALIB_CONFIG_H
+#define MALIB_CONFIG_H
+
+#define VERSION_MAJOR @malib_VERSION_MAJOR@
+#define VERSION_MINOR @malib_VERSION_MINOR@
+
+#endif

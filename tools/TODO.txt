@@ -1,0 +1,11 @@
+Choses à implémenter :
+
+outil d'etalonnage camera monoculaire
+outil d'etalonnage camera stereo
+localisation 6D sur QRcode
+Reconstruction monoculaire / stereo hors ligne
+Reconstruction mono en ligne ( PTAM )
+Reconstruction stereo en ligne
+
+ICP
+
