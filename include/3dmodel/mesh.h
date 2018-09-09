@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <algebra/vector.h>
 
+// FIXME le tableau normals pourrait etre une map 2D, comme pour les textures. A envisager
+// FIXME les coordonnées des vertex dans les textures ont été oubliées.
+
+
 typedef struct mesh_s {
 
 	cloud_t* 	cloud ;
@@ -11,7 +15,7 @@ typedef struct mesh_s {
 	int  		nb_faces ;
 	int* 		faces ;
 
-	vector3d_t*     normals ;		// normal for each point
+	vector3d_t*     normals ;	// normal for each point
 
 	int		color_type ;		// color for each face
 	color_t*	colors ;

@@ -34,7 +34,6 @@ endforeach()
 
 ### Search for Lib/Headers
 
-set(LAPACKE_ROOT "/usr") # prefer over system
 find_package(LAPACKE)
 
 ### Config File
