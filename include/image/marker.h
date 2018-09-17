@@ -2,8 +2,8 @@
 #define CYAN_MARKER_H
 
 typedef struct {
-	double U ;
-	double V ;
+	double u ;
+	double v ;
 } marker_t ;
 
 

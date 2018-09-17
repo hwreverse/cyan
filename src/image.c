@@ -24,19 +24,20 @@ image_t* image_new( int rows, int cols, int colortype ) {
     tmp->data_size = (size_t) 0 ;
     tmp->data = (void*) NULL ;
     tmp->nb_markers = 0 ;
-    tmp->markers = (void*) NULL ;
+    tmp->markers = (marker_t*) NULL ;
 
     return tmp ;
 }
 
 void image_free( image_t* img ) {
-    if ( img->data!= NULL ) {
+    if ( img->data!= (void*) NULL ) {
         free( img->data) ;
         img->data_size = 0 ;
     }
-    if ( img->markers != NULL ) {
+    if ( img->markers != (marker_t*) NULL ) {
         free( img->markers) ;
         img->nb_markers = 0 ;
+        img->tab_marker_size = 0 ;
     }
     free ( img->pixels ) ;
     free ( img ) ;
@@ -110,11 +111,11 @@ int image_import_data   ( image_t* img, size_t data_size, void* data ) {
 }
 
 void* image_get_data_pointer( image_t* img, int i , int j ) {
-    return img->data + (i+j*image->cols)*image->data_size ;
+    return img->data + (i+j*img->cols)*img->data_size ;
 }
 
 color_t* image_get_pixel_pointer( image_t* img, int i, int j ) {
-    return &(img->pixels[i+j*image->cols]) ;
+    return &(img->pixels[i+j*img->cols]) ;
 }
 
 image_t* image_clone( image_t* img ) {
@@ -122,11 +123,59 @@ image_t* image_clone( image_t* img ) {
     clone = image_new( img->rows, img->cols, img->colortype ) ;
     memcpy( clone->pixels, img->pixels, img->rows*img->cols*sizeof(color_t) ) ;
     if ( img->data!= (void*) NULL ) {
-        clone->data_size = img->data_size ;
-        image_import_data( clone, img->data, img->rows*img->cols*img->data_size ) ;
+        image_import_data( clone, img->data_size, img->data ) ;
     }
     if ( img->nb_markers != 0 ) {
        clone->nb_markers = img->nb_markers ; 
-       clone->markers =
+       clone->tab_marker_size = img->nb_markers ; 
+       clone->markers = (marker_t*) malloc( img->nb_markers * sizeof(marker_t) ) ;
     }
+    return clone ;
+}
+
+int image_add_marker( image_t* img, marker_t m ) {
+    marker_t* tmp ;
+    if ( img->nb_markers == img->tab_marker_size ) {
+        tmp = (marker_t*) malloc( (img->tab_marker_size+10)*sizeof(marker_t));
+        if ( img->markers != (marker_t*) NULL ) {
+            memcpy( tmp, img->markers, img->tab_marker_size*sizeof(marker_t)) ;
+            free(img->markers) ;
+        }
+        img->markers = tmp ;
+        img->tab_marker_size += 10 ;
+    }
+    img->markers[img->nb_markers].u = m.u ;
+    img->markers[img->nb_markers].v = m.v ;
+    img->nb_markers++ ;
+    return 1;
+}
+
+int image_add_marker_uv( image_t* img, double u, double v ) {
+    marker_t* tmp ;
+    if ( img->nb_markers == img->tab_marker_size ) {
+        tmp = (marker_t*) malloc( (img->tab_marker_size+10)*sizeof(marker_t));
+        if ( img->markers != (marker_t*) NULL ) {
+            memcpy( tmp, img->markers, img->tab_marker_size*sizeof(marker_t)) ;
+            free(img->markers) ;
+        }
+        img->markers = tmp ;
+        img->tab_marker_size += 10 ;
+    }
+    img->markers[img->nb_markers].u = u ;
+    img->markers[img->nb_markers].v = v ;
+    img->nb_markers += 1 ;
+    return 1;
+}
+
+int image_del_marker( image_t* img, int position) {
+    if ((img->nb_markers <= position)||(position<0)) {
+        fprintf(stderr, "del_marker: invalid position\n") ;
+        return 0 ;
+    }
+    if (position != img->nb_markers-1) {
+        img->markers[position].u = img->markers[img->nb_markers-1].u ;
+        img->markers[position].v = img->markers[img->nb_markers-1].v ;
+    }
+    img->nb_markers -= 1 ;
+    return 1 ;
 }

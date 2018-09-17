@@ -1,6 +1,7 @@
 #ifndef CYAN_IMAGE_H
 #define CYAN_IMAGE_H
 
+#include <stdlib.h>
 #include <color/color.h>
 #include <image/marker.h>
 
@@ -16,7 +17,8 @@ typedef struct {
 	void*    data ;
 
 	int nb_markers ;
-	void* markers ;
+	marker_t* markers ;
+    int tab_marker_size ;   // Nbre de cases du tableau markers
 
 } image_t ;
 
@@ -39,8 +41,8 @@ void image_resize ( image_t*, int rows, int cols ) ;
 void image_apply_fct ( image_t*, void (*fct)( image_t*,int i, int j, void* ctx),
 			void* context ) ;
 
-int add_marker( image_t*, marker_t ) ;
-int add_marker_uv ( image_t*, double U, double V ) ;
-int del_marker( image_t*, int position) ;
+int image_add_marker( image_t*, marker_t ) ;
+int image_add_marker_uv ( image_t*, double U, double V ) ;
+int image_del_marker( image_t*, int position) ;
 
 #endif
