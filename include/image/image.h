@@ -1,7 +1,6 @@
 #ifndef CYAN_IMAGE_H
 #define CYAN_IMAGE_H
 
-#include <stdlib.h>
 #include <color/color.h>
 #include <image/marker.h>
 
@@ -43,6 +42,5 @@ void image_apply_fct ( image_t*, void (*fct)( image_t*,int i, int j, void* ctx),
 int add_marker( image_t*, marker_t ) ;
 int add_marker_uv ( image_t*, double U, double V ) ;
 int del_marker( image_t*, int position) ;
-
 
 #endif
