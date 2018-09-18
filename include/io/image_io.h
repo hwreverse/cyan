@@ -1,8 +1,10 @@
 #ifndef CYAN_IMAGE_IO_H
 #define CYAN_IMAGE_IO_H
 
-int image_save_ppm(image_t* img, char* filetype ) ;
-image_t* image_load_ppm(char* filetype , int* result ) ;
+#include <image/image.h>
+
+int image_save_ppm(image_t* img, char* filename ) ;
+image_t* image_load_ppm(char* filename , int* result ) ;
 
 #if IMAGEMAGICK
 
