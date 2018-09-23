@@ -62,37 +62,5 @@ int image_save_ppm( image_t* img, char* filename ) {
     return 0 ;                  // FIXME
 }
 
-image_t* image_load_ppm(char* filename , int* result ) {
-    FILE* handle ;
-    char line[71] ;
-
-    int width ;
-    int height ;
-    int maxvalue ;
-
-    image_t* img ;
-
-    handle = fopen( filename, "r" ) ;
-    if ( handle == (FILE*) NULL ) {
-        fprintf(stderr, "image_load_ppm: error while opening file %s \n", filename ) ;
-        *result = -1 ;
-        return NULL ;
-    }
-
-
-    // ***************************
-    // *** Lecture de l'entete *** 
-    // ***************************
-    //
-    // *** Verification du magic number
-    // *** Lecture de la largeur
-    // *** Lecture de la hauteur
-
-    // voir avec la fonction getline, dans stdio.h
-
-
-    fclose( handle ) ;
-
-}
 
 
