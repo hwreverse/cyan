@@ -21,6 +21,9 @@ ppm_file_t* ppm_file_new( char* filename ) ;
 void ppm_file_free( ppm_file_t* fichier ) ;
 ssize_t ppm_file_read_line( ppm_file_t* fichier ) ;
 char* ppm_file_get_next_token( ppm_file_t* fichier ) ;
+image_t* image_load_P3( ppm_file_t*, int *result ) ;
+image_t* image_load_P6( ppm_file_t*, int *result ) ;
+
 
 ppm_file_t* ppm_file_new( char* filename ) {
     ppm_file_t* fichier = malloc ( sizeof(ppm_file_t) ) ;
@@ -37,8 +40,8 @@ ppm_file_t* ppm_file_new( char* filename ) {
 
 void ppm_file_free( ppm_file_t* fichier ) {
     fclose( fichier->handle ) ;
-    if ( line != (char*) NULL )
-        free( line ) ;
+    if ( fichier->line != (char*) NULL )
+        free( fichier->line ) ;
     free(fichier) ; 
 }
 
@@ -52,11 +55,15 @@ ssize_t ppm_file_read_line( ppm_file_t* fichier ) {
 }
 
 char* ppm_file_get_next_token( ppm_file_t* fichier ) {
-    char delimiters[3] = { ' ', '\t', '\0' }
+    char delimiters[3] = { ' ', '\t', '\0' } ;
     char* chaine ;
     char* result ;
-    if (fichier->first_token)
+    if (fichier->line ==NULL)
+        ppm_file_read_line(fichier);
+    if (fichier->first_token) {
         chaine = fichier->line ;
+        fichier->first_token = 0 ;
+    }
     else
         chaine = NULL ;
     result = strtok( chaine, delimiters ) ;
@@ -68,20 +75,38 @@ char* ppm_file_get_next_token( ppm_file_t* fichier ) {
 }
 
 
-image_t* image_load_ppm(char* filename , int* result ) {
+image_t* image_load_P3( ppm_file_t* file, int* result ) {
 
-    int width ;
-    int height ;
-    int maxvalue ;
-    image_t* img ;
-
-    
-
-    // voir avec la fonction getline, dans stdio.h
-
-
-    fclose( handle ) ;
-
+    int width = ppm_file_get_next_token( inputfile ) ;
+    int height = ppm_file_get_next_token( inputfile ) ;
 }
 
+
+
+image_t* image_load_ppm(char* filename , int* result ) {
+    image_t* img ;
+    ppm_file_t  *inputfile ;
+    inputfile = ppm_file_new( filename ) ; 
+    if (inputfile == NULL ) {
+        fprintf(stderr,"Cannot open file\n") ;
+    }
+    char* token ;
+    token = ppm_file_get_next_token( inputfile ) ;yy
+
+    if (strcmp(token, "P3") == 0 ) {
+        img = image_load_P3( inputfile, result ) ;
+        *result = 1 ;
+    } else {
+        
+        if (strcmp(token, "P6") == 0 ) {
+            img = image_load_P6( inputfile, result ) ;
+            *result = 1 ;
+        } else {
+            fprintf(stderr, "Fichier non reconnu \n") ;
+            *result = 0 ;
+        }
+    }
+    ppm_file_free( inputfile ) ;
+    return img ; 
+}
 
