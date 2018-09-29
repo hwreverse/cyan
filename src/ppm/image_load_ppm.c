@@ -7,7 +7,7 @@
 #include <image/image.h>
 #include <io/image_io.h>
 
-#include "config.h"
+#include "../config.h"
 
 typedef struct {
 	FILE *handle;

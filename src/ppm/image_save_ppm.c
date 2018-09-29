@@ -7,7 +7,7 @@
 #include <io/image_io.h>
 
 
-#include "config.h"
+#include "../config.h"
 
 int image_save_ppm(image_t * img, char *filename) {
 	FILE *handle;

@@ -34,7 +34,17 @@ endforeach()
 
 ### Search for Lib/Headers
 
-find_package(LAPACKE)
+find_package(LAPACKE REQUIRED)
+find_package(netpbm)
+
+if ( LIBNETPBM_FOUND )
+    message("netpbm found") 
+    file( GLOB src_ppm "src/netpbm/*.c"  )
+else()
+    message("netpbm not found. Will use local implementation of image_load_ppm()")
+    file( GLOB src_ppm "src/ppm/*.c"  )
+endif() 
+
 
 ### Config File
 
@@ -60,14 +70,14 @@ file( GLOB hdr_structs "include/structs/*.h"  )
 
 ### Targets
 
-add_library( "cyan" SHARED ${src} ${hdr} ) 
+add_library( "cyan" SHARED ${src} ${src_ppm} ${hdr} ) 
 
 set_target_properties(cyan PROPERTIES VERSION ${cyan_VERSION_STRING}
                                          SOVERSION ${cyan_VERSION_MAJOR})
 
 ### Linking
 
-target_link_libraries( "cyan" "m" )
+target_link_libraries( "cyan" "m" ${LIBNETPBM_LIBRARIES} )
 
 ### Cmake file
 
