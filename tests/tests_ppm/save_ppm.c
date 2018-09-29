@@ -7,7 +7,7 @@ int main( int argc, char** argv, char* envv ) {
 
     int i, j ;
 
-    image_t* image = image_new( 480, 640, COLORTYPE_RGB ) ;
+    image_t* image = image_new( 640, 480, COLORTYPE_RGB ) ;
     color_t* couleur ;
 
     for ( i=0; i<image->rows; i++ )

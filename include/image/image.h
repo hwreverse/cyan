@@ -22,7 +22,7 @@ typedef struct {
 
 } image_t ;
 
-image_t* image_new( int rows, int cols, int colortype ) ;
+image_t* image_new( int cols, int rows, int colortype ) ;
 void     image_free( image_t* ) ;
 
 int image_allocate_data_default  ( image_t*, size_t size, void* default_data ) ;
