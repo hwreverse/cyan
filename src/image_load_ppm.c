@@ -11,7 +11,7 @@
     
 #include "config.h"
 
-#if HAVE_NETPBM
+#if HAVE_LIBNETPBM
 
 image_t *image_load_ppm(char *filename, int *result) {
 	image_t *img;
@@ -32,11 +32,6 @@ image_t *image_load_ppm(char *filename, int *result) {
     }
 
     pnm_readpnminit( fichier, &cols, &rows, &maxval, &format ); 
-
-    printf("%d x %d \n", cols, rows ) ;
-    printf("Maxval : %d \n", maxval ) ;
-    printf("Format : %s \n", (char*) &format ) ;
-
     pixel * pixel_row = ppm_allocrow(cols);
     
     img = image_new( cols, rows, COLORTYPE_RGB ) ; 
@@ -140,9 +135,6 @@ image_t *image_load_P3(ppm_file_t * inputfile, int *result) {
 	int height = atoi(ppm_file_get_next_token(inputfile));
 	double maxval = (double) atoi(ppm_file_get_next_token(inputfile));
 
-	fprintf(stderr, "P3 file:\n");
-	fprintf(stderr, "\tsize: %d x %d \n", width, height);
-
 	img = image_new(width, height, COLORTYPE_RGB);
 	for (j = 0; j < img->rows; j++) {
 		for (i = 0; i < img->cols; i++) {
@@ -171,6 +163,7 @@ image_t *image_load_P6(ppm_file_t * inputfile, int *result) {
 	fprintf(stderr, "\tsize: %d x %d \n", width, height);
 
 
+	img = image_new(width, height, COLORTYPE_RGB);
 
 
 	return NULL;		// FIXME 
