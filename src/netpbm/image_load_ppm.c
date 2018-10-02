@@ -50,6 +50,9 @@ image_t *image_load_ppm(char *filename, int *result) {
             r = pixel_row[j].r ;
             g = pixel_row[j].g ;
             b = pixel_row[j].b ;
+            img->pixels[i*img->cols+j].coords[0] = r / 255.0 ;
+            img->pixels[i*img->cols+j].coords[1] = g / 255.0 ;
+            img->pixels[i*img->cols+j].coords[2] = b / 255.0 ;
         }
     }
 

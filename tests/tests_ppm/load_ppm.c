@@ -7,7 +7,7 @@
 int main( int argc, char** argv, char* envv ) {
 
     int result ;
-    image_t* image = image_load_ppm( "./Lenna.ppm", &result ) ;
+    image_t* image = image_load_ppm( "./lena.ppm", &result ) ;
     if ( image == NULL ) {
         fprintf(stderr, "Image could not be loaded\n") ;
         return -1 ;
