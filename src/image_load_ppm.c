@@ -7,7 +7,63 @@
 #include <image/image.h>
 #include <io/image_io.h>
 
-#include "../config.h"
+#include <netpbm/pam.h>
+    
+#include "config.h"
+
+#if HAVE_NETPBM
+
+image_t *image_load_ppm(char *filename, int *result) {
+	image_t *img;
+    int rows ;
+    int cols ;
+    xelval maxval ;
+    int format ;
+    int i,j ;
+    gray r,g,b ;
+    
+    pm_init("cyan", 0);
+
+    FILE *fichier = fopen(filename, "r");
+    if(fichier == NULL) {
+        fprintf(stderr, "Cannot open file \n") ;
+        *result = 0 ;
+        return NULL;
+    }
+
+    pnm_readpnminit( fichier, &cols, &rows, &maxval, &format ); 
+
+    printf("%d x %d \n", cols, rows ) ;
+    printf("Maxval : %d \n", maxval ) ;
+    printf("Format : %s \n", (char*) &format ) ;
+
+    pixel * pixel_row = ppm_allocrow(cols);
+    
+    img = image_new( cols, rows, COLORTYPE_RGB ) ; 
+    if ( img == NULL ) {
+        fprintf(stderr, "Cannot allocate image \n" ) ;
+        *result = 0 ;
+        return NULL ;
+    }
+
+    for (i=0; i<rows; i++) {
+        ppm_readppmrow(fichier, pixel_row, cols, maxval, format);
+        for (j=0;j<cols; j++){
+            r = pixel_row[j].r ;
+            g = pixel_row[j].g ;
+            b = pixel_row[j].b ;
+            img->pixels[i*img->cols+j].coords[0] = r / 255.0 ;
+            img->pixels[i*img->cols+j].coords[1] = g / 255.0 ;
+            img->pixels[i*img->cols+j].coords[2] = b / 255.0 ;
+        }
+    }
+
+    fclose(fichier) ;
+    
+    return img;
+}
+
+#else
 
 typedef struct {
 	FILE *handle;
@@ -148,3 +204,7 @@ image_t *image_load_ppm(char *filename, int *result) {
 	ppm_file_free(inputfile);
 	return img;
 }
+
+#endif
+
+

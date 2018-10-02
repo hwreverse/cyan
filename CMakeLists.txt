@@ -32,18 +32,22 @@ foreach(p LIB BIN HEADERS AR)
         endif()
 endforeach()
 
+
+### Options ###
+
+option(ENABLE_netpbm "Use the netpbm library to handle ppm files" ON)
+option(ENABLE_imagemagick "Use the imagemagick lib to handle image files" ON)
+
 ### Search for Lib/Headers
 
 find_package(LAPACKE REQUIRED)
-find_package(netpbm)
-
-if ( LIBNETPBM_FOUND )
-    message("netpbm found") 
-    file( GLOB src_ppm "src/netpbm/*.c"  )
+if (ENABLE_netpbm)
+    find_package(netpbm REQUIRED)
+    set ( HAVE_NETPBM 1 )
 else()
-    message("netpbm not found. Will use local implementation of image_load_ppm()")
-    file( GLOB src_ppm "src/ppm/*.c"  )
-endif() 
+    message("Not using netpbm lib. Will use local implementation")
+    set ( HAVE_NETPBM 0 )
+endif()
 
 
 ### Config File
@@ -54,9 +58,8 @@ configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
 ### Set include directories 
         
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
-	                 "${CMAKE_CURRENT_BINARY_DIR}" )
-#		     "${X11_X11_INCLUDE_PATH}" )
-
+	                 "${CMAKE_CURRENT_BINARY_DIR}" 
+                     ${LIBNETPBM_INCLUDE_DIRS} )
 # link_directories( "${CYAN_LIBRARY_DIR}" )
 
 ### File lists
@@ -70,7 +73,7 @@ file( GLOB hdr_structs "include/structs/*.h"  )
 
 ### Targets
 
-add_library( "cyan" SHARED ${src} ${src_ppm} ${hdr} ) 
+add_library( "cyan" SHARED ${src} ${hdr} ) 
 
 set_target_properties(cyan PROPERTIES VERSION ${cyan_VERSION_STRING}
                                          SOVERSION ${cyan_VERSION_MAJOR})

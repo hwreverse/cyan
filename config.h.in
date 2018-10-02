@@ -4,4 +4,7 @@
 #define VERSION_MAJOR @cyan_VERSION_MAJOR@
 #define VERSION_MINOR @cyan_VERSION_MINOR@
 
+#define HAVE_LIBNETPBM @HAVE_NETPBM@
+
+
 #endif
