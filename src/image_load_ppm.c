@@ -155,19 +155,44 @@ image_t *image_load_P3(ppm_file_t * inputfile, int *result) {
 
 image_t *image_load_P6(ppm_file_t * inputfile, int *result) {
 
+    int i,j ;
+    unsigned char r,g,b ;
+    uint16_t R,G,B ; 
+    int addr ;
 	int width = atoi(ppm_file_get_next_token(inputfile));
 	int height = atoi(ppm_file_get_next_token(inputfile));
 	int maxval = atoi(ppm_file_get_next_token(inputfile));
-
 	fprintf(stderr, "P6 file:\n");
 	fprintf(stderr, "\tsize: %d x %d \n", width, height);
+	fprintf(stderr, "\tmaxval: %d\n", maxval);
+	image_t* img = image_new(width, height, COLORTYPE_RGB);
+    if ( maxval < 256 ) {
+           for (j=0; j<height; j++)
+               for (i=0; i<width; i++ ) {
+                    fread(&r, 1, 1, inputfile->handle) ; 
+                    fread(&g, 1, 1, inputfile->handle) ; 
+                    fread(&b, 1, 1, inputfile->handle) ; 
+                    img->pixels[j * img->cols + i].coords[0] = ((double) r / (double) maxval) ;
+                    img->pixels[j * img->cols + i].coords[1] = ((double) g / (double) maxval) ;
+                    img->pixels[j * img->cols + i].coords[2] = ((double) b / (double) maxval) ;
+               }
+    } else {
+ 
+           for (j=0; j<height; j++)
+               for (i=0; i<width; i++ ) {
+                    fread(&R, 1, sizeof(uint16_t), inputfile->handle) ; 
+                    fread(&G, 1, sizeof(uint16_t), inputfile->handle) ; 
+                    fread(&B, 1, sizeof(uint16_t), inputfile->handle) ;
+                    R = (R>>8)|(R<<8);
+                    G = (G>>8)|(G<<8);
+                    B = (B>>8)|(B<<8);
+                    img->pixels[j * img->cols + i].coords[0] = ((double) R / (double) maxval) ;
+                    img->pixels[j * img->cols + i].coords[1] = ((double) G / (double) maxval) ;
+                    img->pixels[j * img->cols + i].coords[2] = ((double) B / (double) maxval) ;
+               }
 
-
-	img = image_new(width, height, COLORTYPE_RGB);
-
-
-	return NULL;		// FIXME 
-
+    }
+	return img;
 }
 
 image_t *image_load_ppm(char *filename, int *result) {
