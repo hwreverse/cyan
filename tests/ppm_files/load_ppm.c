@@ -20,7 +20,11 @@ int main( int argc, char** argv, char* envv ) {
         return -2 ;
     }
 
-    image_save_ppm( image, argv[2]) ;
+    result=image_save_ppm( image, argv[2]) ;
+    if (  result != 0 ) {
+        fprintf(stderr, "Cannot save file\n");
+        return -3 ;
+    }
 
     image_free( image) ;
 
