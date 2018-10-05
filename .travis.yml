@@ -14,10 +14,6 @@ branches:
   only:
   - master
 script: "./.travis/run build"
-after_success:
-- "./.travis/run after_success"
-- codecov --gcov-root=/tmp/_ci/build
+after_success: "./.travis/run after_success"
 after_failure: "./.travis/run after_failure"
-before_install:
-- pip install --user codecov
-- "./.travis/run before_install"
+before_install: "./.travis/run before_install"
