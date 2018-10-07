@@ -41,6 +41,7 @@ option(ENABLE_imagemagick "Use the imagemagick lib to handle image files" ON)
 ### Search for Lib/Headers
 
 find_package(LAPACKE REQUIRED)
+
 if (ENABLE_netpbm)
     find_package(netpbm REQUIRED)
     set ( HAVE_NETPBM 1 )
@@ -60,6 +61,7 @@ configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 	                 "${CMAKE_CURRENT_BINARY_DIR}" 
                      ${LIBNETPBM_INCLUDE_DIRS} )
+
 # link_directories( "${CYAN_LIBRARY_DIR}" )
 
 ### File lists
