@@ -44,5 +44,7 @@ void image_apply_fct ( image_t*, void (*fct)( image_t*,int i, int j, void* ctx),
 int image_add_marker( image_t*, marker_t ) ;
 int image_add_marker_uv ( image_t*, double U, double V ) ;
 int image_del_marker( image_t*, int position) ;
+int image_print_all_markers( image_t*, int size, float colorcmp1, float colorcmp2, float colorcmp3 ) ;
+
 
 #endif

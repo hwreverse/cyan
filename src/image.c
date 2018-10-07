@@ -199,3 +199,29 @@ int image_del_marker(image_t * img, int position) {
 	img->nb_markers -= 1;
 	return 1;
 }
+
+int image_print_all_markers( image_t* img, int size, float colorcmp1, float colorcmp2, float colorcmp3 ) {
+    int i ;
+    int j ;
+    int u,v ;
+    int count ;
+    count = 0 ;
+    if ( img->colortype != COLORTYPE_RGB )              // FIXME
+        return -1 ;
+    for (i=0; i<img->nb_markers; i++) {
+        u = (int) img->markers[i].u ;
+        v = (int) img->markers[i].v ;
+        if ((u>size) && (u<img->cols-size) && (v>size) && (v<img->rows-size)) {
+            for (j=-size; j<=size;j++ ) {
+                img->pixels[v*img->cols+(u+j)].coords[0] = colorcmp1 ;
+                img->pixels[v*img->cols+(u+j)].coords[1] = colorcmp2 ;
+                img->pixels[v*img->cols+(u+j)].coords[2] = colorcmp2 ;
+                img->pixels[(v+j)*img->cols+u].coords[0] = colorcmp1 ;
+                img->pixels[(v+j)*img->cols+u].coords[1] = colorcmp2 ;
+                img->pixels[(v+j)*img->cols+u].coords[2] = colorcmp3 ;
+            }
+                count++ ;
+        }
+    }
+    return count ;
+}
