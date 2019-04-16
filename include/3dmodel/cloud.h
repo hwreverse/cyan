@@ -26,7 +26,7 @@ typedef struct cloud_s {
 cloud_t* cloud_new( int nb_points ) ;
 void cloud_free( cloud_t* ) ;
 
-int cloud_allocate_color ( cloud_t*, int color_type ) ;
+int cloud_allocate_color ( cloud_t*, int color_type, color_t default_color ) ;
 int cloud_allocate_data  ( cloud_t*, size_t size,  void* default_data ) ;
 
 cloud_t* cloud_clone ( cloud_t* ) ;

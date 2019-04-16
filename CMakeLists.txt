@@ -40,7 +40,7 @@ option(ENABLE_imagemagick "Use the imagemagick lib to handle image files" ON)
 
 ### Search for Lib/Headers
 
-find_package(LAPACKE REQUIRED)
+# find_package(LAPACKE REQUIRED)
 
 if (ENABLE_netpbm)
     find_package(netpbm REQUIRED)

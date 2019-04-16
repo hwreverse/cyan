@@ -7,7 +7,6 @@
 #include <image/image.h>
 #include <io/image_io.h>
 
-// #include <netpbm/pam.h>
 #include <pam.h>
     
 #include "config.h"
