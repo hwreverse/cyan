@@ -1,4 +1,4 @@
-#include "cloud.h"
+/*#include "cloud.h"
 
 cloud_t* cloud_new( int nb_points ) {
     cloud_t* tmp ;
@@ -43,4 +43,4 @@ int cloud_allocate_color( cloud_t* nuage, int color_type, color_t default_color 
     // TODO : recopier dans le tableau la valeur par defaut
 
 
-}
+}*/

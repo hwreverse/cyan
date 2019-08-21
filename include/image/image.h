@@ -1,16 +1,37 @@
 #ifndef CYAN_IMAGE_H
 #define CYAN_IMAGE_H
 
+/**
+ * @defgroup image
+ *
+ * @brief Primitives pour le traitement d'images bitmap
+ *
+ * Ce module contient les structures et fonctions nécessaires pour
+ * le traitement d'images stockées sous forme de grille 2D. La structure 
+ * de base utilisée est image_t, qui permet de représenter un plan de pixels.
+ *
+ */
+
 #include <stdlib.h>
 #include <color/color.h>
 #include <image/marker.h>
 
+/**
+ * \struct image_t 
+ *
+ * \brief Image de type bitmap
+ *
+ * image_t est une structure permettant de stocker un plan de pixels
+ * dans le format colorimetrique de votre choix
+ *
+ * \ingroup image
+ */
+
 typedef struct {
 
-	int rows ;
-	int cols ;
-	
-	int colortype ;
+	int rows ;              ///< Nombre de lignes du bitmap
+	int cols ;              ///< Nombre de colonnes du bitmap 
+	int colortype ;         ///< Colorspace used
 	color_t* pixels ;
 	
 	size_t data_size ;
@@ -18,7 +39,7 @@ typedef struct {
 
 	int nb_markers ;
 	marker_t* markers ;
-    int tab_marker_size ;   // Nbre de cases du tableau markers
+    int tab_marker_size ;   
 
 } image_t ;
 

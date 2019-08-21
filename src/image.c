@@ -4,6 +4,22 @@
 
 #include "image/image.h"
 
+/**
+ * \fn image_t *image_new(int cols, int rows, int colortype) 
+ *
+ * \brief Fonction de construction de l'objet image_t.
+ *
+ * \param cols nombre de colonnes de pixels ("largeur")
+ * \param rows nombre de lignes de pixels ("hauteur")
+ * \param colortype espace colorimétrique choisi
+ *
+ * \return Adresse de l'image_t allouée, NULL en cas d'erreur. 
+ *
+ * \ingroup image
+ * \relates image_t
+ */
+
+
 image_t *image_new(int cols, int rows, int colortype) {
 
 	image_t *tmp;
@@ -28,6 +44,17 @@ image_t *image_new(int cols, int rows, int colortype) {
 
 	return tmp;
 }
+
+/**
+ * \fn void image_free(image_t * img) {
+ *
+ * \brief Fonction de désallocation de la structure image_t.
+ *
+ * \param img adresse de l'image qui doit être désallouée
+ *
+ * \ingroup image
+ * \relates image_t
+ */
 
 void image_free(image_t * img) {
 	if (img->data != (void *) NULL) {
