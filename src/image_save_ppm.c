@@ -20,7 +20,7 @@ int image_save_ppm(image_t * img, char *filename) {
         fprintf(stderr,"image_save_ppm: cannot save NULL image \n");
         return -1 ;
     }
-	if (img->colortype != COLORTYPE_RGB) {
+	if (img->colortype != CYAN_COLORTYPE_RGB) {
 		fprintf(stderr,
 			"image_save_ppm : Only RGB images are supported \n");
 		return -2;
