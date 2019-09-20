@@ -64,7 +64,7 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
                       )
 
 if (LIBNETPBM_FOUND)
-    include_directories( "${LIBNETPBM_INCLUDE_DIR}"
+    include_directories( "${LIBNETPBM_INCLUDE_DIR}" )
 endif()
 
 ### File lists
