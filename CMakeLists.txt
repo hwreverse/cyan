@@ -32,11 +32,9 @@ foreach(p LIB BIN HEADERS AR)
         endif()
 endforeach()
 
-
 ### Options ###
 
 option(ENABLE_netpbm "Use the netpbm library to handle ppm files" ON)
-option(ENABLE_imagemagick "Use the imagemagick lib to handle image files" ON)
 
 ### Search for Lib/Headers
 
@@ -57,7 +55,7 @@ endif()
 ### Config File
 
 configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
-		 "${PROJECT_SOURCE_DIR}/src/config.h" )
+		         "${PROJECT_SOURCE_DIR}/src/config.h" )
 
 ### Set include directories 
         
@@ -65,7 +63,9 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 	                 "${CMAKE_CURRENT_BINARY_DIR}" 
                       )
 
-# link_directories( "${CYAN_LIBRARY_DIR}" )
+if (LIBNETPBM_FOUND)
+    include_directories( "${LIBNETPBM_INCLUDE_DIR}"
+endif()
 
 ### File lists
 
@@ -86,6 +86,9 @@ set_target_properties(cyan PROPERTIES VERSION ${cyan_VERSION_STRING}
 ### Linking
 
 target_link_libraries( "cyan" "m" )
+if (LIBNETPBM_FOUND)
+    target_link_libraries( "cyan" ${LIBNETPBM_LIBRARY} )
+endif()
 
 ### Cmake file
 
