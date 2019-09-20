@@ -6,12 +6,11 @@
 #include <image/image.h>
 #include <io/image_io.h>
 
-// #include <netpbm/pam.h>
-#include <pam.h>
-
 #include "config.h"
 
 #if HAVE_LIBNETPBM 
+
+#include <pam.h>
 
 int image_save_ppm(image_t * img, char *filename) {
 
@@ -62,7 +61,7 @@ int image_save_ppm(image_t * img, char *filename) {
 			"image_save_ppm : Cannot save NULL image\n");
 		return -1;
 	}
-	if (img->colortype != COLORTYPE_RGB) {
+	if (img->colorspace != CYAN_COLORTYPE_RGB) {
 		fprintf(stderr,
 			"image_save_ppm : Only RGB images are supported \n");
 		return -2;

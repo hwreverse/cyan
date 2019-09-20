@@ -29,9 +29,9 @@
 
 typedef struct {
 
-	int rows ;              ///< Nombre de lignes du bitmap
-	int cols ;              ///< Nombre de colonnes du bitmap 
-	int colortype ;         ///< Colorspace used
+	int rows ;                        ///< Nombre de lignes du bitmap
+	int cols ;                        ///< Nombre de colonnes du bitmap 
+	cyan_colorspace_t colorspace;     ///< Colorspace used
 	color_t* pixels ;
 	
 	size_t data_size ;
@@ -43,7 +43,7 @@ typedef struct {
 
 } image_t ;
 
-image_t* image_new( int cols, int rows, int colortype ) ;
+image_t* image_new( int cols, int rows, cyan_colorspace_t colorspace ) ;
 void     image_free( image_t* ) ;
 
 int image_allocate_data_default  ( image_t*, size_t size, void* default_data ) ;

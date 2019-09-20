@@ -16,7 +16,7 @@ int main( int argc, char** argv, char* envv ) {
        return -1 ;
     }
     
-    image = image_new( 640, 480, COLORTYPE_RGB ) ;
+    image = image_new( 640, 480, CYAN_COLORTYPE_RGB ) ;
     if ( image == NULL ) {
         fprintf(stderr,"image allocation failed\n") ;
         return -2 ;

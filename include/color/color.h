@@ -1,11 +1,13 @@
 #ifndef CYAN_COLOR_H
 #define CYAN_COLOR_H
 
-#define COLORTYPE_NONE 	0
-#define COLORTYPE_RGB  	1
-#define COLORTYPE_HSV  	2
-#define COLORTYPE_LAB  	3
-#define COLORTYPE_XYZ  	4
+typedef enum {
+    CYAN_COLORTYPE_NONE,
+    CYAN_COLORTYPE_RGB,
+    CYAN_COLORTYPE_HSV,
+    CYAN_COLORTYPE_LAB,
+    CYAN_COLORTYPE_XYZ
+} cyan_colorspace_t ;
 
 #define RGB_R 0 // 0.0 - 1.0
 #define RGB_G 1 // 0.0 - 1.0
@@ -24,8 +26,8 @@ typedef struct {
 	float coords[3] ;
 } color_t ;
 
-void color_convert  ( int colortype_from, int colortype_to, color_t*, color_t* ) ;
-void color_convert_ ( int colortype_from, int colortype_to, color_t* ) ;
+void color_convert  ( cyan_colorspace_t from, cyan_colorspace_t to, color_t*, color_t* ) ;
+void color_convert_ ( cyan_colorspace_t from, cyan_colorspace_t to, color_t* ) ;
 
 void rgb2hsv ( color_t, color_t* ) ;
 void rgb2lab ( color_t, color_t* ) ; // TODO

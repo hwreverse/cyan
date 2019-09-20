@@ -5,13 +5,13 @@
 #include "image/image.h"
 
 /**
- * \fn image_t *image_new(int cols, int rows, int colortype) 
+ * \fn image_t *image_new(int cols, int rows, cyan_colorspace_t colorspace) 
  *
  * \brief Fonction de construction de l'objet image_t.
  *
  * \param cols nombre de colonnes de pixels ("largeur")
  * \param rows nombre de lignes de pixels ("hauteur")
- * \param colortype espace colorimétrique choisi
+ * \param colorspace espace colorimétrique choisi
  *
  * \return Adresse de l'image_t allouée, NULL en cas d'erreur. 
  *
@@ -20,7 +20,7 @@
  */
 
 
-image_t *image_new(int cols, int rows, int colortype) {
+image_t *image_new(int cols, int rows, cyan_colorspace_t colorspace) {
 
 	image_t *tmp;
 	tmp = (image_t *) malloc(sizeof(image_t));
@@ -30,7 +30,7 @@ image_t *image_new(int cols, int rows, int colortype) {
 	}
 	tmp->rows = rows;
 	tmp->cols = cols;
-	tmp->colortype = colortype;
+	tmp->colorspace = colorspace;
 	tmp->pixels = (color_t *) malloc(rows * cols * sizeof(color_t));
 	if (tmp->pixels == NULL) {
 		fprintf(stderr, "image_new : pixels allocation error \n");
@@ -70,8 +70,7 @@ void image_free(image_t * img) {
 	free(img);
 }
 
-int image_allocate_data_default(image_t * img, size_t size,
-				void *data_array) {
+int image_allocate_data_default(image_t * img, size_t size, void *data_array) {
 	int i;
 	if (img == (image_t *) NULL) {
 		fprintf(stderr,
@@ -97,10 +96,7 @@ int image_allocate_data_default(image_t * img, size_t size,
 	return i;
 }
 
-int image_allocate_data_fct(image_t * img, size_t size,
-			    int (*fill_fct) (image_t *, int, int, void *),
-			    void *context) {
-
+int image_allocate_data_fct(image_t * img, size_t size, int (*fill_fct) (image_t *, int, int, void *), void *context) {
 	int i, j, ret;
 	if (img == (image_t *) NULL) {
 		fprintf(stderr,
@@ -125,7 +121,6 @@ int image_allocate_data_fct(image_t * img, size_t size,
 		for (i = 0; i < img->cols; i++) {
 			ret += fill_fct(img, i, j, context);
 		}
-
 	return ret;
 }
 
@@ -156,7 +151,7 @@ color_t *image_get_pixel_pointer(image_t * img, int i, int j) {
 
 image_t *image_clone(image_t * img) {
 	image_t *clone;
-	clone = image_new(img->cols, img->rows, img->colortype);
+	clone = image_new(img->cols, img->rows, img->colorspace);
 	memcpy(clone->pixels, img->pixels,
 	       img->rows * img->cols * sizeof(color_t));
 	if (img->data != (void *) NULL) {
@@ -233,7 +228,7 @@ int image_print_all_markers( image_t* img, int size, float colorcmp1, float colo
     int u,v ;
     int count ;
     count = 0 ;
-    if ( img->colortype != COLORTYPE_RGB )              // FIXME
+    if ( img->colorspace != CYAN_COLORTYPE_RGB )              // FIXME
         return -1 ;
     for (i=0; i<img->nb_markers; i++) {
         u = (int) img->markers[i].u ;

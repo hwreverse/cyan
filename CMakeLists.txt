@@ -42,7 +42,12 @@ option(ENABLE_imagemagick "Use the imagemagick lib to handle image files" ON)
 
 if (ENABLE_netpbm)
     find_package(netpbm REQUIRED)
-    set ( HAVE_NETPBM 1 )
+    if (netpb_FOUND)
+        set ( HAVE_NETPBM 1)
+    else()
+        set ( HAVE_NETPBM 0)
+        message( FATAL_ERROR "Cannot find netpbm lib.")
+    endif()
 else()
     message("Not using netpbm lib. Will use local implementation")
     set ( HAVE_NETPBM 0 )
@@ -58,7 +63,7 @@ configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
         
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 	                 "${CMAKE_CURRENT_BINARY_DIR}" 
-                      ${LIBNETPBM_INCLUDE_DIRS} )
+                      )
 
 # link_directories( "${CYAN_LIBRARY_DIR}" )
 
@@ -80,7 +85,7 @@ set_target_properties(cyan PROPERTIES VERSION ${cyan_VERSION_STRING}
 
 ### Linking
 
-target_link_libraries( "cyan" "m" ${LIBNETPBM_LIBRARIES} )
+target_link_libraries( "cyan" "m" )
 
 ### Cmake file
 

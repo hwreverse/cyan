@@ -7,11 +7,11 @@
 #include <image/image.h>
 #include <io/image_io.h>
 
-#include <pam.h>
-    
 #include "config.h"
 
 #if HAVE_LIBNETPBM
+
+#include <pam.h>
 
 image_t *image_load_ppm(char *filename, int *result) {
 	image_t *img;
@@ -135,7 +135,7 @@ image_t *image_load_P3(ppm_file_t * inputfile, int *result) {
 	int height = atoi(ppm_file_get_next_token(inputfile));
 	double maxval = (double) atoi(ppm_file_get_next_token(inputfile));
 
-	img = image_new(width, height, COLORTYPE_RGB);
+	img = image_new(width, height, CYAN_COLORTYPE_RGB);
 	for (j = 0; j < img->rows; j++) {
 		for (i = 0; i < img->cols; i++) {
 			img->pixels[j * img->cols + i].coords[0] =
@@ -157,7 +157,7 @@ image_t *image_load_P6(ppm_file_t * inputfile, int *result) {
 
     int i,j ;
     unsigned char r,g,b ;
-    uint16_t R,G,B ; 
+    u_int16_t R,G,B ; 
     int addr ;
 	int width = atoi(ppm_file_get_next_token(inputfile));
 	int height = atoi(ppm_file_get_next_token(inputfile));
@@ -165,7 +165,7 @@ image_t *image_load_P6(ppm_file_t * inputfile, int *result) {
 	fprintf(stderr, "P6 file:\n");
 	fprintf(stderr, "\tsize: %d x %d \n", width, height);
 	fprintf(stderr, "\tmaxval: %d\n", maxval);
-	image_t* img = image_new(width, height, COLORTYPE_RGB);
+	image_t* img = image_new(width, height, CYAN_COLORTYPE_RGB);
     if ( maxval < 256 ) {
            for (j=0; j<height; j++)
                for (i=0; i<width; i++ ) {
@@ -180,9 +180,9 @@ image_t *image_load_P6(ppm_file_t * inputfile, int *result) {
  
            for (j=0; j<height; j++)
                for (i=0; i<width; i++ ) {
-                    fread(&R, 1, sizeof(uint16_t), inputfile->handle) ; 
-                    fread(&G, 1, sizeof(uint16_t), inputfile->handle) ; 
-                    fread(&B, 1, sizeof(uint16_t), inputfile->handle) ;
+                    fread(&R, 1, sizeof(u_int16_t), inputfile->handle) ; 
+                    fread(&G, 1, sizeof(u_int16_t), inputfile->handle) ; 
+                    fread(&B, 1, sizeof(u_int16_t), inputfile->handle) ;
                     R = (R>>8)|(R<<8);
                     G = (G>>8)|(G<<8);
                     B = (B>>8)|(B<<8);
