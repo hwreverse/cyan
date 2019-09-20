@@ -41,8 +41,8 @@ option(ENABLE_imagemagick "Use the imagemagick lib to handle image files" ON)
 ### Search for Lib/Headers
 
 if (ENABLE_netpbm)
-    find_package(netpbm REQUIRED)
-    if (netpb_FOUND)
+    find_package(netpbm)
+    if (LIBNETPBM_FOUND)
         set ( HAVE_NETPBM 1)
     else()
         set ( HAVE_NETPBM 0)
