@@ -13,8 +13,8 @@
  */
 
 #include <stdlib.h>
-#include <color/color.h>
-#include <image/marker.h>
+#include <color.h>
+#include <marker.h>
 
 /**
  * \struct image_t 
@@ -67,5 +67,8 @@ int image_add_marker_uv ( image_t*, double U, double V ) ;
 int image_del_marker( image_t*, int position) ;
 int image_print_all_markers( image_t*, int size, float colorcmp1, float colorcmp2, float colorcmp3 ) ;
 
+
+int image_save_ppm(image_t* img, char* filename ) ;
+image_t* image_load_ppm(char* filename , int* result ) ;
 
 #endif

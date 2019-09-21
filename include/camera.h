@@ -25,5 +25,4 @@ void camera_set_lens( double r1, double r2, double r3, double t1, double t2 ) ;
 
 void camera_proj_coords( camera_t*, marker_t*, point_t ) ;
 
-
 #endif

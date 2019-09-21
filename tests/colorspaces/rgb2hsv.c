@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <color/color.h>
+#include <color.h>
 
 int main ( int argc, char** argv, char** envv ) {
 

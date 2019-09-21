@@ -1,7 +1,5 @@
 #include <stdio.h>
-#include <image/image.h>
-#include <color/color.h>
-#include <io/image_io.h>
+#include <image.h>
 
 
 int main( int argc, char** argv, char* envv ) {

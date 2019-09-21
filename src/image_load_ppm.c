@@ -3,9 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <color/color.h>
-#include <image/image.h>
-#include <io/image_io.h>
+#include <color.h>
+#include <image.h>
 
 #include "config.h"
 
