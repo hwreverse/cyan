@@ -13,8 +13,8 @@
  */
 
 #include <stdlib.h>
-#include <color.h>
-#include <marker.h>
+#include <cyan/color.h>
+#include <cyan/marker.h>
 
 /**
  * \struct image_t 
