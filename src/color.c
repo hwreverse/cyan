@@ -1,4 +1,4 @@
-#include <color.h>
+#include <cyan/color.h>
 
 float max_f(float a, float b, float c) {
 	if ((a > b) && (a > c))

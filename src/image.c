@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "image.h"
+#include <cyan/image.h>
 
 /**
  * \fn image_t *image_new(int cols, int rows, cyan_colorspace_t colorspace) 

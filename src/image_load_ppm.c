@@ -3,8 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include <color.h>
-#include <image.h>
+#include <cyan/image.h>
 
 #include "config.h"
 
