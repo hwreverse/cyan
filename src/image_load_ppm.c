@@ -32,7 +32,7 @@ image_t *image_load_ppm(char *filename, int *result) {
     pnm_readpnminit( fichier, &cols, &rows, &maxval, &format ); 
     pixel * pixel_row = ppm_allocrow(cols);
     
-    img = image_new( cols, rows, CYAN_COLORTYPE_RGB ) ; 
+    img = image_new( cols, rows ) ; 
     if ( img == NULL ) {
         fprintf(stderr, "Cannot allocate image \n" ) ;
         *result = 0 ;
@@ -45,6 +45,11 @@ image_t *image_load_ppm(char *filename, int *result) {
             r = pixel_row[j].r ;
             g = pixel_row[j].g ;
             b = pixel_row[j].b ;
+            
+
+
+
+
             img->pixels[i*img->cols+j].coords[0] = r / 255.0 ;
             img->pixels[i*img->cols+j].coords[1] = g / 255.0 ;
             img->pixels[i*img->cols+j].coords[2] = b / 255.0 ;
