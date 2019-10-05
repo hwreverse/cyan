@@ -129,5 +129,5 @@ install( FILES ${hdr_structs}
 # Regression tests
 
 enable_testing()
-add_subdirectory(tests)
+add_subdirectory(test)
 
