@@ -13,7 +13,7 @@ int main( int argc, char** argv, char* envv ) {
        return -1 ;
     }
     
-    image = image_new( 640, 480 ) ;
+    image = image_new(640, 480) ;
     if ( image == NULL ) {
         fprintf(stderr,"image allocation failed\n") ;
         return -2 ;

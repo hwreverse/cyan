@@ -4,8 +4,7 @@
 
 #include <cyan/image.h>
 
-image_t *image_new(int cols, int rows) {
-
+image_t* image_new(int cols, int rows) {
 	image_t *tmp;
 	tmp = (image_t *) malloc(sizeof(image_t));
 	if (tmp == NULL) {
@@ -15,8 +14,7 @@ image_t *image_new(int cols, int rows) {
 	tmp->rows = rows;
 	tmp->cols = cols;
     tmp->monochrome = 0 ;
-    tmp->illuminant = CYAN_D50 ;
-
+//    tmp->illuminant = CYAN_D50 ;
 	tmp->X = (double *) malloc(rows * cols * sizeof(double));
 	tmp->Y = (double *) malloc(rows * cols * sizeof(double));
 	tmp->Z = (double *) malloc(rows * cols * sizeof(double));
@@ -25,12 +23,10 @@ image_t *image_new(int cols, int rows) {
 		free(tmp);
 		return NULL;
 	}
-
 	tmp->data_size = (size_t) 0;
 	tmp->data = (void *) NULL;
 	tmp->nb_markers = 0;
 	tmp->markers = (marker_t *) NULL;
-
 	return tmp;
 }
 

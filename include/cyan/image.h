@@ -5,23 +5,18 @@
 #include <cyan/marker.h>
 
 typedef struct {
-
 	int rows ; 
 	int cols ; 
-	
 	double* X ;                         // XYZ as defined in CIE 1976
     double* Y ;
     double* Z ;
     enum cyan_refwhite illuminant ;     // Default to CYAN_D50
     int monochrome ;                    // if set to zero, only the Y plane will be used
-
 	size_t data_size ;
 	void*    data ;
-
 	int nb_markers ;
 	marker_t* markers ;
     int tab_marker_size ;   
-
 } image_t ;
 
 image_t* image_new( int cols, int rows ) ;
