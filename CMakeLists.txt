@@ -34,23 +34,22 @@ endforeach()
 
 ### Options ###
 
-option(ENABLE_netpbm "Use the netpbm library to handle ppm files" ON)
+option(ENABLE_tirpc "Use the tirpc library for file saving/loading" ON)
 
-### Search for Lib/Headers
+### Search for tirpc
 
-if (ENABLE_netpbm)
-    find_package(netpbm)
-    if (LIBNETPBM_FOUND)
-        set ( HAVE_NETPBM 1)
+if (ENABLE_tirpc)
+    find_package(tirpc)
+    if (LIBTIRPC_FOUND)
+        set ( HAVE_TIRPC 1)
     else()
-        set ( HAVE_NETPBM 0)
-        message( FATAL_ERROR "Cannot find netpbm lib.")
+        set ( HAVE_TIRPC 0)
+        message( FATAL_ERROR "Cannot find tirpc lib.")
     endif()
 else()
-    message("Not using netpbm lib. Will use local implementation")
-    set ( HAVE_NETPBM 0 )
+    message("Not using tirpc lib. Load/save functions will not be available")
+    set ( HAVE_TIRPC 0 )
 endif()
-
 
 ### Config File
 
@@ -87,7 +86,7 @@ set_target_properties(cyan PROPERTIES VERSION ${cyan_VERSION_STRING}
 
 target_link_libraries( "cyan" "m" )
 if (LIBNETPBM_FOUND)
-    target_link_libraries( "cyan" ${LIBNETPBM_LIBRARY} )
+    target_link_libraries( "cyan" ${LIBTIRPC_LIBRARY} )
 endif()
 
 ### Cmake file
