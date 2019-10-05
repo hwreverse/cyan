@@ -1,19 +1,19 @@
 #ifndef CYAN_IMAGE_H
 #define CYAN_IMAGE_H
 
-#include <stdlib.h>
-#include <cyan/marker.h>
+#include <cyan/color/color.h>
 
 typedef struct {
 
 	int rows ; 
 	int cols ; 
 	
-    int monochrome ;
-	float* L ;              // as defined in CIE 1976
-    float* a ;
-    float* b ;
-	
+	double* X ;                         // XYZ as defined in CIE 1976
+    double* Y ;
+    double* Z ;
+    enum cyan_refwhite illuminant ;     // Default to CYAN_D50
+    int monochrome ;                    // if set to zero, only the Y plane will be used
+
 	size_t data_size ;
 	void*    data ;
 
@@ -36,7 +36,6 @@ int image_allocate_data_fct( image_t*,
 int image_import_data   ( image_t*, size_t data_size, void* data ) ;
 
 void*    image_get_data_pointer  ( image_t*, int i, int j ) ;
-//color_t* image_get_pixel_pointer ( image_t*, int i, int j ) ;
 
 image_t* image_clone ( image_t* ) ;
 void image_resize ( image_t*, int rows, int cols ) ;
@@ -47,9 +46,9 @@ void image_apply_fct ( image_t*,
 int image_add_marker( image_t*, marker_t ) ;
 int image_add_marker_uv ( image_t*, double U, double V ) ;
 int image_del_marker( image_t*, int position) ;
-int image_print_all_markers( image_t*, int size, float L, float A, float B ) ;
+int image_print_all_markers( image_t*, int size, double L, double A, double B ) ;
 
-int image_save_ppm(image_t* img, char* filename ) ;
-image_t* image_load_ppm(char* filename , int* result ) ;
+int image_save(image_t* img, char* filename ) ;
+image_t* image_load(char* filename , int* result ) ;
 
 #endif
