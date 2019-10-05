@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <cyan/image.h>
+#include <cyan/image/image.h>
 
 
 int main( int argc, char** argv, char* envv ) {

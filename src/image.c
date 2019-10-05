@@ -2,7 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <cyan/image.h>
+#include <cyan/image/image.h>
 
 image_t* image_new(int cols, int rows) {
 	image_t *tmp;
@@ -14,7 +14,7 @@ image_t* image_new(int cols, int rows) {
 	tmp->rows = rows;
 	tmp->cols = cols;
     tmp->monochrome = 0 ;
-//    tmp->illuminant = CYAN_D50 ;
+    tmp->illuminant = CYAN_D50 ;
 	tmp->X = (double *) malloc(rows * cols * sizeof(double));
 	tmp->Y = (double *) malloc(rows * cols * sizeof(double));
 	tmp->Z = (double *) malloc(rows * cols * sizeof(double));

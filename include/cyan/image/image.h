@@ -2,7 +2,7 @@
 #define CYAN_IMAGE_H
 
 #include <cyan/color/color.h>
-#include <cyan/marker.h>
+#include <cyan/image/marker.h>
 
 typedef struct {
 	int rows ; 

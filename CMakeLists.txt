@@ -70,17 +70,17 @@ endif()
 
 file( GLOB src "src/*.c"  )
 file( GLOB hdr "include/*.h"  )
-file( GLOB hdr_algebra "include/algebra/*.h"  )
-file( GLOB hdr_vision  "include/vision/*.h"  )
 file( GLOB hdr_image   "include/image/*.h"  )
-file( GLOB hdr_structs "include/structs/*.h"  )
+file( GLOB hdr_color   "include/color/*.h"  )
+file( GLOB hdr_vision  "include/vision/*.h"  )
+file( GLOB hdr_3dmodel "include/vision/*.h"  )
 
 ### Targets
 
 add_library( "cyan" SHARED ${src} ${hdr} ) 
 
 set_target_properties(cyan PROPERTIES VERSION ${cyan_VERSION_STRING}
-                                         SOVERSION ${cyan_VERSION_MAJOR})
+                                    SOVERSION ${cyan_VERSION_MAJOR})
 
 ### Linking
 
@@ -112,17 +112,17 @@ install( TARGETS "cyan"
 install( FILES ${hdr}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/${name}
 	    COMPONENT main )
-install( FILES ${hdr_algebra}
-	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/algebra${name}
+install( FILES ${hdr_image}
+	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/image/${name}
+	    COMPONENT main )
+install( FILES ${hdr_color}
+	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/color/${name}
 	    COMPONENT main )
 install( FILES ${hdr_vision}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/vision/${name}
 	    COMPONENT main )
-install( FILES ${hdr_image}
-	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/image/${name}
-	    COMPONENT main )
-install( FILES ${hdr_structs}
-	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/structs/${name}
+install( FILES ${hdr_3dmodel}
+	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/3dmodel/${name}
 	    COMPONENT main )
 
 # Regression tests
