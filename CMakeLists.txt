@@ -41,9 +41,9 @@ option(ENABLE_tirpc "Use the tirpc library for file saving/loading" ON)
 if (ENABLE_tirpc)
     find_package(tirpc)
     if (LIBTIRPC_FOUND)
-        set ( HAVE_TIRPC 1)
+        set ( HAVE_LIBTIRPC 1)
     else()
-        set ( HAVE_TIRPC 0)
+        set ( HAVE_LIBTIRPC 0)
         message( FATAL_ERROR "Cannot find tirpc lib.")
     endif()
 else()
@@ -127,6 +127,6 @@ install( FILES ${hdr_3dmodel}
 
 # Regression tests
 
-enable_testing()
-add_subdirectory(test)
+#enable_testing()
+#add_subdirectory(test)
 

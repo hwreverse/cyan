@@ -1,6 +1,6 @@
 #ifndef CYAN_H
 #define CYAN_H
 
-#include <image.h>
+#include <image/image.h>
 
 #endif

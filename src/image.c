@@ -23,22 +23,15 @@ image_t* image_new(int cols, int rows) {
 		free(tmp);
 		return NULL;
 	}
-	tmp->data_size = (size_t) 0;
-	tmp->data = (void *) NULL;
-	tmp->nb_markers = 0;
-	tmp->markers = (marker_t *) NULL;
+	tmp->pixel_data_size = (size_t) 0;
+	tmp->pixel_data = (void *) NULL;
 	return tmp;
 }
 
 void image_free(image_t * img) {
-	if (img->data != (void *) NULL) {
-		free(img->data);
-		img->data_size = 0;
-	}
-	if (img->markers != (marker_t *) NULL) {
-		free(img->markers);
-		img->nb_markers = 0;
-		img->tab_marker_size = 0;
+	if (img->pixel_data != (void *) NULL) {
+		free(img->pixel_data);
+		img->pixel_data_size = 0;
 	}
 	if (img->X != (double *) NULL) {
 		free(img->X);
@@ -59,21 +52,21 @@ int image_allocate_data_default(image_t * img, size_t size, void *data_array) {
 			"image_allocate_data_default: image is a NULL pointer\n");
 		return -1;
 	}
-	if (img->data != (void *) NULL) {
+	if (img->pixel_data != (void *) NULL) {
 		fprintf(stderr,
-			"image_allocate_data_default : img->data is not NULL \n");
+			"image_allocate_data_default : img->pixel_data is not NULL \n");
 		return -1;
 	}
-	img->data_size = size;
-	img->data = (void *) malloc(img->rows * img->cols * size);
-	if (img->data == NULL) {
+	img->pixel_data_size = size;
+	img->pixel_data = (void *) malloc(img->rows * img->cols * size);
+	if (img->pixel_data == NULL) {
 		fprintf(stderr,
 			"image_allocate_data_default : data allocation error \n");
-		img->data_size = 0;
+		img->pixel_data_size = 0;
 		return 0;
 	}
 	for (i = 0; i < img->rows * img->cols; i++) {
-		memcpy(img->data + i * size, data_array, size);
+		memcpy(img->pixel_data + i * size, data_array, size);
 	}
 	return i;
 }
@@ -85,17 +78,17 @@ int image_allocate_data_fct(image_t * img, size_t size, int (*fill_fct) (image_t
 			"image_allocate_data_fct: image is a NULL pointer\n");
 		return -1;
 	}
-	if (img->data != (void *) NULL) {
+	if (img->pixel_data != (void *) NULL) {
 		fprintf(stderr,
-			"image_allocate_data_fct : img->data is not NULL \n");
+			"image_allocate_data_fct : img->pixel_data is not NULL \n");
 		return -1;
 	}
-	img->data_size = size;
-	img->data = (void *) malloc(img->rows * img->cols * size);
-	if (img->data == NULL) {
+	img->pixel_data_size = size;
+	img->pixel_data = (void *) malloc(img->rows * img->cols * size);
+	if (img->pixel_data == NULL) {
 		fprintf(stderr,
 			"image_allocate_data_fct : data allocation error \n");
-		img->data_size = 0;
+		img->pixel_data_size = 0;
 		return 0;
 	}
 	ret = 0;
@@ -106,25 +99,24 @@ int image_allocate_data_fct(image_t * img, size_t size, int (*fill_fct) (image_t
 	return ret;
 }
 
-
 int image_import_data(image_t * img, size_t data_size, void *data) {
 	if (img == (image_t *) NULL) {
 		fprintf(stderr,
 			"image_import_data: image is a NULL pointer\n");
 		return -1;
 	}
-	if (img->data != (void *) NULL) {
+	if (img->pixel_data != (void *) NULL) {
 		fprintf(stderr,
-			"image_import_data : img->data is not NULL \n");
+			"image_import_data : img->pixel_data is not NULL \n");
 		return -1;
 	}
-	img->data_size = data_size;
-	memcpy(img->data, data, img->cols * img->rows * data_size);
+	img->pixel_data_size = data_size;
+	memcpy(img->pixel_data, data, img->cols * img->rows * data_size);
 	return img->cols * img->rows;
 }
 
 void *image_get_data_pointer(image_t * img, int i, int j) {
-	return img->data + (i + j * img->cols) * img->data_size;
+	return img->pixel_data + (i + j * img->cols) * img->pixel_data_size;
 }
 
 image_t *image_clone(image_t * img) {
@@ -140,108 +132,9 @@ image_t *image_clone(image_t * img) {
 	    memcpy(clone->X, img->X, img->rows * img->cols * sizeof(double));
 	    memcpy(clone->Z, img->Z, img->rows * img->cols * sizeof(double));
     }
-    if (img->data != (void *) NULL) {
-		image_import_data(clone, img->data_size, img->data);
-	}
-	if (img->nb_markers != 0) {
-		clone->nb_markers = img->nb_markers;
-		clone->tab_marker_size = img->nb_markers;
-		clone->markers =
-		    (marker_t *) malloc(img->nb_markers *
-					sizeof(marker_t));
+    if (img->pixel_data != (void *) NULL) {
+		image_import_data(clone, img->pixel_data_size, img->pixel_data);
 	}
 	return clone;
 }
 
-int image_add_marker(image_t * img, marker_t m) {
-	marker_t *tmp;
-	if (img->nb_markers == img->tab_marker_size) {
-		tmp =
-		    (marker_t *) malloc((img->tab_marker_size + 10) *
-					sizeof(marker_t));
-		if (img->markers != (marker_t *) NULL) {
-			memcpy(tmp, img->markers,
-			       img->tab_marker_size * sizeof(marker_t));
-			free(img->markers);
-		}
-		img->markers = tmp;
-		img->tab_marker_size += 10;
-	}
-	img->markers[img->nb_markers].u = m.u;
-	img->markers[img->nb_markers].v = m.v;
-	img->nb_markers++;
-	return 1;
-}
-
-int image_add_marker_uv(image_t * img, double u, double v) {
-	marker_t *tmp;
-	if (img->nb_markers == img->tab_marker_size) {
-		tmp =
-		    (marker_t *) malloc((img->tab_marker_size + 10) *
-					sizeof(marker_t));
-		if (img->markers != (marker_t *) NULL) {
-			memcpy(tmp, img->markers,
-			       img->tab_marker_size * sizeof(marker_t));
-			free(img->markers);
-		}
-		img->markers = tmp;
-		img->tab_marker_size += 10;
-	}
-	img->markers[img->nb_markers].u = u;
-	img->markers[img->nb_markers].v = v;
-	img->nb_markers += 1;
-	return 1;
-}
-
-int image_del_marker(image_t * img, int position) {
-	if ((img->nb_markers <= position) || (position < 0)) {
-		fprintf(stderr, "del_marker: invalid position\n");
-		return 0;
-	}
-	if (position != img->nb_markers - 1) {
-		img->markers[position].u =
-		    img->markers[img->nb_markers - 1].u;
-		img->markers[position].v =
-		    img->markers[img->nb_markers - 1].v;
-	}
-	img->nb_markers -= 1;
-	return 1;
-}
-
-int image_print_all_markers( image_t* img, int size, double X, double Y, double Z ) {
-    int i ;
-    int j ;
-    int u,v ;
-    int count ;
-    count = 0 ;
-    if ( img->monochrome) {
-        for (i=0; i<img->nb_markers; i++) {
-            u = (int) img->markers[i].u ;
-            v = (int) img->markers[i].v ;
-            if ((u>size) && (u<img->cols-size) && (v>size) && (v<img->rows-size)) {
-                for (j=-size; j<=size;j++ ) {
-                    img->Y[v*img->cols+(u+j)] = Y ;
-                    img->Y[(v+j)*img->cols+u] = Y ;
-                }
-                count++ ;
-            }
-        }
-    } else {
-        for (i=0; i<img->nb_markers; i++) {
-            u = (int) img->markers[i].u ;
-            v = (int) img->markers[i].v ;
-            if ((u>size) && (u<img->cols-size) && (v>size) && (v<img->rows-size)) {
-                for (j=-size; j<=size;j++ ) {
-                    img->X[v*img->cols+(u+j)] = X ;
-                    img->Y[v*img->cols+(u+j)] = Y ;
-                    img->Z[v*img->cols+(u+j)] = Z ;
-                    img->X[(v+j)*img->cols+u] = X ;
-                    img->Y[(v+j)*img->cols+u] = Y ;
-                    img->Z[(v+j)*img->cols+u] = Z ;
-                }
-                count++ ;
-            }
-        }
-    }
-    return count ;
-}
