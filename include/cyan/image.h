@@ -2,6 +2,7 @@
 #define CYAN_IMAGE_H
 
 #include <cyan/color/color.h>
+#include <cyan/marker.h>
 
 typedef struct {
 

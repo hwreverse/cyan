@@ -1,7 +1,7 @@
 #ifndef CYAN_COLOR_H
 #define CYAN_COLOR_H
 
-enum {
+enum cyan_colorspace {
     CYAN_XYZ        =0,
     CYAN_xyY        =1,
     CYAN_Lab        =2,
@@ -10,9 +10,9 @@ enum {
     CYAN_LCHuv      =5,
     CYAN_RGB        =6,
     CYAN_spectrum   =7
-} cyan_colorspace ;
+} ;
 
-enum {
+enum cyan_refwhite {
     CYAN_A      =0,
     CYAN_B      =1,
     CYAN_C      =2,
@@ -24,9 +24,9 @@ enum {
     CYAN_F2     =8,
     CYAN_F7     =9,
     CYAN_F11    =10,
-} cyan_refwhite ;
+} ;
 
-enum {
+enum cyan_rgb_workspace {
     CYAN_RGB_ADOBE_1998      =0,
     CYAN_RGB_APPLE           =1,
     CYAN_RGB_BEST            =2,
@@ -43,7 +43,7 @@ enum {
     CYAN_RGB_SMPTE_C         =13,
     CYAN_RGB_sRGB            =14,
     CYAN_RGB_WIDE_GAMUT      =15
-} cyan_rgb_workspace ;
+} ;
 
 double cyan_refwhite_xyz[11][3] = { { 1.09850 , 1.00000 , 0.35585 },    // CYAN_A
                                     { 0.99072 , 1.00000 , 0.85223 },    // CYAN_B
@@ -57,8 +57,8 @@ double cyan_refwhite_xyz[11][3] = { { 1.09850 , 1.00000 , 0.35585 },    // CYAN_
                                     { 0.95041 , 1.00000 , 1.08747 },    // CYAN_F7
                                     { 1.00962 , 1.00000 , 0.64350 } };  // CYAN_F11
 
-void RGB_to_XYZ( enum cyan_rgb_worskpace RGB_space, double R, double G, double B, enum cyan_refwhite w, double* X, double* Y, double* Z ) ;  // TODO
-void XYZ_to_RGB( enum cyan_refwhite w, double X, double Y, double Z, enum cyan_rgb_workspage RGB_space, double* R, double* G, double* B ) ;  // TODO
+void RGB_to_XYZ( enum cyan_rgb_workspace RGB_space, double R, double G, double B, enum cyan_refwhite w, double* X, double* Y, double* Z ) ;  // TODO
+void XYZ_to_RGB( enum cyan_refwhite w, double X, double Y, double Z, enum cyan_rgb_workspace RGB_space, double* R, double* G, double* B ) ;  // TODO
 
 void xyY_to_XYZ() ;      // TODO
 void XYZ_to_xyY() ;      // TODO

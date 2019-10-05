@@ -45,13 +45,13 @@ void image_free(image_t * img) {
 		img->tab_marker_size = 0;
 	}
 	if (img->X != (double *) NULL) {
-		free(img->L);
+		free(img->X);
 	}
 	if (img->Y != (double *) NULL) {
-		free(img->a);
+		free(img->Y);
 	}
 	if (img->Z != (double *) NULL) {
-		free(img->b);
+		free(img->Z);
 	}
 	free(img);
 }
@@ -219,8 +219,6 @@ int image_print_all_markers( image_t* img, int size, double X, double Y, double 
     int count ;
     count = 0 ;
     if ( img->monochrome) {
-
-    } else {
         for (i=0; i<img->nb_markers; i++) {
             u = (int) img->markers[i].u ;
             v = (int) img->markers[i].v ;
