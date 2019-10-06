@@ -1,6 +1,8 @@
 #ifndef CYAN_COLOR_H
 #define CYAN_COLOR_H
 
+#include <stddef.h>
+
 enum cyan_colorspace {
     CYAN_XYZ        =0,
     CYAN_xyY        =1,
@@ -73,6 +75,8 @@ void Luv_to_XYZ() ;      // TODO
 void XYZ_to_Luv() ;      // TODO
 
 void spectrum_to_XYZ() ;    // TODO
-void XYZ_to_spectrum() ;    // TODO
+void XYZ_to_spectrum() ;    // TODO 
+
+void rgb_get_name( enum cyan_rgb_workspace rgb, char* str, size_t str_size ) ;
 
 #endif
