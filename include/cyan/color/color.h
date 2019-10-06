@@ -49,7 +49,7 @@ enum cyan_rgb_workspace {
 
 // ---------------------------------------------------------------------------
 
-// All colorspace conversions are made for
+// All RGB colorspace conversions are made from/to
 // D_50 XYZ space
 
 void RGB_to_XYZ( enum cyan_rgb_workspace RGB_space, 
