@@ -127,6 +127,6 @@ install( FILES ${hdr_3dmodel}
 
 # Regression tests
 
-#enable_testing()
-#add_subdirectory(test)
+enable_testing()
+add_subdirectory(test)
 

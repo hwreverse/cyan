@@ -1,2 +1,2 @@
-add_subdirectory( markers ) 
+add_subdirectory( image ) 
 
