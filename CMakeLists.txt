@@ -34,13 +34,13 @@ endforeach()
 
 ### Options ###
 
-option(ENABLE_tirpc "Use the tirpc library for file saving/loading" ON)
+option(ENABLE_TIRPC "Use the tirpc library for file saving/loading" ON)
 option(BUILD_TOOLS  "Build and install cyan tools" ON)
-option(BUILD_TEST   "Build cyan tests" ON)
+option(BUILD_TEST   "Build cyan tests" OFF)
 
 ### Search for tirpc
 
-if (ENABLE_tirpc)
+if (ENABLE_TIRPC)
     find_package(tirpc)
     if (LIBTIRPC_FOUND)
         set ( HAVE_LIBTIRPC 1)
@@ -140,3 +140,14 @@ if (BUILD_TEST)
     add_subdirectory(test)
 endif()
 
+### Pretty Display :
+
+MESSAGE(STATUS "*********************************************************")
+MESSAGE(STATUS "")
+MESSAGE(STATUS "Build type:        " ${CMAKE_BUILD_TYPE})
+MESSAGE(STATUS "")
+MESSAGE(STATUS "ENABLE_TIRPC:      " ${ENABLE_tirpc})
+MESSAGE(STATUS "BUILD_TOOLS:       " ${BUILD_TOOLS})
+MESSAGE(STATUS "BUILD_TEST:        " ${BUILD_TEST})
+MESSAGE(STATUS "")
+MESSAGE(STATUS "*********************************************************")
