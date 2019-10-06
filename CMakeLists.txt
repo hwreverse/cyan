@@ -55,8 +55,8 @@ endif()
 
 ### Config File
 
-configure_file ( "${PROJECT_SOURCE_DIR}/cyan_config.h.in"
-		         "${PROJECT_SOURCE_DIR}/include/cyan/cyan_config.h" )
+configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
+		         "${PROJECT_SOURCE_DIR}/include/cyan/config/cyan.h" )
 
 ### Set include directories 
         
@@ -70,16 +70,17 @@ endif()
 
 ### File lists
 
-file( GLOB src "src/*.c"  )
-file( GLOB hdr "include/*.h"  )
-file( GLOB hdr_image   "include/image/*.h"  )
-file( GLOB hdr_color   "include/color/*.h"  )
-file( GLOB hdr_vision  "include/vision/*.h"  )
-file( GLOB hdr_3dmodel "include/vision/*.h"  )
+file( GLOB src         "src/*.c"  )
+file( GLOB hdr         "include/cyan/*.h"  )
+file( GLOB hdr_image   "include/cyan/image/*.h"  )
+file( GLOB hdr_color   "include/cyan/color/*.h"  )
+file( GLOB hdr_vision  "include/cyan/vision/*.h"  )
+file( GLOB hdr_3dmodel "include/cyan/3dmodel/*.h"  )
+file( GLOB hdr_config  "include/cyan/config/*.h"  )
 
 ### Targets
 
-add_library( "cyan" SHARED ${src} ${hdr} ) 
+add_library( "cyan" SHARED ${src} ) 
 
 set_target_properties(cyan PROPERTIES VERSION ${cyan_VERSION_STRING}
                                     SOVERSION ${cyan_VERSION_MAJOR})
@@ -109,22 +110,30 @@ install ( FILES "${PROJECT_BINARY_DIR}/cyanConfigVersion.cmake"
 install( TARGETS "cyan"
 	    RUNTIME DESTINATION ${INSTALL_BIN_PATH}  COMPONENT main
 	    LIBRARY DESTINATION ${INSTALL_LIB_PATH}  COMPONENT main
-            ARCHIVE DESTINATION ${INSTALL_AR_PATH}   COMPONENT main )
+        ARCHIVE DESTINATION ${INSTALL_AR_PATH}   COMPONENT main )
 
 install( FILES ${hdr}
-	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/${name}
-	    COMPONENT main )
+	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/${name} 
+        COMPONENT main )
+
 install( FILES ${hdr_image}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/image/${name}
 	    COMPONENT main )
+
 install( FILES ${hdr_color}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/color/${name}
 	    COMPONENT main )
+
 install( FILES ${hdr_vision}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/vision/${name}
 	    COMPONENT main )
+
 install( FILES ${hdr_3dmodel}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/3dmodel/${name}
+	    COMPONENT main )
+
+install( FILES ${hdr_config}
+	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/config/${name}
 	    COMPONENT main )
 
 # Build Tools
@@ -146,7 +155,7 @@ MESSAGE(STATUS "*********************************************************")
 MESSAGE(STATUS "")
 MESSAGE(STATUS "Build type:        " ${CMAKE_BUILD_TYPE})
 MESSAGE(STATUS "")
-MESSAGE(STATUS "ENABLE_TIRPC:      " ${ENABLE_tirpc})
+MESSAGE(STATUS "ENABLE_TIRPC:      " ${ENABLE_TIRPC})
 MESSAGE(STATUS "BUILD_TOOLS:       " ${BUILD_TOOLS})
 MESSAGE(STATUS "BUILD_TEST:        " ${BUILD_TEST})
 MESSAGE(STATUS "")

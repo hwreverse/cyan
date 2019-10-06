@@ -1,7 +1,7 @@
 #ifndef CYAN_IMAGE_H
 #define CYAN_IMAGE_H
 
-#include <cyan/cyan_config.h>
+#include <cyan/config/cyan.h>
 #include <cyan/color/color.h>
 
 typedef struct {
