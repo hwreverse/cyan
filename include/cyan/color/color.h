@@ -45,20 +45,11 @@ enum cyan_rgb_workspace {
     CYAN_RGB_WIDE_GAMUT      =15
 } ;
 
-double cyan_refwhite_xyz[11][3] = { { 1.09850 , 1.00000 , 0.35585 },    // CYAN_A
-                                    { 0.99072 , 1.00000 , 0.85223 },    // CYAN_B
-                                    { 0.98074 , 1.00000 , 1.18232 },    // CYAN_C
-                                    { 0.96422 , 1.00000 , 0.82521 },    // CYAN_D50
-                                    { 0.95682 , 1.00000 , 0.92149 },    // CYAN_D55
-                                    { 0.95047 , 1.00000 , 1.08883 },    // CYAN_D65
-                                    { 0.94972 , 1.00000 , 1.22638 },    // CYAN_D75
-                                    { 1.00000 , 1.00000 , 1.00000 },    // CYAN_E
-                                    { 0.99186 , 1.00000 , 0.67393 },    // CYAN_F2
-                                    { 0.95041 , 1.00000 , 1.08747 },    // CYAN_F7
-                                    { 1.00962 , 1.00000 , 0.64350 } };  // CYAN_F11
+// All colorspace conversions are made for
+// D_50 XYZ space
 
-void RGB_to_XYZ( enum cyan_rgb_workspace RGB_space, double R, double G, double B, enum cyan_refwhite w, double* X, double* Y, double* Z ) ;  // TODO
-void XYZ_to_RGB( enum cyan_refwhite w, double X, double Y, double Z, enum cyan_rgb_workspace RGB_space, double* R, double* G, double* B ) ;  // TODO
+void RGB_to_XYZ( enum cyan_rgb_workspace RGB_space, double R, double G, double B, double* X, double* Y, double* Z ) ;  // TODO
+void XYZ_to_XYZ( enum cyan_rgb_workspace RGB_space, double X, double Y, double Z, double* R, double* G, double* B ) ;  // TODO
 
 void xyY_to_XYZ() ;      // TODO
 void XYZ_to_xyY() ;      // TODO

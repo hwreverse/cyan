@@ -70,7 +70,10 @@ endif()
 
 ### File lists
 
-file( GLOB src         "src/*.c"  )
+file( GLOB src  "src/*.c"  
+                "src/color/*.c")
+
+
 file( GLOB hdr         "include/cyan/*.h"  )
 file( GLOB hdr_image   "include/cyan/image/*.h"  )
 file( GLOB hdr_color   "include/cyan/color/*.h"  )
