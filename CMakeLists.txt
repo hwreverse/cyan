@@ -35,6 +35,8 @@ endforeach()
 ### Options ###
 
 option(ENABLE_tirpc "Use the tirpc library for file saving/loading" ON)
+option(BUILD_TOOLS  "Build and install cyan tools" ON)
+option(BUILD_TEST   "Build cyan tests" ON)
 
 ### Search for tirpc
 
@@ -53,8 +55,8 @@ endif()
 
 ### Config File
 
-configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
-		         "${PROJECT_SOURCE_DIR}/src/config.h" )
+configure_file ( "${PROJECT_SOURCE_DIR}/cyan_config.h.in"
+		         "${PROJECT_SOURCE_DIR}/include/cyan/cyan_config.h" )
 
 ### Set include directories 
         
@@ -125,8 +127,16 @@ install( FILES ${hdr_3dmodel}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/3dmodel/${name}
 	    COMPONENT main )
 
+# Build Tools
+
+if (BUILD_TOOLS)
+    add_subdirectory(tools)
+endif()
+
 # Regression tests
 
-enable_testing()
-add_subdirectory(test)
+if (BUILD_TEST)
+    enable_testing()
+    add_subdirectory(test)
+endif()
 

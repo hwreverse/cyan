@@ -11,4 +11,4 @@ CMakeFile
 *.lo
 
 build/*
-src/config.h
+include/cyan/cyan_config.h
