@@ -47,11 +47,17 @@ enum cyan_rgb_workspace {
     CYAN_RGB_WIDE_GAMUT      =15
 } ;
 
+// ---------------------------------------------------------------------------
+
 // All colorspace conversions are made for
 // D_50 XYZ space
 
-void RGB_to_XYZ( enum cyan_rgb_workspace RGB_space, double R, double G, double B, double* X, double* Y, double* Z ) ;  // TODO
-void XYZ_to_XYZ( enum cyan_rgb_workspace RGB_space, double X, double Y, double Z, double* R, double* G, double* B ) ;  // TODO
+void RGB_to_XYZ( enum cyan_rgb_workspace RGB_space, 
+                    double R, double G, double B, 
+                    double* X, double* Y, double* Z ) ; 
+void XYZ_to_RGB( enum cyan_rgb_workspace RGB_space, 
+                    double X, double Y, double Z, 
+                    double* R, double* G, double* B ) ;  // TODO
 
 void xyY_to_XYZ() ;      // TODO
 void XYZ_to_xyY() ;      // TODO
@@ -77,6 +83,11 @@ void XYZ_to_Luv() ;      // TODO
 void spectrum_to_XYZ() ;    // TODO
 void XYZ_to_spectrum() ;    // TODO 
 
+// ---------------------------------------------------------------------------
+
+void refwhite_get_xyz( enum cyan_refwhite w, double* X, double* Y,double* Z) ;
+
 void rgb_get_name( enum cyan_rgb_workspace rgb, char* str, size_t str_size ) ;
+void refwhite_get_name( enum cyan_refwhite w  , char* str, size_t str_size ) ;
 
 #endif
