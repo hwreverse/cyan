@@ -35,9 +35,10 @@ endforeach()
 ### Set include directories 
         
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
-	                 "${CMAKE_CURRENT_BINARY_DIR}" 
-                      )
-
+	                 "${CMAKE_CURRENT_BINARY_DIR}" )
+		 if(PNG_FOUND)
+		 include_directories("${PNG_INCLUDE_DIRS}")
+		endif()
 ### File lists
 
 file( GLOB src "src/*.c"  )
@@ -49,6 +50,7 @@ add_executable( "cyan_imageviewer" ${src} ${hdr} )
 ### Linking
 
 target_link_libraries( "cyan_imageviewer" "m" )
+target_link_libraries( "cyan_imageviewer" ${PNG_LIBRARIES} )
 target_link_libraries( "cyan_imageviewer" "cyan" )
 
 ### Install 

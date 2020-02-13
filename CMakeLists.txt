@@ -38,6 +38,10 @@ option(ENABLE_TIRPC "Use the tirpc library for file saving/loading" ON)
 option(BUILD_TOOLS  "Build and install cyan tools" ON)
 option(BUILD_TEST   "Build cyan tests" ON)
 
+###Search for libpng
+
+find_package(PNG)
+
 ### Search for tirpc
 
 if (ENABLE_TIRPC)
@@ -65,7 +69,13 @@ include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
                       )
 
 if (LIBNETPBM_FOUND)
-    include_directories( "${LIBNETPBM_INCLUDE_DIR}" )
+	include_directories( "${LIBNETPBM_INCLUDE_DIR}" )
+endif()
+
+if (PNG_FOUND)
+	include_directories( "${PNG_INCLUDE_DIRS}")
+else()
+	message("libpng couldn't be found.")
 endif()
 
 ### File lists
@@ -94,6 +104,10 @@ target_link_libraries( "cyan" "m" )
 if (LIBNETPBM_FOUND)
     target_link_libraries( "cyan" ${LIBTIRPC_LIBRARY} )
 endif()
+if (PNG_FOUND)
+	target_link_libraries( "cyan" ${PNG_LIBRARIES})
+endif()
+
 
 ### Cmake file
 

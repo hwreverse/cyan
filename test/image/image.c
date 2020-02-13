@@ -13,10 +13,10 @@ int main( int argc, char** argv, char* envv ) {
             fprintf(stderr,"image allocation failed\n") ;
             return -2 ;
         }
-        for ( j=0; j<image->rows; j++ ) {
-            for ( i=0; i<image->cols; i++ ) {
+        for ( i=0; i<image->rows; i++ ) {
+            for ( j=0; j<image->cols; j++ ) {
                 int coord ;
-                coord = i+j*image->cols ;
+                coord = j+i*image->cols ;
                 image->X[coord] = 0.0;
                 image->Y[coord] = 1.0 ;
                 image->Z[coord] = 0.0 ;

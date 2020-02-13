@@ -36,6 +36,7 @@ void image_apply_fct ( image_t*,
             			void* context ) ;
 
 int image_save(image_t* img, char* filename ) ;
+int image_save_ppm(image_t* img, char* filename ) ;
 image_t* image_load(char* filename , int* result ) ;
 
 #endif

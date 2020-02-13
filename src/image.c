@@ -138,3 +138,26 @@ image_t *image_clone(image_t * img) {
 	return clone;
 }
 
+int image_save_ppm(image_t * img, char *filename) {
+	FILE *f = fopen(filename, "wb");
+	if (f) { /*write header to the file*/
+		int i,j, coord;
+		for(i = 0; i< img->rows; i++){
+			for(j = 0; j < img->cols; j++){
+				coord = j + i * img->cols;
+				fwrite(&(img->X[coord]), sizeof(double), 1, f);
+				fwrite(&(img->Y[coord]), sizeof(double), 1, f);
+				fwrite(&(img->Z[coord]), sizeof(double), 1, f);
+			}
+		}
+		
+		//fwrite(img->pixel_data, img->rows * img->cols * 3, 1, f); // data
+		fclose(f);
+		fprintf(stderr, "file  %s saved \n", filename);
+		return 0;
+	} else {
+		fprintf(stderr, "ERROR saving `%s'\n", filename);
+		return -1;
+	}
+}
+
