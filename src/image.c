@@ -141,6 +141,9 @@ image_t *image_clone(image_t * img) {
 int image_save_ppm(image_t * img, char *filename) {
 	FILE *f = fopen(filename, "wb");
 	if (f) { /*write header to the file*/
+
+		fprintf(f, "P6 %d %d 1\n", img->cols, img->rows);
+		//fprintf(f, "# andelbrot set, center = %.16f ; %.16f; radius = %.16f\n", creal(center), cimag(center), radius  ); 
 		int i,j, coord;
 		for(i = 0; i< img->rows; i++){
 			for(j = 0; j < img->cols; j++){
@@ -153,7 +156,7 @@ int image_save_ppm(image_t * img, char *filename) {
 		
 		//fwrite(img->pixel_data, img->rows * img->cols * 3, 1, f); // data
 		fclose(f);
-		fprintf(stderr, "file  %s saved \n", filename);
+		fprintf(stdout, "file  %s saved \n", filename);
 		return 0;
 	} else {
 		fprintf(stderr, "ERROR saving `%s'\n", filename);
