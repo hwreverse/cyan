@@ -36,7 +36,7 @@ endforeach()
 
 option(ENABLE_TIRPC "Use the tirpc library for file saving/loading" ON)
 option(BUILD_TOOLS  "Build and install cyan tools" ON)
-option(BUILD_TEST   "Build cyan tests" OFF)
+option(BUILD_TEST   "Build cyan tests" ON)
 
 ### Search for tirpc
 
