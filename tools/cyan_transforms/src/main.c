@@ -33,11 +33,25 @@ int main( int argc, char** argv, char* envv ) {
 		fprintf(stderr,"image allocation failed\n") ;
 		return -1 ;
 	}	
-	grey_image = color2grey(image);
+//	grey_image = color2grey(image);
 
-	result = image_save_ppm( image, argv[1] ) ; 
+//	result = image_save_ppm( grey_image, argv[1] ) ; 
 
-	fprintf(stdout, "image monochrome : %d\n", grey_image->monochrome);
+	complex_polar_t array[8];
+	complex_polar_t buffer[8];
+
+	for(i=0; i < 8; i++){
+		array[i].phase = 0.0f;
+		array[i].power = 0.0f;
+	}
+	//array[2].power = 2.0;
+	//array[3].power = 3.0;
+	//array[4].power = 4.0;
+	FFT_1D(array, buffer, 3); 
+	for(i=0; i < 8; i++)
+		fprintf(stdout, "array fft : power : %f, phase : %f \n", array[i].power, array[i].phase);
+
+	//fprintf(stdout, "image monochrome : %d\n", grey_image->monochrome);
 	if (result != 0) {
 		fprintf(stderr, "cannot save file\n") ;
 		return -1 ;
@@ -46,7 +60,7 @@ int main( int argc, char** argv, char* envv ) {
 	image_free( image) ;
 
 	fclose(fp);
-	
+
 	return 0 ;
 }
 
