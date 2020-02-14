@@ -9,6 +9,8 @@ CMakeFile
 *.o
 *.la
 *.lo
+*.make
+*.cmake
 
 build/*
 include/cyan/cyan_config.h
