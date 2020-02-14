@@ -7,12 +7,14 @@
 #include <cyan/image/image.h>
 #include <cyan/image/load_png.h>
 
+#include "transforms.h"
 
 int main( int argc, char** argv, char* envv ) {
 
 	int i, j ;
 	int result ;
-	image_t* image ; 
+	image_t * image ;	
+	image_t * grey_image;
 	FILE * fp;
 
 	fp = fopen("lena.png", "r");
@@ -30,9 +32,11 @@ int main( int argc, char** argv, char* envv ) {
 	if ( image == NULL ) {
 		fprintf(stderr,"image allocation failed\n") ;
 		return -1 ;
-	}
-	result = image_save_ppm( image, argv[1] ) ; 
+	}	
+	grey_image = color2grey(image);
 
+	result = image_save_ppm( grey_image, argv[1] ) ; 
+	fprintf(stdout, "image monochrome : %d\n", grey_image->monochrome);
 	if (result != 0) {
 		fprintf(stderr, "cannot save file\n") ;
 		return -1 ;
@@ -41,8 +45,8 @@ int main( int argc, char** argv, char* envv ) {
 	image_free( image) ;
 
 	fclose(fp);
-
-    return 0 ;
+	
+	return 0 ;
 }
 
 

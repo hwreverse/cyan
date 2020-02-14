@@ -124,10 +124,15 @@ image_t *image_clone(image_t * img) {
 	clone = image_new(img->cols, img->rows);
     clone->monochrome = img->monochrome ;
     clone->illuminant = img->illuminant ;
+    fprintf(stdout, "Inside image_clone().\n");
     memcpy(clone->Y, img->Y, img->rows * img->cols * sizeof(double));
 	if ( img->monochrome ) {
-        clone->X = NULL ;
-        clone->Z = NULL ;
+		//HOTFIX
+		//There should be a better way to do this (i.e, without allocating a
+		//whole array of zeros which should not been used 
+        	//Assigning a NULL pointer to either of these causes segmentation fault upon allocation after exiting image_clone()
+	clone->X = calloc(img->rows*img->cols, sizeof(double)) ;
+        clone->Z = clone->X;
     } else {
 	    memcpy(clone->X, img->X, img->rows * img->cols * sizeof(double));
 	    memcpy(clone->Z, img->Z, img->rows * img->cols * sizeof(double));
@@ -135,6 +140,7 @@ image_t *image_clone(image_t * img) {
     if (img->pixel_data != (void *) NULL) {
 		image_import_data(clone, img->pixel_data_size, img->pixel_data);
 	}
+    fprintf(stdout, "About to exit image_clone().\n");
 	return clone;
 }
 
@@ -150,6 +156,8 @@ int image_save_ppm(image_t * img, char *filename) {
 		for(i = 0; i< img->rows; i++){
 			for(j = 0; j < img->cols; j++){
 				coord = j + i * img->cols;
+
+				//TODO : XYZ_to_RGB
 				temp[0] = (int) 255 * img->X[coord];
 				temp[1] = (int) 255 * img->Y[coord];
 				temp[2] = (int) 255 * img->Z[coord];
