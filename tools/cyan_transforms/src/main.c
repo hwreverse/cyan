@@ -35,7 +35,8 @@ int main( int argc, char** argv, char* envv ) {
 	}	
 	grey_image = color2grey(image);
 
-	result = image_save_ppm( grey_image, argv[1] ) ; 
+	result = image_save_ppm( image, argv[1] ) ; 
+
 	fprintf(stdout, "image monochrome : %d\n", grey_image->monochrome);
 	if (result != 0) {
 		fprintf(stderr, "cannot save file\n") ;

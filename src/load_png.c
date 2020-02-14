@@ -70,17 +70,20 @@ image_t* png2image(FILE * fp) {
     printf ("Row bytes = %d\n", rowbytes);
     
 	double R,G,B;
+	int temp[3];
 
        for (i = 0; i < height; i++) {
 	   	for (j = 0; j < width ; j++) {
 			double * couleur = NULL;
 			int coord;
 			coord = j + i*image->cols ;
+	
 			R = rows[i][3*j]/(double) 255 ;
 			G = rows[i][3*j+1]/(double) 255 ;
 			B = rows[i][3*j+2]/ (double) 255 ;
 			
 			RGB_to_XYZ( color_type, R, G, B, &(image->X[coord]), &(image->Y[coord]), &(image->Z[coord]));
+			
 		}  
 	}
 

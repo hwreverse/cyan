@@ -151,19 +151,20 @@ int image_save_ppm(image_t * img, char *filename) {
 		fprintf(f, "P6 %d %d 255\n", img->cols, img->rows);
 		
 		//Filling ppm with data
-		int temp[3];
+		double temp[3];
 		int i,j, coord;
 		for(i = 0; i< img->rows; i++){
 			for(j = 0; j < img->cols; j++){
 				coord = j + i * img->cols;
 
-				//TODO : XYZ_to_RGB
-				temp[0] = (int) 255 * img->X[coord];
-				temp[1] = (int) 255 * img->Y[coord];
-				temp[2] = (int) 255 * img->Z[coord];
-				
-				fprintf(f,"%c%c%c",(char) temp[0], (char) temp[1], (char) temp[2]);
-			}
+				XYZ_to_RGB(CYAN_RGB_BEST, img->X[coord], img->Y[coord], img->Z[coord], &(temp[0]), &(temp[1]), &(temp[2]));	
+			
+				temp[0] *= 255.0f;			
+				temp[1] *= 255.0f;			
+				temp[2] *= 255.0f;	
+			
+				fprintf(f, "%c%c%c", (int) temp[0], (int) temp[1], (int) temp[2]);
+			}	
 		}
 		fclose(f);
 		fprintf(stdout, "file  %s saved \n", filename);
