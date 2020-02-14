@@ -9,37 +9,39 @@
 #include "load_png.h"
 
 
+//Basic program to open a .jpg file through cyan
+
 int main( int argc, char** argv, char* envv ) {
 
-    int i, j ;
-    int result ;
-    image_t* image ; 
-    FILE * fp;
-       
+	int i, j ;
+	int result ;
+	image_t* image ; 
+	FILE * fp;
+
 	fp = fopen("lena.png", "r");
 	if(fp == NULL){	
 		fprintf(stderr, "Couldn't open file.\n Error : %d, (%s)\n", errno, strerror(errno));
-		return -4;
+		return -1;
 	}
 
 
-    if (argc != 2 ) {
-        fprintf(stderr,"Usage : %s output_file.ppm\n", argv[0] ) ;
-       return -1 ;
-    }
-  	image = png2image(fp);
-    if ( image == NULL ) {
-        fprintf(stderr,"image allocation failed\n") ;
-        return -2 ;
-    }
+	if (argc != 2 ) {
+		fprintf(stderr,"Usage : %s output_file.ppm\n", argv[0] ) ;
+		return -1 ;
+	}
+	image = png2image(fp);
+	if ( image == NULL ) {
+		fprintf(stderr,"image allocation failed\n") ;
+		return -1 ;
+	}
 	result = image_save_ppm( image, argv[1] ) ; 
-    
+
 	if (result != 0) {
-        fprintf(stderr, "cannot save file\n") ;
-        return -3 ;
-    }
-    
-    image_free( image) ;
+		fprintf(stderr, "cannot save file\n") ;
+		return -1 ;
+	}
+
+	image_free( image) ;
 
 	fclose(fp);
 
