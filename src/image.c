@@ -140,21 +140,23 @@ image_t *image_clone(image_t * img) {
 
 int image_save_ppm(image_t * img, char *filename) {
 	FILE *f = fopen(filename, "wb");
-	if (f) { /*write header to the file*/
-
-		fprintf(f, "P6 %d %d 1\n", img->cols, img->rows);
-		//fprintf(f, "# andelbrot set, center = %.16f ; %.16f; radius = %.16f\n", creal(center), cimag(center), radius  ); 
+	if (f) { 
+		//Writing ppm file header
+		fprintf(f, "P6 %d %d 255\n", img->cols, img->rows);
+		
+		//Filling ppm with data
+		int temp[3];
 		int i,j, coord;
 		for(i = 0; i< img->rows; i++){
 			for(j = 0; j < img->cols; j++){
 				coord = j + i * img->cols;
-				fwrite(&(img->X[coord]), sizeof(double), 1, f);
-				fwrite(&(img->Y[coord]), sizeof(double), 1, f);
-				fwrite(&(img->Z[coord]), sizeof(double), 1, f);
+				temp[0] = (int) 255 * img->X[coord];
+				temp[1] = (int) 255 * img->Y[coord];
+				temp[2] = (int) 255 * img->Z[coord];
+				
+				fprintf(f,"%c%c%c",(char) temp[0], (char) temp[1], (char) temp[2]);
 			}
 		}
-		
-		//fwrite(img->pixel_data, img->rows * img->cols * 3, 1, f); // data
 		fclose(f);
 		fprintf(stdout, "file  %s saved \n", filename);
 		return 0;
