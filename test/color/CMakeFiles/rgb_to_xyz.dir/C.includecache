@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/sf/Prog/cyan/test/color/rgb_to_xyz.c
+stdio.h
+-
+cyan/color/color.h
+-
+
+include/cyan/color/color.h
+stddef.h
+-
+

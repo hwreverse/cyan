@@ -1,0 +1,1 @@
+/usr/bin/cc   -rdynamic CMakeFiles/image.dir/image.c.o  -o image -Wl,-rpath,/home/sf/Prog/cyan ../../libcyan.so.0.1.1 -lm -lpng -lz 
