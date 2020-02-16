@@ -42,7 +42,7 @@ int main( int argc, char** argv, char* envv ) {
 
 	for(i=0; i < 8; i++){
 		array[i].phase = 0.0f;
-		array[i].power = 0.0f;
+		array[i].power = 1.0f;
 	}
 	//array[2].power = 2.0;
 	//array[3].power = 3.0;

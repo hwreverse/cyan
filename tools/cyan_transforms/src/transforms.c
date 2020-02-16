@@ -39,10 +39,10 @@ complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 	complex_cart_t * f_temp_cart = malloc(sizeof(complex_cart_t));
 	int i;
 	//Rearranging f with the N/2 even elems, then the N/2 odd elems
-	for(i = 0; i< N-1; i++){
-		buffer[i] = f[2*i+1];
+	for(i = 0; i< N/2; i++){
+		buffer[i] = f[2*i + 1]; //to N-2
 		f[i] = f[2*i];
-		f[2*i + 1] = buffer[i];
+		f[N/2 + i] = buffer[i];
 	}
 	//Computing odd and even fft in buffer
 	//stores similarly as f
