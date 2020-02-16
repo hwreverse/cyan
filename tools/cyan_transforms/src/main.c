@@ -42,15 +42,20 @@ int main( int argc, char** argv, char* envv ) {
 
 	for(i=0; i < 8; i++){
 		array[i].phase = 0.0f;
-		array[i].power = 1.0f;
+		array[i].power = 0.0f;
 	}
-	//array[2].power = 2.0;
-	//array[3].power = 3.0;
-	//array[4].power = 4.0;
+	array[2].power = 2.0;
+	array[3].power = 3.0;
+	array[4].power = 4.0;
 	FFT_1D(array, buffer, 3); 
-	for(i=0; i < 8; i++)
+	
+	complex_cart_t fft_array_cart[8];
+	
+	for(i=0; i < 8; i++){
+		polar_to_cart(&(fft_array_cart[i]), array[i] );
 		fprintf(stdout, "array fft : power : %f, phase : %f \n", array[i].power, array[i].phase);
-
+		fprintf(stdout, "array fft : real : %f, im : %f \n", fft_array_cart[i].real, fft_array_cart[i].im);
+	}
 	//fprintf(stdout, "image monochrome : %d\n", grey_image->monochrome);
 	if (result != 0) {
 		fprintf(stderr, "cannot save file\n") ;

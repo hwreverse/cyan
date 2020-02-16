@@ -32,6 +32,7 @@ complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 	
 	complex_polar_t * W_N = unity(1, N);
 	complex_polar_t * W = unity(1, 1);
+	
 	complex_polar_t * temp_polar = unity(1, 1);	
 	complex_cart_t  *temp_cart1= malloc(sizeof(complex_cart_t));
 	complex_cart_t  *temp_cart2= malloc(sizeof(complex_cart_t));
@@ -51,16 +52,17 @@ complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 	int j = 0;
 	for(j = 0; j< N/2; j++)
 	{
-		//Even part
-		mult_complex_polar(temp_polar, *W, buffer[2*j + 1]);
-		polar_to_cart(temp_cart1, *temp_polar);
-		polar_to_cart(temp_cart2, buffer[2*j]);
+		//sorting values part
+		mult_complex_polar(temp_polar, *W, buffer[N/2 + j]);
+		polar_to_cart(temp_cart1, *temp_polar);	//temp_cart 1 i.e W*Y_even
+		polar_to_cart(temp_cart2, buffer[j]);	//temp_cart2 i.e. Y_even
 		
-		add_complex_cart(f_temp_cart, *temp_cart1, *temp_cart2);
+		//Y(j) part
 
+		add_complex_cart(f_temp_cart, *temp_cart1, *temp_cart2);
 		cart_to_polar(&(f[j]), *f_temp_cart);
 			
-		//Odd part
+		//Y(j+N/2) part
 		temp_cart2->real *= (-1.0f);
 		temp_cart2->im *=(-1.0f);
 		
@@ -68,7 +70,12 @@ complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 		cart_to_polar(&(f[j + N/2]),*f_temp_cart );
 		
 		//Updating phase factor
-		mult_complex_polar(W, *W, *W_N);
+		mult_complex_polar(temp_polar, *W, *W_N);
+	
+	}
+	//double normalizer = 1.0f / pow(2.0f, n/2);
+	for (i = 0; i< N; i++){
+		//f[i].power *= 1.0f/sqrt(N);
 	}
 	return f;
 }
@@ -122,7 +129,11 @@ void * assign_complex_polar( complex_polar_t * result, complex_polar_t z){
 
 double  mult_complex_polar( complex_polar_t * result, complex_polar_t z1, complex_polar_t z2){
 	result->phase 	= z1.phase + z2.phase;
-	result->power 	= z1.power * z2.power;
+	
+	if(z1.power > 0.0f && z2.power > 0.0f)
+		result->power 	= z1.power * z2.power;
+	else
+		result->power = 0.0f;
 
 	return result->power;
 }
@@ -146,8 +157,14 @@ double phase_complex_cart( complex_cart_t z){
 }
 
 void * polar_to_cart( complex_cart_t * z_cart, complex_polar_t z_pol){
-	z_cart->real = z_pol.power * cos(z_pol.phase);
-	z_cart->im   = z_pol.power * sin(z_pol.phase);
+	if(z_pol.power > 0.0f){
+		z_cart->real = z_pol.power * cos(z_pol.phase);
+		z_cart->im   = z_pol.power * sin(z_pol.phase);
+	}
+	else{
+		z_cart->real 	= 0.0f;
+		z_cart->im	= 0.0f;
+	}
 }
 void * cart_to_polar( complex_polar_t * z_pol, complex_cart_t z_cart){
 	z_pol->phase = phase_complex_cart( z_cart );
