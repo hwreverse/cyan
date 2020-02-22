@@ -6,8 +6,7 @@
 #include <cyan/color/color.h>
 #include <cyan/image/image.h>
 #include <cyan/image/load_png.h>
-
-#include "transforms.h"
+#include <cyan/image/transforms.h>
 
 complex_polar_t * unity(int k, int N){
 	

@@ -7,40 +7,16 @@
 #include <cyan/color/color.h>
 #include <cyan/image/image.h>
 #include <cyan/image/load_png.h>
+#include <cyan/image/transforms.h>
 
-#include "transforms.h"
+//This unit test  computes the fourier transform of cart_array
+//Then the reverse ft of the array of coefs. obtained
+//The values are taken from the example that can be found on the wikipedia page of the DFT
 
 int main( int argc, char** argv, char* envv ) {
 
 	int i, j ;
-	int result ;
-	image_t * image ;	
-	image_t * grey_image;
-	FILE * fp;
-
-	fp = fopen("lena.png", "r");
-	if(fp == NULL){	
-		fprintf(stderr, "Couldn't open file.\n Error : %d, (%s)\n", errno, strerror(errno));
-		return -1;
-	}
-
-
-	if (argc != 2 ) {
-		fprintf(stderr,"Usage : %s output_file.ppm\n", argv[0] ) ;
-		return -1 ;
-	}
-	image = png2image(fp);
-	if ( image == NULL ) {
-		fprintf(stderr,"image allocation failed\n") ;
-		return -1 ;
-	}	
-//	grey_image = color2grey(image);
-
-//	result = image_save_ppm( grey_image, argv[1] ) ; 
-
 	complex_cart_t cart_array[4];
-	//complex_polar_t array[4];
-	//complex_polar_t buffer[4];
 
 	cart_array[0].real = 1.0f;
 	cart_array[0].im = 0.0f;
@@ -67,15 +43,6 @@ int main( int argc, char** argv, char* envv ) {
 	for(i = 0; i < N; i++){
 		fprintf(stdout, "array reverse : real : %f, im : %f \n", reverse_cart[i].real, reverse_cart[i].im);
 	}
-
-	if (result != 0) {
-		fprintf(stderr, "cannot save file\n") ;
-		return -1 ;
-	}
-
-	image_free( image) ;
-
-	fclose(fp);
 
 	return 0 ;
 }
