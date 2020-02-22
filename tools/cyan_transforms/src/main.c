@@ -70,11 +70,19 @@ int main( int argc, char** argv, char* envv ) {
 	for(i=0; i < 4; i++){
 	
 //		array[i].power *= 1.0f/sqrt((double) 8);
-		polar_to_cart(&(fft_array_cart[i]), fft_polar[i] );
-//		fprintf(stdout, "array fft : power : %f, phase : %f \n", array[i].power, array[i].phase);
+		polar_to_cart(&(fft_array_cart[i]), fft_polar[i] );	
 		fprintf(stdout, "array fft : real : %f, im : %f \n", fft_array_cart[i].real, fft_array_cart[i].im);
 	}
-	//fprintf(stdout, "image monochrome : %d\n", grey_image->monochrome);
+
+	complex_polar_t * reverse_polar;
+	reverse_polar = FFT_1D_reverse( fft_polar, 2);
+	complex_cart_t reverse_cart[4];
+	for(i=0; i<4; i++){
+		polar_to_cart(&(reverse_cart[i]), reverse[i]);
+		fprintf(stdout, "array reverse : real : %f, im : %f \n", reverse_cart[i].real, reverse_cart[i].im);
+
+	}
+
 	if (result != 0) {
 		fprintf(stderr, "cannot save file\n") ;
 		return -1 ;

@@ -24,11 +24,12 @@ complex_polar_t * unity(int k, int N){
 //The function FFT_1D() is implemented as the procedure FFT(A) in the following link
 //http://people.scs.carleton.ca/~maheshwa/courses/5703COMP/16Fall/FFT_Report.pdf
 //FFT_1D computes (and returns in f) the 1D Fast Fourier Transform of the sequence f of 2^n elements (i.e. {f(k)}_{k=0,...,2^n}
+//At this stage complexity is N * lgN in size and computations, it can be made in 2N size
 complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 	
 	int N = pow(2, n);
 	if(buffer == NULL){
-		fprintf(stdout, "FFT_1D : Allocating the buffer.\n");
+		fprintf(stdout, "FFT_1D : Allocating the buffer (of size N : %d).\n", N);
 		buffer = (complex_polar_t *) malloc( N * sizeof(complex_polar_t));
 	}
 	if(n == 0)
@@ -95,6 +96,21 @@ complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 	return buffer;
 }
 
+//Takes as an input fourier_polar, the polar fourier coefficients and computes f_polar the reverse FT of fourier_polar
+//
+complex_cart_t * FFT_1D_reverse( complex_polar_t * fourier_polar, int n){
+	
+	int N = pow(2, n);
+	for(i = 0; i< N; i++){
+//		polar_to_cart(&(f_cart[i]), flipped_f_polar[i]);
+		flip_polar(&(fourier[i]));
+	}
+
+	complex_polar_t * f_polar;
+	f_polar = FFT_1D(fourier, NULL, n);
+
+	return f_polar;
+}
 
 //Returns a grey level copy of color_img
 image_t * color2grey(image_t * color_img){
@@ -151,6 +167,13 @@ double  mult_complex_polar( complex_polar_t * result, complex_polar_t z1, comple
 		result->power = 0.0f;
 
 	return result->power;
+}
+void * flip_cart(complex_cart_t * z){
+	z->real = -(z->real);
+	z->im = -(z->im);
+}
+void * flip_polar(complex_polar_t * z){
+	z->phase = - (z->phase) ;
 }
 void * mult_complex_cart( complex_cart_t * result, complex_cart_t z1, complex_cart_t z2){
 	result->real 	= z1.real *  z2.real 	- z1.im * z2.im;

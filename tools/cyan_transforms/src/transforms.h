@@ -12,6 +12,7 @@ typedef struct s_complex_cart_t{
 }complex_cart_t;
 
 complex_polar_t * FFT_1D( complex_polar_t *, complex_polar_t *, int);
+complex_cart_t * FFT_1D_reverse( complex_polar_t * fourier_polar, int n);
 
 image_t * color2grey(image_t *);
 
@@ -23,6 +24,8 @@ void * assign_complex_polar( complex_polar_t *, complex_polar_t);
 complex_cart_t * add_complex_cart(complex_cart_t * result, complex_cart_t z1, complex_cart_t z2);
 complex_cart_t * substract_complex_cart(complex_cart_t * result, complex_cart_t z1, complex_cart_t z2);	
 
+void * flip_cart(complex_cart_t * z);
+	
 double mult_complex_polar( complex_polar_t *, complex_polar_t, complex_polar_t);
 void * mult_complex_cart_t( complex_cart_t *, complex_cart_t, complex_cart_t);
 
