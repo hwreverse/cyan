@@ -129,7 +129,7 @@ image_t *image_clone(image_t * img) {
 	if ( img->monochrome ) {
 		//HOTFIX
 		//There should be a better way to do this (i.e, without allocating a
-		//whole array of zeros which should not been used 
+		//whole array of zeros which should not be used 
         	//Assigning a NULL pointer to either of these causes segmentation fault upon allocation after exiting image_clone()
 	clone->X = calloc(img->rows*img->cols, sizeof(double)) ;
         clone->Z = clone->X;

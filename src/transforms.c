@@ -8,6 +8,117 @@
 #include <cyan/image/load_png.h>
 #include <cyan/image/transforms.h>
 
+image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_cart_t **, int, int) ){
+ 	if(image == NULL)
+		fprintf(stderr, "FT_image : image is a NULL pointer. \n");
+
+	//1. Convert image in array[rows][cols]
+	complex_cart_t ** image_array = NULL;
+	image_array = image_to_cart(image, Y_to_cart); 
+	//2. Compute 2D FFT
+	complex_cart_t ** ft_array = NULL;
+	ft_array = transform(image_array, 9, 9);
+	//3. Convert 2D FFT in an image
+	image_t * image_ft = NULL;
+	image_ft = cart_to_image(ft_array, 9, 9);
+
+	return image_ft;
+}
+
+//image_t * ft_to_image( complex_cart_t ** ft_array
+
+complex_cart_t ** image_to_cart(image_t * image, complex_cart_t (*xyz_to_cart)( double, double, double) ){
+	if(image == NULL)
+		fprintf(stderr, "image_to_cart : image is a NULL pointer. \n");
+
+	complex_cart_t ** array_cart = malloc( image->rows * sizeof(complex_cart_t *));;
+
+	//complex_cart_t ** array_cart = NULL;
+	fprintf(stdout, "rows : %d, cols : %d\n", image->rows, image->cols);
+	//array_cart = (complex_cart_t **) malloc( image->rows * image->cols * sizeof(complex_cart_t ));
+	if(array_cart == NULL){
+		fprintf(stderr, "image_to_cart : couldn't allocate memory to array_cart. \n");
+	}
+	int i, j, coord;
+	for(i = 0; i < image->rows; i++){
+		array_cart[i] = malloc(image->cols * sizeof(complex_cart_t));
+		for(j=0; j<image->cols; j++){
+			coord = j + i * image->cols;
+			array_cart[i][j] = xyz_to_cart(image->X[coord], image->Y[coord], image->Z[coord] );
+		}
+	}
+	return array_cart;
+}
+image_t * cart_to_image(complex_cart_t ** array, int n, int m ){
+	if(array == (complex_cart_t **) NULL)
+		fprintf(stderr, "cart_to_image : array is a NULL pointer. \n");
+
+	int N = pow(2, n);
+	int M = pow(2, m);
+
+	image_t * image = image_new(N, M);
+
+	//complex_cart_t ** array_cart = NULL;
+	//fprintf(stdout, "rows : %d, cols : %d\n", image->rows, image->cols);
+	//array_cart = (complex_cart_t **) malloc( image->rows * image->cols * sizeof(complex_cart_t ));
+	int i, j, coord;
+	for(i = 0; i < N; i++){
+		for(j=0; j < M; j++){
+			coord = j + i * image->cols;
+			image->Y[coord] = array[i][j].real ;
+		}
+	}
+	return image;
+}
+
+
+complex_cart_t  Y_to_cart(double X, double Y, double Z){
+	complex_cart_t  cart;
+	//cart = (complex_cart_t *) malloc(sizeof(complex_cart_t));
+	cart.real = Y;
+	cart.im =0;	
+
+	return cart;
+}
+
+
+//Returns a double array from a 2^n lines by 2^m cols initial array
+complex_cart_t ** FFT_2D(complex_cart_t ** array_cart, int n, int m){
+	int N = pow(2, n);
+	int M = pow(2, m);
+
+
+	complex_cart_t * ft_array_rows[N];
+	complex_cart_t temp_row[M];
+	complex_cart_t ** ft_array_cols = NULL;
+	ft_array_cols = (complex_cart_t **) malloc( M * sizeof( complex_cart_t * ) );
+	int i, j, coords;
+	for(i = 0; i < N; i++){
+		ft_array_rows[i] = FFT_1D_cart_to_cart(array_cart[i], m);
+	}
+	for(j = 0; j < M; j++){	
+		ft_array_cols[j] = FFT_1D_cart_to_cart( &(ft_array_rows[0][j]), n);
+	}
+	return ft_array_cols;
+}
+complex_cart_t ** FFT_2D_reverse(complex_cart_t ** ft_array_cart, int n, int m){
+	int N = pow(2, n);
+	int M = pow(2, m);
+
+
+	complex_cart_t * array_rows[N];
+	complex_cart_t ft_temp_row[M];
+	complex_cart_t ** array_cols = NULL;
+	array_cols = (complex_cart_t **) malloc( M * sizeof( complex_cart_t * ) );
+	int i, j, coords;
+	for(i = 0; i < N; i++){
+		array_rows[i] = FFT_1D_reverse_cart_to_cart(&(ft_array_cart[i][0]), m);
+	}
+	for(j = 0; j < M; j++){	
+		array_cols[j] = FFT_1D_reverse_cart_to_cart( array_rows[j], n);
+	}
+	return array_cols;
+}
 complex_polar_t * unity(int k, int N){
 	
 	complex_polar_t * unit = (complex_polar_t *) malloc(sizeof(complex_polar_t));
@@ -23,12 +134,13 @@ complex_polar_t * unity(int k, int N){
 //The function FFT_1D() is implemented as the procedure FFT(A) in the following link
 //http://people.scs.carleton.ca/~maheshwa/courses/5703COMP/16Fall/FFT_Report.pdf
 //FFT_1D computes (and returns in f) the 1D Fast Fourier Transform of the sequence f of 2^n elements (i.e. {f(k)}_{k=0,...,2^n}
-//At this stage complexity is N * lgN in size and computations, it can be made in 2N size
+//At this stage of development complexity is N * lgN in size and computations, it can be made in 2N size
+//Data ordering is a little bit unclear
 static complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 	
 	int N = pow(2, n);
 	if(buffer == NULL){
-		fprintf(stdout, "FFT_1D : Allocating the buffer (of size N : %d).\n", N);
+	//	fprintf(stdout, "FFT_1D : Allocating the buffer (of size N : %d).\n", N);
 		buffer = (complex_polar_t *) malloc( N * sizeof(complex_polar_t));
 	}
 	if(n == 0)

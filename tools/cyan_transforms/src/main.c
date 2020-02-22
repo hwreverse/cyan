@@ -8,7 +8,8 @@
 #include <cyan/image/image.h>
 #include <cyan/image/load_png.h>
 
-#include "transforms.h"
+#include <cyan/image/transforms.h>
+//#include "transforms.h"
 
 int main( int argc, char** argv, char* envv ) {
 
@@ -36,23 +37,13 @@ int main( int argc, char** argv, char* envv ) {
 	}	
 //	grey_image = color2grey(image);
 
-//	result = image_save_ppm( grey_image, argv[1] ) ; 
-
+	image_t * ft_image = NULL;
+	ft_image = FT_image_Y(image, FFT_2D);
+	result = image_save_ppm( ft_image, argv[1] ) ; 
+	image_t * reverse_image = NULL;
+	reverse_image = FT_image_Y(ft_image, FFT_2D_reverse);
+	image_save_ppm(reverse_image, "fourier.ppm");
 	complex_cart_t cart_array[4];
-	//complex_polar_t array[4];
-	//complex_polar_t buffer[4];
-
-	cart_array[0].real = 1.0f;
-	cart_array[0].im = 0.0f;
-	
-	cart_array[1].real = 2.0f;
-	cart_array[1].im = -1.0f;
-	
-	cart_array[2].real = 0.0f;
-	cart_array[2].im = -1.0f;
-	
-	cart_array[3].real = -1.0f;
-	cart_array[3].im = 2.0f;
 
 	int n = 2;
 	int N = pow(2, n);
