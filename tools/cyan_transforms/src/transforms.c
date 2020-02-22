@@ -14,12 +14,16 @@ complex_polar_t * unity(int k, int N){
 	complex_polar_t * unit = (complex_polar_t *) malloc(sizeof(complex_polar_t));
 	
 	unit->power = (double) 1.0f;
+	//Rk: 4*atan(1) = 2 * pi
 	unit->phase = 2.0 * (4 * atan( (double) 1.0f)) *  (double) k / (double) N;
 
+	//fprintf(stdout, "unit phase (k, %d, N, %d) : %f\n", k, N, unit->phase);
 	return unit;
 }
 
-//FFT_1D computes the 1D Fast Fourier Transform of the sequence f of 2^n elements (i.e. {f(k)}_{k=0,...,2^n}
+//The function FFT_1D() is implemented as the procedure FFT(A) in the following link
+//http://people.scs.carleton.ca/~maheshwa/courses/5703COMP/16Fall/FFT_Report.pdf
+//FFT_1D computes (and returns in f) the 1D Fast Fourier Transform of the sequence f of 2^n elements (i.e. {f(k)}_{k=0,...,2^n}
 complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 	
 	int N = pow(2, n);
@@ -31,53 +35,64 @@ complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 		return f;
 	
 	complex_polar_t * W_N = unity(1, N);
-	complex_polar_t * W = unity(1, 1);
+	complex_polar_t * W = unity(0, 1);
 	
-	complex_polar_t * temp_polar = unity(1, 1);	
+	complex_polar_t * temp_polar = unity(0, 1);	
 	complex_cart_t  *temp_cart1= malloc(sizeof(complex_cart_t));
 	complex_cart_t  *temp_cart2= malloc(sizeof(complex_cart_t));
 
 	complex_cart_t * f_temp_cart = malloc(sizeof(complex_cart_t));
 	int i;
 	//Rearranging f with the N/2 even elems, then the N/2 odd elems
+	//(A_even)_{2k} corresponds to f[0, N/2-1]
+	//(A_odd)_{2k+1} corresponds to f[N/2, N-1] 
+	
+	complex_polar_t order_buffer[N];
 	for(i = 0; i< N/2; i++){
-		buffer[i] = f[2*i + 1]; //to N-2
-		f[i] = f[2*i];
-		f[N/2 + i] = buffer[i];
+		order_buffer[i] = f[2*i]; //to N-2
+		order_buffer[N/2+i] = f[2*i + 1];	
 	}
-	//Computing odd and even fft in buffer
+/*	for(i=0; i<N/2; i++){
+		f[N/2+i] = order_buffer[ i];	
+		//The following line is optional and makes it such that f and buffer contain the same elements
+		//buffer[i] = f[i];	
+	}*/
+	//Computing odd and even fft in f
 	//stores similarly as f
-	FFT_1D( buffer, f, n-1);
-	FFT_1D( &(buffer[ N/2 + 1]), &(f[ N/2 + 1]), n-1 ); 
+	//FFT_1D( f, buffer, n-1);	//f[0, N/2-1] is (Y_even)_k
+	
+	complex_polar_t * Y_even;
+	complex_polar_t * Y_odd;
+	Y_even = FFT_1D(order_buffer, NULL, n-1);
+	Y_odd = FFT_1D(&(order_buffer[N/2]), NULL, n-1);
+	
+	//FFT_1D( &(f[ N/2 ]), &(buffer[ N/2 ]), n-1 ); //f[N/2, N-1] is (Y_odd)_k
 	int j = 0;
 	for(j = 0; j< N/2; j++)
 	{
 		//sorting values part
-		mult_complex_polar(temp_polar, *W, buffer[N/2 + j]);
-		polar_to_cart(temp_cart1, *temp_polar);	//temp_cart 1 i.e W*Y_even
-		polar_to_cart(temp_cart2, buffer[j]);	//temp_cart2 i.e. Y_even
+		mult_complex_polar(temp_polar, *W, Y_odd[ j]);	//temp_polar i.e W * Y_odd
+		polar_to_cart(temp_cart1, *temp_polar);	//temp_cart 1 i.e W*Y_odd
+		polar_to_cart(temp_cart2, Y_even[j]);	//temp_cart2 i.e. Y_even
 		
 		//Y(j) part
 
 		add_complex_cart(f_temp_cart, *temp_cart1, *temp_cart2);
-		cart_to_polar(&(f[j]), *f_temp_cart);
+		cart_to_polar(&(buffer[j]), *f_temp_cart);
 			
 		//Y(j+N/2) part
-		temp_cart2->real *= (-1.0f);
-		temp_cart2->im *=(-1.0f);
 		
-		add_complex_cart(f_temp_cart, *temp_cart1, *temp_cart2);
-		cart_to_polar(&(f[j + N/2]),*f_temp_cart );
+		substract_complex_cart(f_temp_cart, *temp_cart2, *temp_cart1);
+		cart_to_polar(&(buffer[j + N/2]),*f_temp_cart );
 		
 		//Updating phase factor
-		mult_complex_polar(temp_polar, *W, *W_N);
-	
+		//mult_complex_polar(temp_polar, *W, *W_N);
+
+		W->phase += 2.0f * (4.0f * atan(1.0f)) / (double) N;	//Phase += 2*pi /N	
+		//W->power = temp_polar->power;	
 	}
 	//double normalizer = 1.0f / pow(2.0f, n/2);
-	for (i = 0; i< N; i++){
-		//f[i].power *= 1.0f/sqrt(N);
-	}
-	return f;
+	return buffer;
 }
 
 
@@ -130,7 +145,7 @@ void * assign_complex_polar( complex_polar_t * result, complex_polar_t z){
 double  mult_complex_polar( complex_polar_t * result, complex_polar_t z1, complex_polar_t z2){
 	result->phase 	= z1.phase + z2.phase;
 	
-	if(z1.power > 0.0f && z2.power > 0.0f)
+	if(z1.power != 0.0f && z2.power != 0.0f)
 		result->power 	= z1.power * z2.power;
 	else
 		result->power = 0.0f;
@@ -139,29 +154,34 @@ double  mult_complex_polar( complex_polar_t * result, complex_polar_t z1, comple
 }
 void * mult_complex_cart( complex_cart_t * result, complex_cart_t z1, complex_cart_t z2){
 	result->real 	= z1.real *  z2.real 	- z1.im * z2.im;
-	result->im 	= z1.real * z2.im	+ z1.im * z2.real; 
+	result->im 	= z1.real * z2.im	+ z1.im * z2.real; 	
 }
-complex_cart_t * add_complex_cart(complex_cart_t * result, complex_cart_t z1, complex_cart_t z2){
-		
+complex_cart_t * add_complex_cart(complex_cart_t * result, complex_cart_t z1, complex_cart_t z2){	
 	result->real 	= z1.real + z2.real;
 	result->im	= z1.im + z2.im;
+	
+	return result;
+}
+complex_cart_t * substract_complex_cart(complex_cart_t * result, complex_cart_t z1, complex_cart_t z2){	
+	result->real 	= z1.real - z2.real;
+	result->im	= z1.im - z2.im;
+	
 	return result;
 }
 
 double norm_complex_cart( complex_cart_t z){
-	return sqrt( pow(z.real, 2) + pow(z.im, 2));
+	return sqrt(z.real*z.real + z.im*z.im);
 }
 double phase_complex_cart( complex_cart_t z){ 
 	//Note : atan seems to handle infinities
-	return atan( z.im / z.real );
+	return atan2( z.im, z.real );
 }
 
 void * polar_to_cart( complex_cart_t * z_cart, complex_polar_t z_pol){
-	if(z_pol.power > 0.0f){
+	if(z_pol.power != 0.0f){
 		z_cart->real = z_pol.power * cos(z_pol.phase);
 		z_cart->im   = z_pol.power * sin(z_pol.phase);
-	}
-	else{
+	}else{
 		z_cart->real 	= 0.0f;
 		z_cart->im	= 0.0f;
 	}

@@ -21,6 +21,7 @@ float dot_product_4_f(	float, float, float, float, float, float, float, float );
 void * assign_complex_polar( complex_polar_t *, complex_polar_t);
 
 complex_cart_t * add_complex_cart(complex_cart_t * result, complex_cart_t z1, complex_cart_t z2);
+complex_cart_t * substract_complex_cart(complex_cart_t * result, complex_cart_t z1, complex_cart_t z2);	
 
 double mult_complex_polar( complex_polar_t *, complex_polar_t, complex_polar_t);
 void * mult_complex_cart_t( complex_cart_t *, complex_cart_t, complex_cart_t);

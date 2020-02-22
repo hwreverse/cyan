@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <math.h>
 
 #include <cyan/color/color.h>
 #include <cyan/image/image.h>
@@ -37,23 +38,40 @@ int main( int argc, char** argv, char* envv ) {
 
 //	result = image_save_ppm( grey_image, argv[1] ) ; 
 
-	complex_polar_t array[8];
-	complex_polar_t buffer[8];
+	complex_cart_t cart_array[4];
+	complex_polar_t array[4];
+	complex_polar_t buffer[4];
 
-	for(i=0; i < 8; i++){
-		array[i].phase = 0.0f;
-		array[i].power = 0.0f;
+//	for(i=0; i < 8; i++){
+//		cart_array[i].real = 0.0f;
+//		array[i].power = 0.0f;
+//	}
+
+	cart_array[0].real = 1.0f;
+	cart_array[0].im = 0.0f;
+	
+	cart_array[1].real = 2.0f;
+	cart_array[1].im = -1.0f;
+	
+	cart_array[2].real = 0.0f;
+	cart_array[2].im = -1.0f;
+	
+	cart_array[3].real = -1.0f;
+	cart_array[3].im = 2.0f;
+	for(i = 0; i< 4; i++){
+		cart_to_polar(&(array[i]), cart_array[i]);
 	}
-	array[2].power = 2.0;
-	array[3].power = 3.0;
-	array[4].power = 4.0;
-	FFT_1D(array, buffer, 3); 
+	complex_polar_t * fft_polar;
+
+	fft_polar = FFT_1D(array, NULL, 2); 
 	
 	complex_cart_t fft_array_cart[8];
 	
-	for(i=0; i < 8; i++){
-		polar_to_cart(&(fft_array_cart[i]), array[i] );
-		fprintf(stdout, "array fft : power : %f, phase : %f \n", array[i].power, array[i].phase);
+	for(i=0; i < 4; i++){
+	
+//		array[i].power *= 1.0f/sqrt((double) 8);
+		polar_to_cart(&(fft_array_cart[i]), fft_polar[i] );
+//		fprintf(stdout, "array fft : power : %f, phase : %f \n", array[i].power, array[i].phase);
 		fprintf(stdout, "array fft : real : %f, im : %f \n", fft_array_cart[i].real, fft_array_cart[i].im);
 	}
 	//fprintf(stdout, "image monochrome : %d\n", grey_image->monochrome);
