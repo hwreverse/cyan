@@ -25,7 +25,6 @@ image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_car
 	return image_ft;
 }
 
-//image_t * ft_to_image( complex_cart_t ** ft_array
 
 complex_cart_t ** image_to_cart(image_t * image, complex_cart_t (*xyz_to_cart)( double, double, double) ){
 	if(image == NULL)
@@ -65,7 +64,7 @@ image_t * cart_to_image(complex_cart_t ** array, int n, int m ){
 	for(i = 0; i < N; i++){
 		for(j=0; j < M; j++){
 			coord = j + i * image->cols;
-			image->Y[coord] = array[i][j].real ;
+			image->Y[coord] = array[i][j].real + array[i][j].im ;
 		}
 	}
 	return image;
@@ -76,7 +75,7 @@ complex_cart_t  Y_to_cart(double X, double Y, double Z){
 	complex_cart_t  cart;
 	//cart = (complex_cart_t *) malloc(sizeof(complex_cart_t));
 	cart.real = Y;
-	cart.im =0;	
+	cart.im =0.0f;	
 
 	return cart;
 }
@@ -94,10 +93,10 @@ complex_cart_t ** FFT_2D(complex_cart_t ** array_cart, int n, int m){
 	ft_array_cols = (complex_cart_t **) malloc( M * sizeof( complex_cart_t * ) );
 	int i, j, coords;
 	for(i = 0; i < N; i++){
-		ft_array_rows[i] = FFT_1D_cart_to_cart(array_cart[i], m);
+		ft_array_cols[i] = FFT_1D_cart_to_cart(array_cart[i], m);
 	}
 	for(j = 0; j < M; j++){	
-		ft_array_cols[j] = FFT_1D_cart_to_cart( &(ft_array_rows[0][j]), n);
+		//ft_array_cols[j] = FFT_1D_cart_to_cart( ft_array_rows[j], n);
 	}
 	return ft_array_cols;
 }
@@ -112,10 +111,10 @@ complex_cart_t ** FFT_2D_reverse(complex_cart_t ** ft_array_cart, int n, int m){
 	array_cols = (complex_cart_t **) malloc( M * sizeof( complex_cart_t * ) );
 	int i, j, coords;
 	for(i = 0; i < N; i++){
-		array_rows[i] = FFT_1D_reverse_cart_to_cart(&(ft_array_cart[i][0]), m);
+		array_cols[i] = FFT_1D_reverse_cart_to_cart(ft_array_cart[i], m);
 	}
 	for(j = 0; j < M; j++){	
-		array_cols[j] = FFT_1D_reverse_cart_to_cart( array_rows[j], n);
+	//	array_cols[j] = FFT_1D_reverse_cart_to_cart( array_rows[j], n);
 	}
 	return array_cols;
 }

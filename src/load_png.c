@@ -45,12 +45,7 @@ image_t* png2image(FILE * fp) {
     png_get_IHDR (png_ptr, info_ptr, & width, & height, & bit_depth,
 		  & color_type, & interlace_method, & compression_method,
 		  & filter_method);
-	if(color_type != PNG_COLOR_TYPE_RGB){
-		fprintf(stderr, "PNG color type is not RGB, not handled (yet).");
-		//TODO Add this case
-		return NULL;
-	    }
-	if(interlace_method != 0){
+		if(interlace_method != 0){
 		fprintf(stderr, "Behaviour could be unexpected in the following");
 		//TODO See why ? Fix ? Who doesn't like a surprise ?
 	}
@@ -71,20 +66,36 @@ image_t* png2image(FILE * fp) {
     
 	double R,G,B;
 	int temp[3];
-
-       for (i = 0; i < height; i++) {
-	   	for (j = 0; j < width ; j++) {
-			double * couleur = NULL;
-			int coord;
-			coord = j + i*image->cols ;
-	
-			R = rows[i][3*j]/(double) 255 ;
-			G = rows[i][3*j+1]/(double) 255 ;
-			B = rows[i][3*j+2]/ (double) 255 ;
-			
-			RGB_to_XYZ( color_type, R, G, B, &(image->X[coord]), &(image->Y[coord]), &(image->Z[coord]));
-			
-		}  
+	if(color_type == PNG_COLOR_TYPE_RGB){
+		image->monochrome = 0;
+ 		for (i = 0; i < height; i++) {
+			for (j = 0; j < width ; j++) {
+				
+				int coord;
+				coord = j + i*image->cols ;
+		
+				R = rows[i][3*j]/(double) 255 ;
+				G = rows[i][3*j+1]/(double) 255 ;
+				B = rows[i][3*j+2]/ (double) 255 ;
+				
+				RGB_to_XYZ( color_type, R, G, B, &(image->X[coord]), &(image->Y[coord]), &(image->Z[coord]));
+				
+			}  
+	       }
+	}else{
+		image->monochrome = 1;
+		 for (i = 0; i < height; i++) {
+			for (j = 0; j < width ; j++) {
+				
+				int coord;
+				coord = j + i*image->cols ;
+		
+				R = rows[i][j]/(double) 255 ;
+				
+				RGB_to_XYZ( color_type, R, R, R, &(image->X[coord]), &(image->Y[coord]), &(image->Z[coord]));
+				
+			}  
+	       }
 	}
 
 	png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);	

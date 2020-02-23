@@ -19,7 +19,7 @@ int main( int argc, char** argv, char* envv ) {
 	image_t * grey_image;
 	FILE * fp;
 
-	fp = fopen("lena.png", "r");
+	fp = fopen("boat.png", "r");
 	if(fp == NULL){	
 		fprintf(stderr, "Couldn't open file.\n Error : %d, (%s)\n", errno, strerror(errno));
 		return -1;
@@ -35,7 +35,8 @@ int main( int argc, char** argv, char* envv ) {
 		fprintf(stderr,"image allocation failed\n") ;
 		return -1 ;
 	}	
-//	grey_image = color2grey(image);
+	grey_image = color2grey(image);
+	image_save_ppm(grey_image, "grey_boat.ppm");
 
 	image_t * ft_image = NULL;
 	ft_image = FT_image_Y(image, FFT_2D);
