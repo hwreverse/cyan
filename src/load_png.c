@@ -66,6 +66,8 @@ image_t* png2image(FILE * fp) {
     
 	double R,G,B;
 	int temp[3];
+	//Remark, I have no idea which flags shall be used in cyan
+	//It might not be the same as the one define in the png library
 	if(color_type == PNG_COLOR_TYPE_RGB){
 		image->monochrome = 0;
  		for (i = 0; i < height; i++) {

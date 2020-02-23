@@ -8,7 +8,10 @@
 #include <cyan/image/load_png.h>
 #include <cyan/image/transforms.h>
 
-image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_cart_t **, int, int) ){
+//FT_image_Y allows to compute FFT_2D of image in the direction specified by transform (FFT_2D or FFT_2D_reverse should be given as an argument)
+//The coefficients computed and saved in ft_array are given as parameters to convert_cart_to_image
+//which specifies how coefficients should be displayed
+image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_cart_t **, int, int), image_t * (*convert_cart_to_image)( complex_cart_t **, int, int) ){
  	if(image == NULL)
 		fprintf(stderr, "FT_image : image is a NULL pointer. \n");
 
@@ -20,9 +23,23 @@ image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_car
 	ft_array = transform(image_array, 9, 9);
 	//3. Convert 2D FFT in an image
 	image_t * image_ft = NULL;
-	image_ft = cart_to_image(ft_array, 9, 9);
+	
+	image_ft =convert_cart_to_image(ft_array, 512, 512);
 
 	return image_ft;
+}
+image_t * cart_to_Y(complex_cart_t ** array, int N, int M){
+	return cart_to_image(NULL, array, N, M, zero, sum, zero);
+}
+
+image_t * cart_power_to_Y(complex_cart_t ** array, int N, int M){
+	return cart_to_image(NULL, array, N, M, zero, power_complex_cart, zero);
+}
+image_t * cart_log_power_to_Y(complex_cart_t ** array, int N, int M){
+	return cart_to_image(NULL, array, N, M, zero, log_power_complex_cart, zero);
+}
+image_t * cart_phase_to_Y(complex_cart_t ** array, int N, int M){
+	return cart_to_image(NULL, array, N, M, zero, phase_complex_cart, zero);
 }
 
 
@@ -32,30 +49,29 @@ complex_cart_t ** image_to_cart(image_t * image, complex_cart_t (*xyz_to_cart)( 
 
 	complex_cart_t ** array_cart = malloc( image->rows * sizeof(complex_cart_t *));;
 
-	//complex_cart_t ** array_cart = NULL;
-	fprintf(stdout, "rows : %d, cols : %d\n", image->rows, image->cols);
-	//array_cart = (complex_cart_t **) malloc( image->rows * image->cols * sizeof(complex_cart_t ));
 	if(array_cart == NULL){
 		fprintf(stderr, "image_to_cart : couldn't allocate memory to array_cart. \n");
 	}
-	int i, j, coord;
+	int i, j, coords;
 	for(i = 0; i < image->rows; i++){
 		array_cart[i] = malloc(image->cols * sizeof(complex_cart_t));
 		for(j=0; j<image->cols; j++){
-			coord = j + i * image->cols;
-			array_cart[i][j] = xyz_to_cart(image->X[coord], image->Y[coord], image->Z[coord] );
+			coords = j + i * image->cols;
+			array_cart[i][j] = xyz_to_cart(image->X[coords], image->Y[coords], image->Z[coords] );
 		}
 	}
 	return array_cart;
 }
-image_t * cart_to_image(complex_cart_t ** array, int n, int m ){
+image_t * cart_to_image(image_t * image, complex_cart_t ** array, int N, int M,
+	       double (*X_func)(complex_cart_t), double (*Y_func)(complex_cart_t), double (*Z_func)(complex_cart_t)	){
 	if(array == (complex_cart_t **) NULL)
 		fprintf(stderr, "cart_to_image : array is a NULL pointer. \n");
 
-	int N = pow(2, n);
-	int M = pow(2, m);
-
-	image_t * image = image_new(N, M);
+	image_t * ret;
+	if(image == (image_t *) NULL)
+		ret = image_new(N, M);
+	else
+		ret = image;
 
 	//complex_cart_t ** array_cart = NULL;
 	//fprintf(stdout, "rows : %d, cols : %d\n", image->rows, image->cols);
@@ -63,14 +79,41 @@ image_t * cart_to_image(complex_cart_t ** array, int n, int m ){
 	int i, j, coord;
 	for(i = 0; i < N; i++){
 		for(j=0; j < M; j++){
-			coord = j + i * image->cols;
-			image->Y[coord] = array[i][j].real + array[i][j].im ;
+			coord = j + i * M;
+			ret->X[coord] = X_func(array[i][j]) ;
+			ret->Y[coord] = Y_func(array[i][j]) ;
+			ret->Z[coord] = Z_func(array[i][j]) ;
 		}
 	}
-	return image;
+	return ret;
 }
+double zero(complex_cart_t z){
+	return 0.0f;
+}
+double sum(complex_cart_t z){
+	return z.real + z.im;
+}
+double log_power_complex_cart(complex_cart_t z){
+	return log(power_complex_cart( z) );
+}
+complex_cart_t X_Y_Z_to_cart(double X, double Y, double Z){
+	complex_cart_t cart;
 
+	cart.real =X + Y + Z ;
+	//cart.im = X + Z;
 
+	return cart;
+
+}
+complex_cart_t X_Y_to_cart(double X, double Y, double Z){
+	complex_cart_t cart;
+
+	cart.real = Y;
+	cart.im = X;
+
+	return cart;
+
+}
 complex_cart_t  Y_to_cart(double X, double Y, double Z){
 	complex_cart_t  cart;
 	//cart = (complex_cart_t *) malloc(sizeof(complex_cart_t));
@@ -155,29 +198,20 @@ static complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, 
 	complex_cart_t * f_temp_cart = malloc(sizeof(complex_cart_t));
 	int i;
 	//Rearranging f with the N/2 even elems, then the N/2 odd elems
-	//(A_even)_{2k} corresponds to f[0, N/2-1]
-	//(A_odd)_{2k+1} corresponds to f[N/2, N-1] 
+	//(A_even)_{2k} corresponds to order_buffer[0, N/2-1]
+	//(A_odd)_{2k+1} corresponds to order_buffer[N/2, N-1] 
 	
 	complex_polar_t order_buffer[N];
 	for(i = 0; i< N/2; i++){
 		order_buffer[i] = f[2*i]; //to N-2
 		order_buffer[N/2+i] = f[2*i + 1];	
 	}
-/*	for(i=0; i<N/2; i++){
-		f[N/2+i] = order_buffer[ i];	
-		//The following line is optional and makes it such that f and buffer contain the same elements
-		//buffer[i] = f[i];	
-	}*/
-	//Computing odd and even fft in f
-	//stores similarly as f
-	//FFT_1D( f, buffer, n-1);	//f[0, N/2-1] is (Y_even)_k
-	
+
 	complex_polar_t * Y_even;
 	complex_polar_t * Y_odd;
 	Y_even = FFT_1D(order_buffer, NULL, n-1);
 	Y_odd = FFT_1D(&(order_buffer[N/2]), NULL, n-1);
 	
-	//FFT_1D( &(f[ N/2 ]), &(buffer[ N/2 ]), n-1 ); //f[N/2, N-1] is (Y_odd)_k
 	int j = 0;
 	for(j = 0; j< N/2; j++)
 	{
@@ -198,11 +232,10 @@ static complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, 
 		
 		//Updating phase factor
 		//mult_complex_polar(temp_polar, *W, *W_N);
-
 		W->phase += 2.0f * (4.0f * atan(1.0f)) / (double) N;	//Phase += 2*pi /N	
 		//W->power = temp_polar->power;	
 	}
-	//double normalizer = 1.0f / pow(2.0f, n/2);
+	
 	return buffer;
 }
 
@@ -381,8 +414,16 @@ complex_cart_t * substract_complex_cart(complex_cart_t * result, complex_cart_t 
 	return result;
 }
 
+//Remark: norm_complex_cart should probable exist with values in the [0, 1] range, 
+//in some applications (e.g. when assigning color in XYZ) it could be useful
+double energy_complex_cart( complex_cart_t z){
+	return z.real*z.real + z.im*z.im;
+}
 double norm_complex_cart( complex_cart_t z){
-	return sqrt(z.real*z.real + z.im*z.im);
+	return sqrt(z.real*z.real + z.im * z.im);
+}
+double power_complex_cart(complex_cart_t z){	
+	return fabs(z.real) + fabs(z.im);
 }
 double phase_complex_cart( complex_cart_t z){ 
 	//Note : atan seems to handle infinities

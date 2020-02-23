@@ -19,7 +19,7 @@ int main( int argc, char** argv, char* envv ) {
 	image_t * grey_image;
 	FILE * fp;
 
-	fp = fopen("boat.png", "r");
+	fp = fopen("lena.png", "r");
 	if(fp == NULL){	
 		fprintf(stderr, "Couldn't open file.\n Error : %d, (%s)\n", errno, strerror(errno));
 		return -1;
@@ -38,11 +38,33 @@ int main( int argc, char** argv, char* envv ) {
 	grey_image = color2grey(image);
 	image_save_ppm(grey_image, "grey_boat.ppm");
 
+	//Computes fourier transform of the image
 	image_t * ft_image = NULL;
-	ft_image = FT_image_Y(image, FFT_2D);
-	result = image_save_ppm( ft_image, argv[1] ) ; 
+	ft_image = FT_image_Y(image, FFT_2D, cart_to_Y);	//ft_image is the FT with sum of real and im part on each pixel
+								//This seems to allow reconstruction (prob. only for real signals
+	image_save_ppm( ft_image, argv[1] ) ;		
+
+
+	//Computes FT of the image and saves power spectrum in power_image
+	image_t * power_image = NULL;
+	power_image = FT_image_Y(image, FFT_2D, cart_power_to_Y);
+	image_save_ppm( power_image, "power.ppm" );
+
+	//Computes FT of the image and saves log of the power spectrum in log_power_image
+	image_t * log_power_image = NULL;
+	log_power_image = FT_image_Y(image, FFT_2D, cart_log_power_to_Y);
+	image_save_ppm( power_image, "log_power.ppm" );
+
+	//Computes FT of the image and saves log of the power spectrum in log_power_image
+	image_t * phase_image = NULL;
+	phase_image = FT_image_Y(image, FFT_2D, cart_phase_to_Y);
+	image_save_ppm( phase_image, "phase.ppm" );
+
+
+
+	//Computes the reverse FT on ft_image
 	image_t * reverse_image = NULL;
-	reverse_image = FT_image_Y(ft_image, FFT_2D_reverse);
+	reverse_image = FT_image_Y(ft_image, FFT_2D_reverse, cart_to_Y);
 	image_save_ppm(reverse_image, "fourier.ppm");
 	complex_cart_t cart_array[4];
 

@@ -20,12 +20,24 @@ complex_cart_t * FFT_1D_reverse_cart_to_cart( complex_cart_t * fft, int n);
 complex_cart_t ** FFT_2D(complex_cart_t ** array_cart, int n, int m);
 complex_cart_t ** FFT_2D_reverse(complex_cart_t ** ft_array_cart, int n, int m);
 
-image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_cart_t **, int, int) );
-
+image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_cart_t **, int, int) , image_t * (*convert_cart_to_image)( complex_cart_t **, int, int));
 complex_cart_t ** image_to_cart(image_t * image, complex_cart_t (*xyz_to_cart)( double, double, double) );
-image_t * cart_to_image(complex_cart_t ** array, int n, int m );
+image_t * cart_to_image(image_t * image, complex_cart_t ** array, int n, int m, double (*X_func)(complex_cart_t), double (*Y_func)(complex_cart_t), double (*Z_func)(complex_cart_t));
+image_t * cart_to_power_Y_image(image_t * image, complex_cart_t ** array, int N, int M);
+
+double zero(complex_cart_t);
+double sum(complex_cart_t z);
+double log_power_complex_cart(complex_cart_t );
+double power_complex_cart(complex_cart_t z);
 
 complex_cart_t Y_to_cart(double X, double Y, double Z);
+complex_cart_t X_Y_to_cart(double X, double Y, double Z);
+complex_cart_t X_Y_Z_to_cart(double X, double Y, double Z);
+
+image_t * cart_to_Y(complex_cart_t ** array, int N, int M);
+image_t * cart_power_to_Y(complex_cart_t ** array, int N, int M);
+image_t * cart_log_power_to_Y(complex_cart_t ** array, int N, int M);
+image_t * cart_phase_to_Y(complex_cart_t ** array, int N, int M);
 
 complex_polar_t * cart_array_to_polar( complex_cart_t * cart_array, int n);
 complex_cart_t * polar_array_to_cart( complex_polar_t * polar_array, int n);
@@ -50,6 +62,7 @@ double mult_complex_polar( complex_polar_t *, complex_polar_t, complex_polar_t);
 void * mult_complex_cart_t( complex_cart_t *, complex_cart_t, complex_cart_t);
 
 double norm_complex_cart( complex_cart_t );
+double power_complex_cart( complex_cart_t z);
 double phase_complex_cart( complex_cart_t);
 
 void * polar_to_cart( complex_cart_t *, complex_polar_t);
