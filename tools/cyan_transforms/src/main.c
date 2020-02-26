@@ -42,8 +42,22 @@ int main( int argc, char** argv, char* envv ) {
 	//Computes fourier transform of the image
 	image_t * ft_image = NULL;
 	ft_image = FT_image_Y(image, FFT_2D, cart_to_Y);	//ft_image is the FT with sum of real and im part on each pixel
-								//This seems to allow reconstruction (prob. only for real signals
+		//This seems to allow reconstruction (prob. only for real signals
+	
 	image_save_ppm( ft_image, argv[1] ) ;		
+	
+	complex_cart_t ** image_array = NULL;
+	image_array = image_to_cart(image, Y_to_cart); 
+	//2. Compute 2D FFT
+	complex_cart_t ** ft_array = NULL;
+	ft_array = FFT_2D(image_array, 9, 9);
+	//3. Convert 2D FFT in an image
+	image_t * image_ft = NULL;
+	ft_array = highpass_harsh(ft_array, 512, 512);
+
+	image_ft =cart_to_Y(ft_array, 512, 512);
+
+	image_save_ppm( image_ft, "lowpass.ppm");
 
 /*
 	//Computes FT of the image and saves power spectrum in power_image
@@ -65,7 +79,7 @@ int main( int argc, char** argv, char* envv ) {
 */
 	//Computes the reverse FT on ft_image
 	image_t * reverse_image = NULL;
-	reverse_image = FT_image_Y(ft_image, FFT_2D_reverse, cart_to_Y);
+	reverse_image = FT_image_Y(image_ft, FFT_2D_reverse, cart_to_Y);
 	image_save_ppm(reverse_image, "fourier.ppm");
 
 	complex_cart_t cart_array[4];

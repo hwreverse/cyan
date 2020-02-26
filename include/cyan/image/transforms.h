@@ -25,6 +25,9 @@ complex_cart_t ** image_to_cart(image_t * image, complex_cart_t (*xyz_to_cart)( 
 image_t * cart_to_image(image_t * image, complex_cart_t ** array, int n, int m, double (*X_func)(complex_cart_t), double (*Y_func)(complex_cart_t), double (*Z_func)(complex_cart_t));
 image_t * cart_to_power_Y_image(image_t * image, complex_cart_t ** array, int N, int M);
 
+complex_cart_t ** lowpass_harsh(complex_cart_t ** array_cart, int N, int M);
+complex_cart_t ** highpass_harsh(complex_cart_t ** array_cart, int N, int M);
+
 double zero(complex_cart_t);
 double sum(complex_cart_t z);
 double log_power_complex_cart(complex_cart_t );

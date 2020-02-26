@@ -122,7 +122,37 @@ complex_cart_t  Y_to_cart(double X, double Y, double Z){
 
 	return cart;
 }
+//lowpass and highpass are temporary functions
+//They shall be properly developped later
+complex_cart_t ** lowpass_harsh(complex_cart_t ** array_cart, int N, int M){
+	int i,j;
+	for(i = 0; i < N; i++){
+		if( i < N/4 ||i > 3*N/4){
+			for(j = 0; j < M; j++){		
+				array_cart[i][j].real = 0.0f;
+				array_cart[i][j].im = 0.0f;
+				array_cart[j][i].real = 0.0f;
+				array_cart[j][i].im = 0.0f;
+			}
+		}
+	}
+	return array_cart;
+}
 
+complex_cart_t ** highpass_harsh(complex_cart_t ** array_cart, int N, int M){
+	int i,j;
+	for(i = 0; i < N; i++){
+		if( i > N/4  && i < 3*N/4){
+			for(j = 0; j < M; j++){		
+				array_cart[i][j].real = 0.0f;
+				array_cart[i][j].im = 0.0f;
+				array_cart[j][i].real = 0.0f;
+				array_cart[j][i].im = 0.0f;
+			}
+		}
+	}
+	return array_cart;
+}
 
 //Returns a double array from a 2^n lines by 2^m cols initial array
 complex_cart_t ** FFT_2D(complex_cart_t ** array_cart, int n, int m){
