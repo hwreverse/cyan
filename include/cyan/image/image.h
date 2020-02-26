@@ -11,8 +11,9 @@ typedef struct {
     double* Y ;
     double* Z ;
     enum cyan_refwhite illuminant ;     // Default to CYAN_D50
-    int monochrome ;                    // if set to zero, only the Y plane will be used
-    size_t pixel_data_size ;
+    int monochrome ;                    // if set to zero (remark : isn't it the opposite ?, Leo) , only the Y plane will be used
+				
+	size_t pixel_data_size ;
 	void*  pixel_data ;
 } image_t ;
 

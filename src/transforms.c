@@ -130,17 +130,24 @@ complex_cart_t ** FFT_2D(complex_cart_t ** array_cart, int n, int m){
 	int M = pow(2, m);
 
 
-	complex_cart_t * ft_array_rows[N];
+	complex_cart_t * ft_array_rows[M];
 	complex_cart_t temp_row[M];
 	complex_cart_t ** ft_array_cols = NULL;
-	ft_array_cols = (complex_cart_t **) malloc( M * sizeof( complex_cart_t * ) );
+	ft_array_cols = (complex_cart_t **) malloc( N * sizeof( complex_cart_t * ) );
 	int i, j, coords;
-	for(i = 0; i < N; i++){
-		ft_array_cols[i] = FFT_1D_cart_to_cart(array_cart[i], m);
-	}
 	for(j = 0; j < M; j++){	
-		//ft_array_cols[j] = FFT_1D_cart_to_cart( ft_array_rows[j], n);
+		ft_array_rows[j] = FFT_1D_cart_to_cart(array_cart[j], m);
+		//fprintf(stdout, "%d", j);
 	}
+	for(i=0; i < M; i++){
+		fprintf(stdout, "%d\n", i);
+		for(j = 0; j < N; j ++){
+			temp_row[j] = ft_array_rows[j][i];
+		}	
+		ft_array_cols[i] = FFT_1D_cart_to_cart( temp_row, n);
+	}
+
+
 	return ft_array_cols;
 }
 complex_cart_t ** FFT_2D_reverse(complex_cart_t ** ft_array_cart, int n, int m){
@@ -148,17 +155,21 @@ complex_cart_t ** FFT_2D_reverse(complex_cart_t ** ft_array_cart, int n, int m){
 	int M = pow(2, m);
 
 
-	complex_cart_t * array_rows[N];
+	complex_cart_t * ft_array_rows[N];
 	complex_cart_t ft_temp_row[M];
 	complex_cart_t ** array_cols = NULL;
 	array_cols = (complex_cart_t **) malloc( M * sizeof( complex_cart_t * ) );
 	int i, j, coords;
 	for(i = 0; i < N; i++){
-		array_cols[i] = FFT_1D_reverse_cart_to_cart(ft_array_cart[i], m);
+		ft_array_rows[i] = FFT_1D_reverse_cart_to_cart(ft_array_cart[i], m);
 	}
-	for(j = 0; j < M; j++){	
-	//	array_cols[j] = FFT_1D_reverse_cart_to_cart( array_rows[j], n);
-	}
+	for(i = 0; i < M; i++){
+		for(j=0; j < N; j++){
+			ft_temp_row[j] = ft_array_rows[j][i];
+		}
+		array_cols[i] = FFT_1D_reverse_cart_to_cart(ft_temp_row, n);
+	}	
+
 	return array_cols;
 }
 complex_polar_t * unity(int k, int N){
@@ -235,6 +246,9 @@ static complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, 
 		W->phase += 2.0f * (4.0f * atan(1.0f)) / (double) N;	//Phase += 2*pi /N	
 		//W->power = temp_polar->power;	
 	}
+	free(temp_cart1);
+	free(temp_cart2);
+	free(f_temp_cart);
 	
 	return buffer;
 }
