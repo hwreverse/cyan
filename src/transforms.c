@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <errno.h>
 #include <math.h>
 
@@ -10,7 +11,7 @@
 
 //FT_image_Y allows to compute FFT_2D of image in the direction specified by transform (FFT_2D or FFT_2D_reverse should be given as an argument)
 //The coefficients computed and saved in ft_array are given as parameters to convert_cart_to_image
-//which specifies how coefficients should be displayed
+//which specifies how coefficients should be stored in the image
 image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_cart_t **, int, int), image_t * (*convert_cart_to_image)( complex_cart_t **, int, int) ){
  	if(image == NULL)
 		fprintf(stderr, "FT_image : image is a NULL pointer. \n");
@@ -24,7 +25,7 @@ image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_car
 	//3. Convert 2D FFT in an image
 	image_t * image_ft = NULL;
 	
-	image_ft =convert_cart_to_image(ft_array, 512, 512);
+	image_ft = convert_cart_to_image(ft_array, 512, 512);
 
 	return image_ft;
 }
@@ -41,7 +42,7 @@ image_t * cart_log_power_to_Y(complex_cart_t ** array, int N, int M){
 image_t * cart_phase_to_Y(complex_cart_t ** array, int N, int M){
 	return cart_to_image(NULL, array, N, M, zero, phase_complex_cart, zero);
 }
-
+ 
 
 complex_cart_t ** image_to_cart(image_t * image, complex_cart_t (*xyz_to_cart)( double, double, double) ){
 	if(image == NULL)
@@ -75,7 +76,6 @@ image_t * cart_to_image(image_t * image, complex_cart_t ** array, int N, int M,
 
 	//complex_cart_t ** array_cart = NULL;
 	//fprintf(stdout, "rows : %d, cols : %d\n", image->rows, image->cols);
-	//array_cart = (complex_cart_t **) malloc( image->rows * image->cols * sizeof(complex_cart_t ));
 	int i, j, coord;
 	for(i = 0; i < N; i++){
 		for(j=0; j < M; j++){
@@ -125,29 +125,56 @@ complex_cart_t  Y_to_cart(double X, double Y, double Z){
 //lowpass and highpass are temporary functions
 //They shall be properly developped later
 complex_cart_t ** lowpass_harsh(complex_cart_t ** array_cart, int N, int M){
+	complex_cart_t ** ret = NULL;
+	ret = malloc( N * sizeof(complex_cart_t *) );
 	int i,j;
 	for(i = 0; i < N; i++){
+		ret[i] = malloc(M*sizeof(complex_cart_t));
+
 		if( i < N/4 ||i > 3*N/4){
 			for(j = 0; j < M; j++){		
-				array_cart[i][j].real = 0.0f;
-				array_cart[i][j].im = 0.0f;
-				array_cart[j][i].real = 0.0f;
-				array_cart[j][i].im = 0.0f;
+				ret[i][j].real = 0.0f;
+				ret[i][j].im = 0.0f;
+			}
+		}else{
+			for(j = 0; j < M; j++){		
+				ret[i][j].real = array_cart[i][j].real;
+				ret[i][j].im = array_cart[i][j].im;
 			}
 		}
 	}
-	return array_cart;
+	return ret;
 }
+complex_cart_t ** middle_band_pass( complex_cart_t ** array_cart, int N, int M){
 
+	complex_cart_t ** ret = NULL;
+	ret =(complex_cart_t **)  malloc( N * sizeof(complex_cart_t *));
+
+	int i, j;
+	for(i = 0; i < N; i++){
+		ret[i] = ( complex_cart_t * ) malloc(M * sizeof(complex_cart_t) );
+			for(j = 0; j< M; j++){
+				if( !(j > M /4 && j < 3*M/4)){ 
+					ret[i][j].real = array_cart[i][j].real;
+					ret[i][j].im = array_cart[i][j].im;
+				}else{
+					ret[i][j].real = 0.0f;
+					ret[i][j].im = 0.0f;
+				}
+			}
+
+	}
+	return ret;
+}
 complex_cart_t ** highpass_harsh(complex_cart_t ** array_cart, int N, int M){
 	int i,j;
 	for(i = 0; i < N; i++){
 		if( i > N/4  && i < 3*N/4){
-			for(j = 0; j < M; j++){		
-				array_cart[i][j].real = 0.0f;
-				array_cart[i][j].im = 0.0f;
-				array_cart[j][i].real = 0.0f;
-				array_cart[j][i].im = 0.0f;
+			for(j = 0; j < M; j++){	
+				if( j > M/4 && j < 3*M/4 ){	
+					array_cart[i][j].real = 0.0f;
+					array_cart[i][j].im = 0.0f;
+				}
 			}
 		}
 	}
@@ -167,10 +194,8 @@ complex_cart_t ** FFT_2D(complex_cart_t ** array_cart, int n, int m){
 	int i, j, coords;
 	for(j = 0; j < M; j++){	
 		ft_array_rows[j] = FFT_1D_cart_to_cart(array_cart[j], m);
-		//fprintf(stdout, "%d", j);
 	}
 	for(i=0; i < M; i++){
-		fprintf(stdout, "%d\n", i);
 		for(j = 0; j < N; j ++){
 			temp_row[j] = ft_array_rows[j][i];
 		}	
@@ -180,10 +205,9 @@ complex_cart_t ** FFT_2D(complex_cart_t ** array_cart, int n, int m){
 
 	return ft_array_cols;
 }
-complex_cart_t ** FFT_2D_reverse(complex_cart_t ** ft_array_cart, int n, int m){
+complex_cart_t ** FFT_2D_reverse(complex_cart_t *** dst, complex_cart_t ** ft_array_cart, int n, int m){
 	int N = pow(2, n);
 	int M = pow(2, m);
-
 
 	complex_cart_t * ft_array_rows[N];
 	complex_cart_t ft_temp_row[M];
@@ -193,15 +217,63 @@ complex_cart_t ** FFT_2D_reverse(complex_cart_t ** ft_array_cart, int n, int m){
 	for(i = 0; i < N; i++){
 		ft_array_rows[i] = FFT_1D_reverse_cart_to_cart(ft_array_cart[i], m);
 	}
-	for(i = 0; i < M; i++){
-		for(j=0; j < N; j++){
+	for(i = 0; i < N; i++){
+		for(j=0; j < M; j++){
 			ft_temp_row[j] = ft_array_rows[j][i];
 		}
 		array_cols[i] = FFT_1D_reverse_cart_to_cart(ft_temp_row, n);
 	}	
+	complex_cart_t ** array_lines = NULL;
+	if(N != M)
+		return array_cols;
 
-	return array_cols;
+	rotate_180( (void ***) dst, (void **)  array_cols, N, sizeof(complex_cart_t * ) );
+
+	return *dst;
 }
+int rotate_180( void *** dst, void ** src, int N, size_t size){
+	int i, j;
+	if(*dst ==NULL){
+		*dst = (void ** ) malloc( N * sizeof(void *));
+		if(*dst == NULL){
+			fprintf( stderr, "rotate_180 : memory allocation failed. \n" );
+			return -1;
+		}
+	}
+	for( i = 0; i < N; i++){
+		memcpy( *dst + i, src + N - 1 - i, size );
+	}
+
+	return 0;
+}
+int transpose( void *** dst, void ** src, int N, size_t size ){
+	//src is a N elem array, each elem being a pointer to an N elem array of elem of size "size"
+	//Transpose sets each line to be a column
+	//dst will be an N elem array, each elem being a pointer to an N elem array of elem of size "size"
+	//dst is pointing to the array, hence dst shall be given as the address of a pointer in order to allow memory allocation if pointing to NULL
+	//If dst is not a NULL pointer and pointing to a memory which is not of the proper size or type, errors or unexpected behaviour could happen 
+
+	//Note that transpose only works for squared arrays, a version which fills with zero the undefined elements could be defined in the future	
+	int i, j;
+	if(*dst == NULL){
+		*dst = (void **)  malloc( N * sizeof( void *) );
+	} 
+	fprintf(stdout, "crash\n");
+	for(i = 0; i < N; i++){
+		(*dst)[i] = malloc( N * size );
+		if( (*dst)[i] == NULL){
+			fprintf(stderr, "transpose : memory allocation failed.\n");
+			return -1;
+
+		}
+		for(j = 0; j < N; j++){
+			memcpy( *(*dst + i) + j * size,  *( src + j) + i * size, size );
+		}
+	}
+	return 0;
+}
+
+
 complex_polar_t * unity(int k, int N){
 	
 	complex_polar_t * unit = (complex_polar_t *) malloc(sizeof(complex_polar_t));
@@ -279,7 +351,20 @@ static complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, 
 	free(temp_cart1);
 	free(temp_cart2);
 	free(f_temp_cart);
+
+	return buffer;
+}
+void * rotate_buffer( void * buffer, int N, size_t size){
 	
+	complex_polar_t * temp = malloc(N/2 * size);
+
+	memcpy(temp, buffer + (N/2 - 1) * size, N/2 * size);	//temp contains the second half of buffer
+	
+	memcpy(buffer + (N/2 -1) * size, buffer, N/2 * size);	//The second half of buffer now contains the previous first half
+	memcpy(buffer, temp, N/2 * size);	//And its first half is filled with temp
+
+	free(temp);
+
 	return buffer;
 }
 
@@ -289,7 +374,7 @@ complex_polar_t * FFT_1D_reverse( complex_polar_t * fourier_polar, int n){
 
 	complex_polar_t * f_polar;
 	f_polar = FFT_1D(fourier_polar, NULL, n);
-
+	
 	return f_polar;
 }
 
@@ -300,10 +385,11 @@ complex_cart_t * FFT_1D_reverse_cart_to_cart( complex_cart_t * fft, int n){
 	fft_polar = cart_array_to_polar(fft, N);
 	
 	complex_polar_t * f_polar = NULL;
-	
+
+	rotate_buffer(fft_polar, N, sizeof(complex_polar_t));
 	f_polar = FFT_1D_reverse(fft_polar, n);
 	unitary_ft_polar(f_polar, N);
-	
+
 	free(fft_polar);
 
 	complex_cart_t * f_cart = NULL;
@@ -325,7 +411,9 @@ complex_cart_t * FFT_1D_cart_to_cart( complex_cart_t * f, int n){
 
 	fft_polar = FFT_1D(f_polar, NULL, n);
 	unitary_ft_polar( fft_polar, N);
-	
+
+	rotate_buffer( fft_polar, N, sizeof(complex_polar_t));
+
 	free(f_polar);
 
 	complex_cart_t * fft_cart = NULL;
@@ -334,8 +422,6 @@ complex_cart_t * FFT_1D_cart_to_cart( complex_cart_t * f, int n){
 	free(fft_polar);
 
 	return fft_cart;
-
-
 }
 
 //unitary_ft_*() divide each coefficients inside *_array by 1/sqrt(N) in order to have a unitary fourier transform.
@@ -352,7 +438,6 @@ void * unitary_ft_cart(complex_cart_t * cart_array, int N){
 		cart_array[i].im *= 1.0f/sqrt( (double) N);
 	}
 }
-
 
 //Returns an array of size N containing polar values of values contained in cart_array
 complex_polar_t * cart_array_to_polar( complex_cart_t * cart_array, int N){

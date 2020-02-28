@@ -14,11 +14,15 @@ typedef struct s_complex_cart_t{
 static complex_polar_t * FFT_1D( complex_polar_t *, complex_polar_t *, int);
 static complex_polar_t * FFT_1D_reverse( complex_polar_t * fourier_polar, int n);
 
+void * rotate_buffer( void * buffer, int N, size_t );
+int transpose( void *** dst, void ** src, int N, size_t size );
+int rotate_180( void *** dst, void ** src, int N, size_t size);
+
 complex_cart_t * FFT_1D_cart_to_cart( complex_cart_t * f, int n);
 complex_cart_t * FFT_1D_reverse_cart_to_cart( complex_cart_t * fft, int n);
 
 complex_cart_t ** FFT_2D(complex_cart_t ** array_cart, int n, int m);
-complex_cart_t ** FFT_2D_reverse(complex_cart_t ** ft_array_cart, int n, int m);
+complex_cart_t ** FFT_2D_reverse(complex_cart_t ***, complex_cart_t ** ft_array_cart, int n, int m);
 
 image_t * FT_image_Y(image_t * image, complex_cart_t ** (*transform)(complex_cart_t **, int, int) , image_t * (*convert_cart_to_image)( complex_cart_t **, int, int));
 complex_cart_t ** image_to_cart(image_t * image, complex_cart_t (*xyz_to_cart)( double, double, double) );
@@ -27,6 +31,7 @@ image_t * cart_to_power_Y_image(image_t * image, complex_cart_t ** array, int N,
 
 complex_cart_t ** lowpass_harsh(complex_cart_t ** array_cart, int N, int M);
 complex_cart_t ** highpass_harsh(complex_cart_t ** array_cart, int N, int M);
+complex_cart_t ** middle_band_pass( complex_cart_t ** array_cart, int N, int M);
 
 double zero(complex_cart_t);
 double sum(complex_cart_t z);

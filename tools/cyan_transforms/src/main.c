@@ -9,7 +9,6 @@
 #include <cyan/image/load_png.h>
 
 #include <cyan/image/transforms.h>
-//#include "transforms.h"
 
 int main( int argc, char** argv, char* envv ) {
 
@@ -17,95 +16,91 @@ int main( int argc, char** argv, char* envv ) {
 	int result ;
 	image_t * image ;	
 	image_t * grey_image;
+	if (argc != 2 ) {
+		fprintf(stderr,"Usage : %s file.png\n", argv[0] ) ;
+		return -1 ;
+	}
 	FILE * fp;
 
-	fp = fopen("boat.png", "r");
+	fp = fopen(argv[1], "r");
 	if(fp == NULL){	
 		fprintf(stderr, "Couldn't open file.\n Error : %d, (%s)\n", errno, strerror(errno));
 		return -1;
 	}
-
-
-	if (argc != 2 ) {
-		fprintf(stderr,"Usage : %s output_file.ppm\n", argv[0] ) ;
-		return -1 ;
-	}
 	image = png2image(fp);
+//	fclose(fp);
+
 	if ( image == NULL ) {
 		fprintf(stderr,"image allocation failed\n") ;
 		return -1 ;
 	}	
-/*
-	grey_image = color2grey(image);
-	image_save_ppm(grey_image, "grey_boat.ppm");
-*/
-	//Computes fourier transform of the image
-	image_t * ft_image = NULL;
-	ft_image = FT_image_Y(image, FFT_2D, cart_to_Y);	//ft_image is the FT with sum of real and im part on each pixel
-		//This seems to allow reconstruction (prob. only for real signals
+
+
+	/////////Computing fourier transform
+
+	int n, m;
+
+	n = (int) log2( (double) image->rows );
+	m = (int) log2( (double) image->cols );
 	
-	image_save_ppm( ft_image, argv[1] ) ;		
-	
+	if( (int) pow(2, n + m) != image->rows * image->cols ){
+		fprintf(stderr, "ERROR: main: image : %s \t is not a product of powers of two.\n");
+	       return -1;	
+	}
+
+
+	//Converting the image in a complex array
+	//Y component is sent to the real part
 	complex_cart_t ** image_array = NULL;
 	image_array = image_to_cart(image, Y_to_cart); 
-	//2. Compute 2D FFT
+
+	//Computing Fourier transform
 	complex_cart_t ** ft_array = NULL;
-	ft_array = FFT_2D(image_array, 9, 9);
-	//3. Convert 2D FFT in an image
-	image_t * image_ft = NULL;
-	ft_array = highpass_harsh(ft_array, 512, 512);
+	ft_array = FFT_2D(image_array, n, m);
 
-	image_ft =cart_to_Y(ft_array, 512, 512);
+	
+	///////Saving various images
+	
+	
+	////Saving image of fourier transform
+	image_t * ft_image = NULL;
+	ft_image = cart_to_Y(ft_array, image->rows, image->cols);	
+	image_save_ppm ( ft_image, "fourier.ppm");
 
-	image_save_ppm( image_ft, "lowpass.ppm");
-
-/*
-	//Computes FT of the image and saves power spectrum in power_image
+	//Saves power coefficients of fourier coeficients in an image
 	image_t * power_image = NULL;
-	power_image = FT_image_Y(image, FFT_2D, cart_power_to_Y);
-	mage_save_ppm( power_image, "power.ppm" );
+	power_image = cart_power_to_Y(ft_array, image->rows, image->cols );
+	image_save_ppm( power_image, "power.ppm" );
+	image_free( power_image);
 
-	//Computes FT of the image and saves log of the power spectrum in log_power_image
+	//Saves the log of the power of fourier coeficients in an image
 	image_t * log_power_image = NULL;
-	log_power_image = FT_image_Y(image, FFT_2D, cart_log_power_to_Y);
+	log_power_image = cart_log_power_to_Y(ft_array, image->rows, image->cols);
 	image_save_ppm( log_power_image, "log_power.ppm" );
+	image_free( log_power_image );
 
-	//Computes FT of the image and saves log of the power spectrum in log_power_image
+	//Saves the phase of fourier coeficients in an image
 	image_t * phase_image = NULL;
-	phase_image = FT_image_Y(image, FFT_2D, cart_phase_to_Y);
+	phase_image = cart_phase_to_Y( ft_array, image->rows, image->cols );
 	image_save_ppm( phase_image, "phase.ppm" );
+	image_free( phase_image );
 
+	////////Reverting the fourier coeficients
 
-*/
-	//Computes the reverse FT on ft_image
+	//Computes the reverse FT on the coeficients and saves it in an image
 	image_t * reverse_image = NULL;
-	reverse_image = FT_image_Y(image_ft, FFT_2D_reverse, cart_to_Y);
-	image_save_ppm(reverse_image, "fourier.ppm");
+	//reverse_image = FT_image_Y( ft_image, FFT_2D_reverse, cart_to_Y);
+	
+	complex_cart_t ** reverse_array = NULL	;
+//	rotate_buffer( ft_array, image->rows, sizeof(complex_cart_t *));
 
-	complex_cart_t cart_array[4];
+	FFT_2D_reverse(&reverse_array, ft_array, n, m);
 
-	int n = 2;
-	int N = pow(2, n);
-	complex_cart_t * fft_cart = NULL;
-	fft_cart = FFT_1D_cart_to_cart(cart_array, n);
-	for(i=0; i < N; i++){
-		fprintf(stdout, "array fft : real : %f, im : %f \n", fft_cart[i].real, fft_cart[i].im);
-	}
+	reverse_image = cart_to_Y ( reverse_array, image->rows, image->cols );
+	image_save_ppm(reverse_image, "reverse_fourier.ppm");
+	image_free(reverse_image);
 
-	complex_cart_t * reverse_cart = NULL;
-	reverse_cart = FFT_1D_reverse_cart_to_cart(fft_cart, n);
-	for(i = 0; i < N; i++){
-		fprintf(stdout, "array reverse : real : %f, im : %f \n", reverse_cart[i].real, reverse_cart[i].im);
-	}
-
-	if (result != 0) {
-		fprintf(stderr, "cannot save file\n") ;
-		return -1 ;
-	}
-
-	image_free( image) ;
-
-	fclose(fp);
+	image_free( image );
 
 	return 0 ;
 }
