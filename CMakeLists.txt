@@ -111,15 +111,15 @@ endif()
 
 ### Cmake file
 
-configure_file(cyanConfig.cmake.in "${PROJECT_BINARY_DIR}/cyanConfig.cmake" @ONLY)
+configure_file(cyan-config.cmake.in "${PROJECT_BINARY_DIR}/cyan-onfig.cmake" @ONLY)
 
-install ( FILES "${PROJECT_BINARY_DIR}/cyanConfig.cmake" 
+install ( FILES "${PROJECT_BINARY_DIR}/cyan-config.cmake" 
       DESTINATION "${INSTALL_LIB_PATH}/cyan" COMPONENT dev )  
 
-configure_file(cyanConfigVersion.cmake.in
-	"${PROJECT_BINARY_DIR}/cyanConfigVersion.cmake" @ONLY)
+configure_file(cyan-configVersion.cmake.in
+	"${PROJECT_BINARY_DIR}/cyan-configVersion.cmake" @ONLY)
 
-install ( FILES "${PROJECT_BINARY_DIR}/cyanConfigVersion.cmake" 
+install ( FILES "${PROJECT_BINARY_DIR}/cyan-configVersion.cmake" 
       DESTINATION "${INSTALL_LIB_PATH}/cyan" COMPONENT dev )  
 
 ### Install 
