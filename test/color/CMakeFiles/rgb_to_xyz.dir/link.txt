@@ -1,1 +1,1 @@
-/usr/bin/cc    -Wl,-rpath -Wl,/usr/local/lib -rdynamic CMakeFiles/rgb_to_xyz.dir/rgb_to_xyz.c.o  -o rgb_to_xyz ../../libcyan.so.0.1.1 -lm -lpng -lz 
+/usr/bin/cc    -Wl,-rpath -Wl,/usr/local/lib -rdynamic CMakeFiles/rgb_to_xyz.dir/rgb_to_xyz.c.o  -o rgb_to_xyz ../../libcyan.so.0.1.1 -lm -lcyan_fileio -lpng -lz 

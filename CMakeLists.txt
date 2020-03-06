@@ -39,6 +39,8 @@ option(BUILD_TEST   "Build cyan tests" ON)
 
 ###Search for libpng
 
+find_package(CYAN_FILEIO) 
+
 find_package(PNG)
 
 ### Search for tirpc
@@ -66,6 +68,13 @@ configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 	                 "${CMAKE_CURRENT_BINARY_DIR}" 
                       )
+if(CYAN_FILEIO_FOUND)
+	message("SUCCESS: cyan_fileio was found in ${CYAN_FILEIO_INCLUDE_DIR}")
+	include_directories( "${CYAN_FILEIO_INCLUDE_DIR}")
+else()
+	message("ERROR: cyan_fileio was not found")
+endif()
+
 
 if (LIBNETPBM_FOUND)
 	include_directories( "${LIBNETPBM_INCLUDE_DIR}" )
@@ -113,6 +122,11 @@ target_link_libraries( "cyan" "m" )
 if (LIBNETPBM_FOUND)
     target_link_libraries( "cyan" ${LIBTIRPC_LIBRARY} )
 endif()
+if (CYAN_FILEIO_FOUND)
+	message("Linking cyan_fileio library located at : ${CYAN_FILEIO_LIBRARY}")
+	target_link_libraries( "cyan" ${CYAN_FILEIO_LIBRARY})
+endif()
+
 if (PNG_FOUND)
 	target_link_libraries( "cyan" ${PNG_LIBRARIES})
 endif()
@@ -122,13 +136,13 @@ endif()
 configure_file(cyan-config.cmake.in "${PROJECT_BINARY_DIR}/cyan-config.cmake" @ONLY)
 
 install ( FILES "${PROJECT_BINARY_DIR}/cyan-config.cmake" 
-      DESTINATION ${INSTALL_LIB_PATH} COMPONENT dev )  
+      DESTINATION "${INSTALL_LIB_PATH}/cyan" COMPONENT dev )  
 
 configure_file(cyan-configVersion.cmake.in
 	"${PROJECT_BINARY_DIR}/cyan-configVersion.cmake" @ONLY)
 
 install ( FILES "${PROJECT_BINARY_DIR}/cyan-configVersion.cmake" 
-      DESTINATION ${INSTALL_LIB_PATH} COMPONENT dev )  
+      DESTINATION "${INSTALL_LIB_PATH}/cyan" COMPONENT dev )  
 
 ### Install 
 

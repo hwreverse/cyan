@@ -6,13 +6,3 @@
 
 #IncludeRegexTransform: 
 
-/home/sf/Prog/cyan/test/color/refwhite_get_xyz.c
-stdio.h
--
-cyan/color/color.h
--
-
-include/cyan/color/color.h
-stddef.h
--
-

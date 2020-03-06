@@ -10,7 +10,7 @@
 #include <cyan_fileio/load_png.h>
 
 //Basic program to open a .jpg file through cyan
-
+//(Probably deprecated... see cyan_transforms )
 int main( int argc, char** argv, char* envv ) {
 
 	int i, j ;
@@ -19,8 +19,8 @@ int main( int argc, char** argv, char* envv ) {
 	FILE * fp;
 
 
-	if (argc != 2 ) {
-		fprintf(stderr,"Usage : %s input_file.png\n", argv[0] ) ;
+	if (argc != 3 ) {
+		fprintf(stderr,"Usage : %s input_file.png output_file.ppm\n", argv[0] ) ;
 		return -1 ;
 	}
 	fp = fopen( argv[1] , "r" );
@@ -33,7 +33,7 @@ int main( int argc, char** argv, char* envv ) {
 		fprintf(stderr,"image allocation of %s failed \n", argv[1]) ;
 		return -1 ;
 	}
-	result = image_save_ppm( image, argv[1] ) ; 
+	result = image_save_ppm( image, argv[2] ) ; 
 
 	if (result != 0) {
 		fprintf(stderr, "cannot save file\n") ;

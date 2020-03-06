@@ -6,5 +6,5 @@ C_FLAGS =
 
 C_DEFINES = 
 
-C_INCLUDES = -I/home/sf/Prog/cyan/include -I/home/sf/Prog/cyan 
+C_INCLUDES = -I/home/sf/Prog/cyan/include -I/home/sf/Prog/cyan -I/usr/local/include 
 
