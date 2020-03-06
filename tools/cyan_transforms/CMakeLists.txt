@@ -12,14 +12,18 @@ set (cyan_transforms_VERSION_MINOR 1)
 set (cyan_transforms_VERSION_PATCH 1)
 set (cyan_transforms_VERSION_STRING ${cyan_transforms_VERSION_MAJOR}.${cyan_transforms_VERSION_MINOR}.${cyan_transforms_VERSION_PATCH} )
 
-# set( CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /lib /usr/lib )
-# set( CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include )
+ set( CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /lib /usr/lib /usr/local/lib )
+ set( CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include /usr/local/include )
 set( CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" ) 
 
 set ( INSTALL_BIN_PATH bin )
 set ( INSTALL_LIB_PATH lib )
 set ( INSTALL_AR_PATH  lib )
 set ( INSTALL_HEADERS_PATH include )
+
+##set( CMAKE_INSTALL_RPATH "/usr/local/lib/")
+set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
 
 # Make relative paths absolute (needed later on)
 
@@ -54,7 +58,6 @@ target_link_libraries( "cyan_transforms" "m" )
 target_link_libraries( "cyan_transforms" "cyan" )
 
 ### Install 
-
 install( TARGETS "cyan_transforms"
 	    RUNTIME DESTINATION ${INSTALL_BIN_PATH}  COMPONENT main
 	    LIBRARY DESTINATION ${INSTALL_LIB_PATH}  COMPONENT main

@@ -18,11 +18,10 @@ set( CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /lib /usr/lib /usr/local/lib )
 set( CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include /usr/local/include )
 set( CMAKE_MODULE_PATH  ${CMAKE_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake" ) 
 
-set ( INSTALL_BIN_PATH bin )
-set ( INSTALL_LIB_PATH lib )
-set ( INSTALL_AR_PATH  lib )
-set ( INSTALL_HEADERS_PATH include )
-
+set ( INSTALL_BIN_PATH /usr/local/bin )
+set ( INSTALL_LIB_PATH /usr/local/lib )
+set ( INSTALL_AR_PATH  /usr/local/lib )
+set ( INSTALL_HEADERS_PATH /usr/local/include )
 # Make relative paths absolute (needed later on)
 
 foreach(p LIB BIN HEADERS AR)
@@ -95,12 +94,22 @@ file( GLOB hdr_config  "include/cyan/config/*.h"  )
 
 add_library( "cyan" SHARED ${src} ) 
 
-set_target_properties(cyan PROPERTIES VERSION ${cyan_VERSION_STRING}
+set_target_properties("cyan" PROPERTIES VERSION ${cyan_VERSION_STRING}
                                     SOVERSION ${cyan_VERSION_MAJOR})
+
+set_target_properties( "cyan" PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+#set( CMAKE_INSTALL_RPATH "/usr/local/lib")
+#set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath -Wl,/usr/local/lib") 
+
+
 
 ### Linking
 
 target_link_libraries( "cyan" "m" )
+
 if (LIBNETPBM_FOUND)
     target_link_libraries( "cyan" ${LIBTIRPC_LIBRARY} )
 endif()
@@ -108,19 +117,18 @@ if (PNG_FOUND)
 	target_link_libraries( "cyan" ${PNG_LIBRARIES})
 endif()
 
-
 ### Cmake file
 
-configure_file(cyan-config.cmake.in "${PROJECT_BINARY_DIR}/cyan-onfig.cmake" @ONLY)
+configure_file(cyan-config.cmake.in "${PROJECT_BINARY_DIR}/cyan-config.cmake" @ONLY)
 
 install ( FILES "${PROJECT_BINARY_DIR}/cyan-config.cmake" 
-      DESTINATION "${INSTALL_LIB_PATH}/cyan" COMPONENT dev )  
+      DESTINATION ${INSTALL_LIB_PATH} COMPONENT dev )  
 
 configure_file(cyan-configVersion.cmake.in
 	"${PROJECT_BINARY_DIR}/cyan-configVersion.cmake" @ONLY)
 
 install ( FILES "${PROJECT_BINARY_DIR}/cyan-configVersion.cmake" 
-      DESTINATION "${INSTALL_LIB_PATH}/cyan" COMPONENT dev )  
+      DESTINATION ${INSTALL_LIB_PATH} COMPONENT dev )  
 
 ### Install 
 
@@ -129,7 +137,7 @@ install( TARGETS "cyan"
 	    LIBRARY DESTINATION ${INSTALL_LIB_PATH}  COMPONENT main
         ARCHIVE DESTINATION ${INSTALL_AR_PATH}   COMPONENT main )
 
-install( FILES ${hdr}
+install(  FILES ${hdr}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/${name} 
         COMPONENT main )
 
