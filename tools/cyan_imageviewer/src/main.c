@@ -6,8 +6,8 @@
 #include <cyan/color/color.h>
 #include <cyan/image/image.h>
 
-#include "load_png.h"
-
+//#include "load_png.h"
+#include <cyan_fileio/load_png.h>
 
 //Basic program to open a .jpg file through cyan
 
@@ -18,20 +18,19 @@ int main( int argc, char** argv, char* envv ) {
 	image_t* image ; 
 	FILE * fp;
 
-	fp = fopen("lena.png", "r");
-	if(fp == NULL){	
+
+	if (argc != 2 ) {
+		fprintf(stderr,"Usage : %s input_file.png\n", argv[0] ) ;
+		return -1 ;
+	}
+	fp = fopen( argv[1] , "r" );
+	if( fp == NULL){
 		fprintf(stderr, "Couldn't open file.\n Error : %d, (%s)\n", errno, strerror(errno));
 		return -1;
 	}
-
-
-	if (argc != 2 ) {
-		fprintf(stderr,"Usage : %s output_file.ppm\n", argv[0] ) ;
-		return -1 ;
-	}
 	image = png2image(fp);
 	if ( image == NULL ) {
-		fprintf(stderr,"image allocation failed\n") ;
+		fprintf(stderr,"image allocation of %s failed \n", argv[1]) ;
 		return -1 ;
 	}
 	result = image_save_ppm( image, argv[1] ) ; 

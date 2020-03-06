@@ -1,1 +1,0 @@
-/usr/bin/cc   -rdynamic CMakeFiles/cyan_load_png.dir/src/load_png.c.o CMakeFiles/cyan_load_png.dir/src/main.c.o  -o cyan_load_png -lm -lcyan 

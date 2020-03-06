@@ -6,7 +6,8 @@
 
 #include <cyan/color/color.h>
 #include <cyan/image/image.h>
-#include <cyan/image/load_png.h>
+//#include <cyan/image/load_png.h>
+#include <cyan_fileio/load_png.h>
 
 #include <cyan/image/transforms.h>
 

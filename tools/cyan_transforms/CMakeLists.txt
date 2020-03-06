@@ -22,8 +22,9 @@ set ( INSTALL_AR_PATH  lib )
 set ( INSTALL_HEADERS_PATH include )
 
 ##set( CMAKE_INSTALL_RPATH "/usr/local/lib/")
-set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+##set( CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
+set( CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-rpath -Wl,/usr/local/lib") 
 
 # Make relative paths absolute (needed later on)
 
