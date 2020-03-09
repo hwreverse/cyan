@@ -4,7 +4,6 @@
 ###
 ###############################################################################
 
-
 cmake_minimum_required (VERSION 2.6)
 
 project (cyan)
@@ -38,6 +37,16 @@ option(ENABLE_TIRPC "Use the tirpc library for file saving/loading" ON)
 option(BUILD_TOOLS  "Build and install cyan tools" ON)
 option(BUILD_TEST   "Build cyan tests" OFF)
 
+option(CFG_VERBOSE_ERRORS   "Error output on stderr" ON)
+
+### Cyan options processing
+
+if (CFG_VERBOSE_ERRORS)
+    set ( CYAN_CFG_VERBOSE_ERRORS 1)
+else()
+    set ( CYAN_CFG_VERBOSE_ERRORS 0)
+endif()
+
 ### Search for tirpc
 
 if (ENABLE_TIRPC)
@@ -56,7 +65,7 @@ endif()
 ### Config File
 
 configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
-		         "${PROJECT_SOURCE_DIR}/include/cyan/config/cyan.h" )
+		         "${PROJECT_SOURCE_DIR}/include/cyan/common/config.h" )
 
 ### Set include directories 
         
@@ -71,7 +80,8 @@ endif()
 ### File lists
 
 file( GLOB src  "src/*.c"  
-                "src/color/*.c")
+                "src/color/*.c"
+                "src/common/*.c" )
 
 
 file( GLOB hdr         "include/cyan/*.h"  )
@@ -79,7 +89,7 @@ file( GLOB hdr_image   "include/cyan/image/*.h"  )
 file( GLOB hdr_color   "include/cyan/color/*.h"  )
 file( GLOB hdr_vision  "include/cyan/vision/*.h"  )
 file( GLOB hdr_3dmodel "include/cyan/3dmodel/*.h"  )
-file( GLOB hdr_config  "include/cyan/config/*.h"  )
+file( GLOB hdr_common  "include/cyan/common/*.h"  )
 
 ### Targets
 
@@ -135,8 +145,8 @@ install( FILES ${hdr_3dmodel}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/3dmodel/${name}
 	    COMPONENT main )
 
-install( FILES ${hdr_config}
-	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/config/${name}
+install( FILES ${hdr_common}
+	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/common/${name}
 	    COMPONENT main )
 
 # Build Tools
@@ -161,5 +171,7 @@ MESSAGE(STATUS "")
 MESSAGE(STATUS "ENABLE_TIRPC:      " ${ENABLE_TIRPC})
 MESSAGE(STATUS "BUILD_TOOLS:       " ${BUILD_TOOLS})
 MESSAGE(STATUS "BUILD_TEST:        " ${BUILD_TEST})
+MESSAGE(STATUS "")
+MESSAGE(STATUS "CYAN_CFG_VERBOSE_ERRORS:        " ${CFG_VERBOSE_ERRORS})
 MESSAGE(STATUS "")
 MESSAGE(STATUS "*********************************************************")

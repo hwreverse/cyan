@@ -27,15 +27,15 @@ int image_allocate_data_fct( image_t*,
 
 int image_import_data   ( image_t*, size_t data_size, void* data ) ;
 
-void*    image_get_data_pointer  ( image_t*, int i, int j ) ;
+int image_get_data_pointer  ( image_t*, int i, int j, void** ) ;
 
-image_t* image_clone ( image_t* ) ;
-void image_resize ( image_t*, int rows, int cols ) ;
-void image_apply_fct ( image_t*, 
-                        void (*fct)( image_t*,int i, int j, void* ctx),
-            			void* context ) ;
+int image_clone ( image_t*, image_t** ) ;
+int image_resize ( image_t*, int rows, int cols ) ;     //TODO
 
-int image_save(image_t* img, char* filename ) ;
-image_t* image_load(char* filename , int* result ) ;
+
+
+
+int image_save(image_t* img, char* filename ) ;         // TODO
+image_t* image_load(char* filename , int* result ) ;    // TODO
 
 #endif

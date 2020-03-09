@@ -2,13 +2,14 @@
 #include <string.h>
 #include <stdio.h>
 
-#include <cyan/image/image.h>
+#include "cyan/common/error.h"
+#include "cyan/image/image.h"
 
 image_t* image_new(int cols, int rows) {
 	image_t *tmp;
 	tmp = (image_t *) malloc(sizeof(image_t));
 	if (tmp == NULL) {
-		fprintf(stderr, "image_new : malloc error\n");
+		CYAN_ERROR( ERR_MALLOC ) ;
 		return NULL;
 	}
 	tmp->rows = rows;
@@ -16,13 +17,20 @@ image_t* image_new(int cols, int rows) {
     tmp->monochrome = 0 ;
     tmp->illuminant = CYAN_D50 ;
 	tmp->X = (double *) malloc(rows * cols * sizeof(double));
+    if ( tmp->X == NULL ) {
+        CYAN_ERROR( ERR_MALLOC ) ;
+        return NULL ;
+    }
 	tmp->Y = (double *) malloc(rows * cols * sizeof(double));
+    if ( tmp->Y == NULL ) {
+        CYAN_ERROR( ERR_MALLOC ) ;
+        return NULL ;
+    }
 	tmp->Z = (double *) malloc(rows * cols * sizeof(double));
-	if ( (tmp->X == NULL) || (tmp->Y == NULL) || (tmp->Z == NULL) ) {
-		fprintf(stderr, "image_new : pixels allocation error \n");
-		free(tmp);
-		return NULL;
-	}
+    if ( tmp->Z == NULL ) {
+        CYAN_ERROR( ERR_MALLOC ) ;
+        return NULL ;
+    }
 	tmp->pixel_data_size = (size_t) 0;
 	tmp->pixel_data = (void *) NULL;
 	return tmp;
@@ -48,93 +56,87 @@ void image_free(image_t * img) {
 int image_allocate_data_default(image_t * img, size_t size, void *data_array) {
 	int i;
 	if (img == (image_t *) NULL) {
-		fprintf(stderr,
-			"image_allocate_data_default: image is a NULL pointer\n");
-		return -1;
+        CYAN_ERROR( ERR_NULL ) ;
+		return ERR_NULL ;
 	}
 	if (img->pixel_data != (void *) NULL) {
-		fprintf(stderr,
-			"image_allocate_data_default : img->pixel_data is not NULL \n");
-		return -1;
+		CYAN_ERROR( ERR_INVALID_ARG ) ;
+        return ERR_INVALID_ARG ;
 	}
 	img->pixel_data_size = size;
 	img->pixel_data = (void *) malloc(img->rows * img->cols * size);
 	if (img->pixel_data == NULL) {
-		fprintf(stderr,
-			"image_allocate_data_default : data allocation error \n");
-		img->pixel_data_size = 0;
-		return 0;
+		CYAN_ERROR( ERR_MALLOC ) ;
+        return ERR_MALLOC ;
 	}
 	for (i = 0; i < img->rows * img->cols; i++) {
 		memcpy(img->pixel_data + i * size, data_array, size);
 	}
-	return i;
+	return ERR_OK ;
 }
 
 int image_allocate_data_fct(image_t * img, size_t size, int (*fill_fct) (image_t *, int, int, void *), void *context) {
 	int i, j, ret;
 	if (img == (image_t *) NULL) {
-		fprintf(stderr,
-			"image_allocate_data_fct: image is a NULL pointer\n");
-		return -1;
+        CYAN_ERROR( ERR_NULL ) ;
+		return ERR_NULL ;
 	}
 	if (img->pixel_data != (void *) NULL) {
-		fprintf(stderr,
-			"image_allocate_data_fct : img->pixel_data is not NULL \n");
-		return -1;
+		CYAN_ERROR( ERR_INVALID_ARG ) ;
+        return ERR_INVALID_ARG ;
 	}
 	img->pixel_data_size = size;
 	img->pixel_data = (void *) malloc(img->rows * img->cols * size);
 	if (img->pixel_data == NULL) {
-		fprintf(stderr,
-			"image_allocate_data_fct : data allocation error \n");
-		img->pixel_data_size = 0;
-		return 0;
-	}
+		CYAN_ERROR( ERR_MALLOC ) ;
+        return ERR_MALLOC ;
+    }
 	ret = 0;
 	for (j = 0; j < img->rows; j++)
 		for (i = 0; i < img->cols; i++) {
 			ret += fill_fct(img, i, j, context);
 		}
-	return ret;
+	return ERR_OK ;
 }
 
 int image_import_data(image_t * img, size_t data_size, void *data) {
 	if (img == (image_t *) NULL) {
-		fprintf(stderr,
-			"image_import_data: image is a NULL pointer\n");
-		return -1;
+        CYAN_ERROR( ERR_NULL ) ;
+		return ERR_NULL ;
 	}
 	if (img->pixel_data != (void *) NULL) {
-		fprintf(stderr,
-			"image_import_data : img->pixel_data is not NULL \n");
-		return -1;
+		CYAN_ERROR( ERR_INVALID_ARG ) ;
+        return ERR_INVALID_ARG ;
 	}
 	img->pixel_data_size = data_size;
 	memcpy(img->pixel_data, data, img->cols * img->rows * data_size);
-	return img->cols * img->rows;
+	return ERR_OK ;
 }
 
-void *image_get_data_pointer(image_t * img, int i, int j) {
-	return img->pixel_data + (i + j * img->cols) * img->pixel_data_size;
+int image_get_data_pointer(image_t * img, int i, int j, void** data_ptr) {
+	if ((i<0)||(i>=img->cols)||(j<0)||(j>=img->rows)) {
+        CYAN_ERROR( ERR_INVALID_ARG ) ;
+        return ERR_INVALID_ARG ;
+    }
+    *data_ptr=img->pixel_data+(i+j*img->cols)*img->pixel_data_size;
+    return ERR_OK ;
 }
 
-image_t *image_clone(image_t * img) {
-	image_t *clone;
-	clone = image_new(img->cols, img->rows);
-    clone->monochrome = img->monochrome ;
-    clone->illuminant = img->illuminant ;
-    memcpy(clone->Y, img->Y, img->rows * img->cols * sizeof(double));
+int image_clone(image_t * img, image_t** dest) {
+	*dest = image_new(img->cols, img->rows);
+    (*dest)->monochrome = img->monochrome ;
+    (*dest)->illuminant = img->illuminant ;
+    memcpy((*dest)->Y, img->Y, img->rows * img->cols * sizeof(double));
 	if ( img->monochrome ) {
-        clone->X = NULL ;
-        clone->Z = NULL ;
+        (*dest)->X = NULL ;
+        (*dest)->Z = NULL ;
     } else {
-	    memcpy(clone->X, img->X, img->rows * img->cols * sizeof(double));
-	    memcpy(clone->Z, img->Z, img->rows * img->cols * sizeof(double));
+	    memcpy((*dest)->X, img->X, img->rows * img->cols * sizeof(double));
+	    memcpy((*dest)->Z, img->Z, img->rows * img->cols * sizeof(double));
     }
     if (img->pixel_data != (void *) NULL) {
-		image_import_data(clone, img->pixel_data_size, img->pixel_data);
+		image_import_data( *dest, img->pixel_data_size, img->pixel_data);
 	}
-	return clone;
+	return ERR_OK ;
 }
 
