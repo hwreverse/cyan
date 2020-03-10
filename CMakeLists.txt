@@ -33,7 +33,9 @@ endforeach()
 
 ### Options ###
 
-option(ENABLE_TIRPC "Use the tirpc library for file saving/loading" ON)
+option(ENABLE_TIRPC   "Use the tirpc library for file saving/loading" ON)
+option(ENABLE_GETTEXT "Use the gettext library for int18n" ON)
+
 option(BUILD_TOOLS  "Build and install cyan tools" ON)
 option(BUILD_TEST   "Build cyan tests" OFF)
 
@@ -60,6 +62,22 @@ if (ENABLE_TIRPC)
 else()
     message("Not using tirpc lib. Load/save functions will not be available")
     set ( HAVE_TIRPC 0 )
+endif()
+
+
+### Search for gettext
+
+if (ENABLE_GETTEXT)
+    find_package(gettext)
+    if (GETTEXT_FOUND)
+        set ( HAVE_GETTEXT 1)
+    else()
+        set ( HAVE_GETTEXT 0)
+        message( FATAL_ERROR "Cannot find gettext lib.")
+    endif()
+else()
+    message("Not using gettext. Messages will be displayed in english only")
+    set ( HAVE_GETTEXT 0 )
 endif()
 
 ### Config File
