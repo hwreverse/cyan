@@ -19,20 +19,20 @@ msgstr ""
 
 #: /home/seb/devel/cyan.git/src/common/error.c:14
 msgid "Given argument is invalid or has wrong value"
-msgstr ""
+msgstr "Argument ou valeur invalide"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:10
 msgid "Memory allocation failed"
-msgstr ""
+msgstr "Erreur d'allocation mémoire"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:12
 msgid "NULL pointer was given"
-msgstr ""
+msgstr "Pointeur NULL"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:8
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:16
 msgid "Unknown error"
-msgstr ""
+msgstr "Erreur Inconnue"
