@@ -68,7 +68,7 @@ endif()
 ### Search for gettext
 
 if (ENABLE_GETTEXT)
-    find_package(gettext)
+    find_package(Gettext)
     if (GETTEXT_FOUND)
         set ( HAVE_GETTEXT 1)
     else()
@@ -100,7 +100,6 @@ endif()
 file( GLOB src  "src/*.c"  
                 "src/color/*.c"
                 "src/common/*.c" )
-
 
 file( GLOB hdr         "include/cyan/*.h"  )
 file( GLOB hdr_image   "include/cyan/image/*.h"  )
@@ -180,6 +179,12 @@ if (BUILD_TEST)
     add_subdirectory(test)
 endif()
 
+# Int18n
+
+if (ENABLE_GETTEXT)
+    add_subdirectory(po)
+endif()
+
 ### Pretty Display :
 
 MESSAGE(STATUS "*********************************************************")
@@ -187,6 +192,7 @@ MESSAGE(STATUS "")
 MESSAGE(STATUS "Build type:        " ${CMAKE_BUILD_TYPE})
 MESSAGE(STATUS "")
 MESSAGE(STATUS "ENABLE_TIRPC:      " ${ENABLE_TIRPC})
+MESSAGE(STATUS "ENABLE_GETTTEXT:   " ${ENABLE_GETTEXT})
 MESSAGE(STATUS "BUILD_TOOLS:       " ${BUILD_TOOLS})
 MESSAGE(STATUS "BUILD_TEST:        " ${BUILD_TEST})
 MESSAGE(STATUS "")
