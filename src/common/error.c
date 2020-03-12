@@ -1,6 +1,22 @@
 #include "cyan/common/error.h"
 
-#define _(STRING) STRING
+#if HAVE_GETTEXT
+    
+    #include <libintl.h>
+    #define _(STRING) dgettext ( "cyan", STRING )
+
+#else
+
+    #define _(STRING) STRING
+
+#endif
+
+
+// TODO:
+//
+// Mettre dans la fonction init()
+// bindtextdomain ("cyan", "/usr/share/locale";
+
 
 const char* error_get_text ( int error_code ) {
     switch ( error_code ) {
@@ -15,3 +31,4 @@ const char* error_get_text ( int error_code ) {
     }
     return _("Unknown error") ;
 }
+
