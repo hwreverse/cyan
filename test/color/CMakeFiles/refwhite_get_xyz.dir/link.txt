@@ -1,1 +1,1 @@
-/usr/bin/cc    -Wl,-rpath -Wl,/usr/local/lib -rdynamic CMakeFiles/refwhite_get_xyz.dir/refwhite_get_xyz.c.o  -o refwhite_get_xyz ../../libcyan.so.0.1.1 -lm -lcyan_fileio -lpng -lz 
+/usr/bin/cc -g   -Wl,-rpath -Wl,/usr/local/lib -rdynamic CMakeFiles/refwhite_get_xyz.dir/refwhite_get_xyz.c.o  -o refwhite_get_xyz ../../libcyan.so.0.1.1 -lm -lcyan_fileio -lpng -lz 

@@ -8,6 +8,7 @@
 #include <cyan/image/image.h>
 #include <cyan/image/load_png.h>
 #include <cyan/image/transforms.h>
+#include <cyan/image/fourier.h>
 
 //This unit test  computes the fourier transform of cart_array
 //Then the reverse ft of the array of coefs. obtained

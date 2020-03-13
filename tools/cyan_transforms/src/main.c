@@ -9,6 +9,7 @@
 //#include <cyan/image/load_png.h>
 #include <cyan_fileio/load_png.h>
 
+#include <cyan/image/fourier.h>
 #include <cyan/image/transforms.h>
 
 int main( int argc, char** argv, char* envv ) {
