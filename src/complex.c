@@ -49,6 +49,11 @@ void * cart_to_polar( complex_polar_t * z_pol, complex_cart_t z_cart){
 }
 
 
+void * assign_complex_polar_ptr( complex_polar_t * result, complex_polar_t * z){
+	result->phase = z->phase;
+	result->power = z->power;
+}
+
 void * assign_complex_polar( complex_polar_t * result, complex_polar_t z){
 	result->phase = z.phase;
 	result->power = z.power;
