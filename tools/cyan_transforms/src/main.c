@@ -6,18 +6,20 @@
 
 #include <cyan/color/color.h>
 #include <cyan/image/image.h>
-//#include <cyan/image/load_png.h>
+
 #include <cyan_fileio/load_png.h>
 
+#include <cyan/image/complex.h>
 #include <cyan/image/fourier.h>
 #include <cyan/image/transforms.h>
+#include <cyan/image/sampling.h>
 
 int main( int argc, char** argv, char* envv ) {
 
 	int i, j ;
 	int result ;
-	image_t * image ;	
-	image_t * grey_image;
+	image_t * image = NULL ;	
+	
 	if (argc != 2 ) {
 		fprintf(stderr,"Usage : %s file.png\n", argv[0] ) ;
 		return -1 ;
@@ -55,6 +57,18 @@ int main( int argc, char** argv, char* envv ) {
 	//Y component is sent to the real part
 	complex_cart_t ** image_array = NULL;
 	image_array = image_to_cart(image, Y_to_cart); 
+	complex_cart_t ** window_array = malloc(sizeof(complex_cart_t *) * image->rows );
+	for(i = 0; i< image->rows; i++){
+		window_array[i] = NULL;	
+		window_array[i] = (complex_cart_t *) cart_array_through_window_arb( NULL, image_array[i], image->cols, window_triangular);
+	}
+	image_t * grey_image_window = NULL;
+	grey_image_window = cart_to_Y(window_array, image->rows, image->cols);
+	image_save_ppm(grey_image_window, "window_grey_image.ppm");
+
+	image_t * grey_image = NULL;
+	grey_image = cart_to_Y(image_array, image->rows, image->cols);
+	image_save_ppm(grey_image, "grey_image.ppm");
 
 	//Computing Fourier transform
 	complex_cart_t ** ft_array = NULL;
@@ -103,6 +117,27 @@ int main( int argc, char** argv, char* envv ) {
 	image_free(reverse_image);
 
 	image_free( image );
+
+	
+
+
+
+
+	
+	complex_polar_t test_arr[10];
+	for(i = 0; i <10; i++){
+		test_arr[i].power = 1.0f;
+		test_arr[i].phase = 0.0f;
+	}
+	complex_polar_t  * buf = NULL ;
+
+	//buf = sub_sampling_step( buf, test_arr, 10, 5, sizeof(complex_polar_t), ( void (*)(void*, void* ) ) assign_complex_polar_ptr );
+	buf = sub_sampling_step_polar( buf, test_arr, 10, 2);
+	for(i = 0; i <10; i++){
+		fprintf(stdout, "%f\n"	, buf[i].power );
+	}
+
+	free(buf);
 
 	return 0 ;
 }

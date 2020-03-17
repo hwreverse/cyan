@@ -49,15 +49,29 @@ void * cart_to_polar( complex_polar_t * z_pol, complex_cart_t z_cart){
 }
 
 
+void * assign_complex_polar( complex_polar_t * result, complex_polar_t z){
+	result->phase = z.phase;
+	result->power = z.power;
+}
 void * assign_complex_polar_ptr( complex_polar_t * result, complex_polar_t * z){
 	result->phase = z->phase;
 	result->power = z->power;
 }
 
-void * assign_complex_polar( complex_polar_t * result, complex_polar_t z){
-	result->phase = z.phase;
-	result->power = z.power;
+void * assign_complex_cart_ptr( complex_cart_t * result, complex_cart_t * z){
+	result->real = z->real;
+	result->im = z->im;
 }
+int assign_complex_cart_ptr_void( void * result, void * z){
+	((complex_cart_t *) result)->real = ((complex_cart_t *) z)->real;
+	((complex_cart_t *) result)->im = ((complex_cart_t *) z)->im;
+}
+
+int mult_scalar_complex_cart ( void * z, double scal ){
+	((complex_cart_t *) z)->real *= scal;
+	((complex_cart_t *) z)->im *= scal;
+}
+
 //Returns an array of size N containing polar values of values contained in cart_array
 complex_polar_t * cart_array_to_polar( complex_cart_t * cart_array, int N){
 	complex_polar_t * polar_array;

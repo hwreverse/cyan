@@ -22,6 +22,11 @@ void * polar_to_cart( complex_cart_t *, complex_polar_t);
 void * cart_to_polar( complex_polar_t *, complex_cart_t);
 
 void * assign_complex_polar( complex_polar_t *, complex_polar_t);
+void * assign_complex_polar_ptr( complex_polar_t *, complex_polar_t *);
+void * assign_complex_cart_ptr( complex_cart_t *, complex_cart_t *);
+int assign_complex_cart_ptr_void( void * result, void * z);
+int mult_scalar_complex_cart ( void * z, double scal );
+
 complex_polar_t * cart_array_to_polar( complex_cart_t * cart_array, int n);
 complex_cart_t * polar_array_to_cart( complex_polar_t * polar_array, int n);
 
