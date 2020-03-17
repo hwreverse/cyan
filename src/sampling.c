@@ -96,3 +96,27 @@ void * cart_array_through_window_arb( complex_cart_t * ret, complex_cart_t * arr
 
 }
 
+int array_2d_through_window_arb( void *** dst, void ** src, int N, int M, size_t elem_size, 
+	       			double (*window)(double, int), int (*mult)(void *, double)){
+ 	
+	int i, j;
+	*dst = (void **)  malloc( N * sizeof( void *) );
+
+	for(i = 0; i < N; i++){
+		(*dst)[i] = malloc( N * elem_size );
+		if( (*dst)[i] == NULL){
+			fprintf(stderr, "array_2d_through_window_arb : memory allocation failed.\n");
+			return -1;
+		}
+		
+		cart_array_through_window_arb( (*dst)[i], *(src + i), M, window);	
+	}
+	for(j = 0; j < M; j++){
+		for( i = 0; i < N; i++){
+			mult( (*dst)[j] + i * elem_size, window( (double) j, N) );
+		}
+	}
+
+	return 0;
+}
+

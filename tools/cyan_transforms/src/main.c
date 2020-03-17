@@ -57,11 +57,13 @@ int main( int argc, char** argv, char* envv ) {
 	//Y component is sent to the real part
 	complex_cart_t ** image_array = NULL;
 	image_array = image_to_cart(image, Y_to_cart); 
-	complex_cart_t ** window_array = malloc(sizeof(complex_cart_t *) * image->rows );
-	for(i = 0; i< image->rows; i++){
-		window_array[i] = NULL;	
-		window_array[i] = (complex_cart_t *) cart_array_through_window_arb( NULL, image_array[i], image->cols, window_triangular);
-	}
+	
+	complex_cart_t ** window_array = NULL;
+
+	array_2d_through_window_arb( (void ***) &window_array, (void **) image_array, image->rows, image->cols, sizeof(complex_cart_t),
+			window_rectangular, mult_scalar_complex_cart);	
+
+
 	image_t * grey_image_window = NULL;
 	grey_image_window = cart_to_Y(window_array, image->rows, image->cols);
 	image_save_ppm(grey_image_window, "window_grey_image.ppm");

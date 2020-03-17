@@ -193,14 +193,13 @@ int transpose( void *** dst, void ** src, int N, size_t size ){
 	//Transpose sets each line to be a column
 	//dst will be an N elem array, each elem being a pointer to an N elem array of elem of size "size"
 	//dst is pointing to the array, hence dst shall be given as the address of a pointer in order to allow memory allocation if pointing to NULL
-	//If dst is not a NULL pointer and pointing to a memory which is not of the proper size or type, errors or unexpected behaviour could happen 
+	//If dst is not a NULL pointer and pointing to a memory area which is not of the proper size or type, errors or unexpected behaviour could happen 
 
 	//Note that transpose only works for squared arrays, a version which fills with zero the undefined elements could be defined in the future	
 	int i, j;
 	if(*dst == NULL){
 		*dst = (void **)  malloc( N * sizeof( void *) );
 	} 
-	fprintf(stdout, "crash\n");
 	for(i = 0; i < N; i++){
 		(*dst)[i] = malloc( N * size );
 		if( (*dst)[i] == NULL){
