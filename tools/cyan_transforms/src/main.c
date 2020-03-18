@@ -61,7 +61,7 @@ int main( int argc, char** argv, char* envv ) {
 	complex_cart_t ** window_array = NULL;
 
 	array_2d_through_window_arb( (void ***) &window_array, (void **) image_array, image->rows, image->cols, sizeof(complex_cart_t),
-			window_rectangular, mult_scalar_complex_cart);	
+			window_triangular, mult_scalar_complex_cart);	
 
 
 	image_t * grey_image_window = NULL;
@@ -118,7 +118,7 @@ int main( int argc, char** argv, char* envv ) {
 	image_save_ppm(reverse_image, "reverse_fourier.ppm");
 	image_free(reverse_image);
 
-	image_free( image );
+	//image_free( image );
 
 	
 
@@ -131,16 +131,24 @@ int main( int argc, char** argv, char* envv ) {
 		test_arr[i].power = 1.0f;
 		test_arr[i].phase = 0.0f;
 	}
-	complex_polar_t  * buf = NULL ;
+	complex_cart_t  * buf = NULL ;
 
-	//buf = sub_sampling_step( buf, test_arr, 10, 5, sizeof(complex_polar_t), ( void (*)(void*, void* ) ) assign_complex_polar_ptr );
-	buf = sub_sampling_step_polar( buf, test_arr, 10, 2);
-	for(i = 0; i <10; i++){
-		fprintf(stdout, "%f\n"	, buf[i].power );
+	sub_sampling_step_cart( &buf,(complex_cart_t *) *ft_array, image->cols, 8);
+
+	double * double_buf = NULL;
+	double_buf = (double *) malloc(  (image->cols / 8) * sizeof(double));
+	for(i = 0; i < image->cols/8; i++){
+		double_buf[i] = buf[i].real;
+	}
+	
+	double * window_buf = NULL;
+	double_array_through_window(&window_buf, double_buf, image->cols/8, window_triangular);
+	for(i = 0; i < (image->cols/8); i++){
+		fprintf(stdout, "original : %f\t windowed : %f\n"	, buf[i].real, window_buf[i] );
 	}
 
-	free(buf);
-
+	free((complex_cart_t *) buf);
+	image_free(image);
 	return 0 ;
 }
 

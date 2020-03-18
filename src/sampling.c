@@ -13,29 +13,34 @@
 
 
 //TODO : use this sampling function in FFT * to obtain odd and even elem 
-void * sub_sampling_step( void * sample, void *  array, int length, int step, size_t size, void (*assign)(void *, void *) ){
+int sub_sampling_step( void ** dst, void *  src, int number_elem, int step, size_t size, void (*assign)(void *, void *) ){
 	
-	if(sample == NULL){
-		fprintf(stdout, "sub_sampling_step : allocating memory ( total size : %d ).\n", length * size );
-		sample = malloc( (length/step)  * size );
+	if(dst == NULL){
+		fprintf(stderr, "ERROR : sub_sampling_step: dst is a NULL pointer.\n");
+		return -1;
+	}
+
+	if(*dst == NULL){
+		fprintf(stdout, "sub_sampling_step : allocating memory ( allocated : %d, \ttotal size : %d ).\n",(number_elem/step)*size , number_elem * size );
+		*dst = malloc( (number_elem/step)  * size );	
 	}	
 	int i = 0;
-	for( i =0; i*step < length; i++){
+	for( i =0; i*step < number_elem; i++){
 		fprintf(stdout, "sub_sampling_step : assigning data ( %d ). \n", i * step * size );
-		assign( sample + i*size, array + i * step * size );		
+		assign( *dst + i*size, src + i * step * size );		
 	}
 
 	fprintf(stdout, "sub_sampling_step : leaving function. \n");
 
-	return sample;
+	return 0;
 }
 
-complex_polar_t * sub_sampling_step_polar( complex_polar_t * sample, complex_polar_t * array, int length, int step){
-	return  (complex_polar_t *) sub_sampling_step( sample, array, length, step, sizeof(complex_polar_t), (void (*)( void *, void *) ) assign_complex_polar_ptr );
+int sub_sampling_step_polar( complex_polar_t ** dst, complex_polar_t * src, int number_elem, int step){
+	return  sub_sampling_step( (void **) dst, src, number_elem, step, sizeof(complex_polar_t), (void (*)( void *, void *) ) assign_complex_polar_ptr );
 }
 
-complex_cart_t * sub_sampling_step_cart( complex_cart_t * sample, complex_cart_t * array, int length, int step){
-	return  (complex_cart_t *) sub_sampling_step( sample, array, length, step, sizeof(complex_cart_t), (void (*)( void *, void *) ) assign_complex_cart_ptr );
+int sub_sampling_step_cart( complex_cart_t ** dst, complex_cart_t * src, int number_elem, int step){
+	return  sub_sampling_step( (void **) dst, src, number_elem, step, sizeof(complex_cart_t), (void (*)( void *, void *) ) assign_complex_cart_ptr );
 }
 
 double window_rectangular( double x, int N ){
@@ -55,10 +60,26 @@ double window_hann( double x, int N){
 double window_hamming( double x, int N){
 	return 0.54f - 0.46 * cos( 8.0f * atan(1.0f) * x / (double) N - 1.0f );
 }
-int cart_array_through_window( complex_cart_t * ret, complex_cart_t * array, int number_elem, double (*window)(double, int) ){
-	if(ret == (complex_cart_t * ) NULL){
-		ret = malloc( number_elem * sizeof(complex_cart_t) );
-		if(ret == (complex_cart_t * )  NULL){
+int double_array_through_window( double ** dst, double * src, int number_elem, double (*window)(double, int) ){
+	return arb_array_through_window( (void **) dst, src, number_elem, 
+					sizeof(double ),
+					window,
+					assign_double,
+					mult_double );
+
+}
+int assign_double( void * dst, void * src ){
+	*((double *) dst) = *((double *) src);
+	return 0;
+}
+int mult_double( void * dst, double src ){
+	*((double *) dst) *= src;
+	return 0;
+}
+int cart_array_through_window( complex_cart_t ** dst, complex_cart_t * src, int number_elem, double (*window)(double, int) ){
+	if(*dst == (complex_cart_t * ) NULL){
+		*dst = malloc( number_elem * sizeof(complex_cart_t) );
+		if(*dst == (complex_cart_t * )  NULL){
 			fprintf(stderr, "array_through_window : Error allocating memory.\n");
 			return -1;
 		}
@@ -66,29 +87,29 @@ int cart_array_through_window( complex_cart_t * ret, complex_cart_t * array, int
 
 	int i = 0;
 	for(i = 0; i < number_elem; i++){
-		ret[i].real = array[i].real * window(i, number_elem);
-		ret[i].im = array[i].im * window(i, number_elem);
+		(*dst)[i].real = src[i].real * window(i, number_elem);
+		(*dst)[i].im = src[i].im * window(i, number_elem);
 	}
 }
-void * arb_array_through_window( void * ret, void * array, int number_elem, size_t elem_size, double (*window)(double, int), int (*assign)(void *, void *), int (*mult)( void *, double) ){
-	if(ret == NULL){
-		ret = malloc( number_elem * elem_size );
-		if(ret == NULL){
+int arb_array_through_window( void ** ret, void * array, int number_elem, size_t elem_size, double (*window)(double, int), int (*assign)(void *, void *), int (*mult)( void *, double) ){
+	if(*ret == NULL){
+		*ret = malloc( number_elem * elem_size );
+		if(*ret == NULL){
 			fprintf(stderr, "array_through_window : Error allocating memory.\n");
-			return NULL;
+			return -1;
 		}
 	}
 
 	int i = 0;
 	for(i = 0; i < number_elem; i++){
-		assign( ret + i * elem_size, array + i * elem_size);
-		mult( ret + i *elem_size, window((double) i, number_elem) );
+		assign( *ret + i * elem_size, array + i * elem_size);
+		mult( *ret + i *elem_size, window((double) i, number_elem) );
 	}
-	return ret;
+	return 0;
 }
 
-void * cart_array_through_window_arb( complex_cart_t * ret, complex_cart_t * array, int N, double (*window)(double, int) ){
-	return arb_array_through_window( ret, array, N, 
+int cart_array_through_window_arb( complex_cart_t ** ret, complex_cart_t * array, int N, double (*window)(double, int) ){
+	return arb_array_through_window( (void **) ret, array, N, 
 					sizeof(complex_cart_t ),
 					window,
 					assign_complex_cart_ptr_void,

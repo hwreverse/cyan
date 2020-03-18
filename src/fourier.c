@@ -16,6 +16,7 @@
 //FFT_1D computes (and returns in f) the 1D Fast Fourier Transform of the sequence f of 2^n elements (i.e. {f(k)}_{k=0,...,2^n}
 //At this stage of development complexity is N * lgN in size and computations, it can be made in 2N size
 //Data ordering is a little bit unclear
+//At this point it is a big memory leak, will be fixed soon
 static complex_polar_t * FFT_1D( complex_polar_t * f, complex_polar_t * buffer, int n){
 	
 	int N = pow(2, n);
