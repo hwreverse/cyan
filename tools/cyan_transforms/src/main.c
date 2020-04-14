@@ -8,6 +8,7 @@
 #include <cyan/image/image.h>
 
 #include <cyan_fileio/load_png.h>
+#include <cyan_fileio/save_ppm.h>
 
 #include <cyan/image/complex.h>
 #include <cyan/image/fourier.h>

@@ -8,6 +8,7 @@
 
 //#include "load_png.h"
 #include <cyan_fileio/load_png.h>
+#include <cyan_fileio/save_ppm.h>
 
 //Basic program to open a .jpg file through cyan
 //(Probably deprecated... see cyan_transforms )
