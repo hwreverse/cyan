@@ -20,6 +20,8 @@ typedef struct {
 image_t* image_new( int cols, int rows ) ;
 void     image_free( image_t* ) ;
 
+int image_cat_hor( image_t ** dst, image_t * img_left, image_t * img_right );
+
 int image_allocate_data_default  ( image_t*, size_t size, void* default_data ) ;
 int image_allocate_data_fct( image_t*, 
                  size_t datasize, 
@@ -37,7 +39,7 @@ void image_apply_fct ( image_t*,
             			void* context ) ;
 
 int image_save(image_t* img, char* filename ) ;
-int image_save_ppm(image_t* img, char* filename ) ;
+
 image_t* image_load(char* filename , int* result ) ;
 
 #endif

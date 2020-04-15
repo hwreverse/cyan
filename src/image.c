@@ -45,6 +45,51 @@ void image_free(image_t * img) {
 	free(img);
 }
 
+
+//Concatenates two image horizontally
+//img_left and img_right must have the same number of rows
+int image_cat_hor( image_t ** dst, image_t * img_left, image_t * img_right ){
+	if(dst == NULL || img_left == NULL ||img_right == NULL){
+		fprintf(stderr, "ERR : image_cat_hor : an argument is NULL.\n");
+		return -1;
+	}
+	if(img_left->rows != img_right->rows){
+		fprintf(stderr, "ERR: image_cat_hor : img_left and img_right do not have the same number of rows ( resp. %d\t%d) \n", img_left->rows, img_right->rows);
+		return -1;
+	}
+	
+	if(*dst == NULL){
+		fprintf(stdout, "image_cat_hor : dst is pointing to a NULL, allocating new image (size : %d).\n", (img_left->cols + img_right->cols) * img_left->rows * sizeof(double) );
+		*dst = image_new( img_left->cols + img_right->cols, img_left->rows);
+		if( *dst == NULL){
+			fprintf(stderr, "ERR: image_cat_hor: Image allocation failed.\n");
+			return -1;
+		}	
+	}
+
+
+	int i = 0;
+
+	for(i = 0; i < (*dst)->rows; i++){
+		fprintf(stdout, "copying left... %d/%d \n", i, (*dst)->rows);
+		//Copying left image
+		memcpy( &((*dst)->X[i*(*dst)->cols]), &(img_left->X[i * img_left->cols]), img_left->cols*sizeof(double)  );
+		memcpy( &((*dst)->Y[i*(*dst)->cols]), &(img_left->Y[i * img_left->cols]), img_left->cols*sizeof(double)  );
+		memcpy( &((*dst)->Z[i*(*dst)->cols]), &(img_left->Z[i * img_left->cols]), img_left->cols*sizeof(double)  );
+
+		fprintf(stdout, "copying right... %d/%d \n", i, img_left->rows);
+		//Copying right image
+		memcpy( &((*dst)->X[i*(*dst)->cols + img_left->cols]), &(img_right->X[i*img_right->cols]), img_right->cols*sizeof(double)); 
+		memcpy( &((*dst)->Y[i*(*dst)->cols + img_left->cols]), &(img_right->Y[i*img_right->cols]), img_right->cols*sizeof(double)); 
+		memcpy( &((*dst)->Z[i*(*dst)->cols + img_left->cols]), &(img_right->Z[i*img_right->cols]), img_right->cols*sizeof(double)); 
+	}
+
+	fprintf(stdout, "image_cat_hor : Success\n");
+
+	return 0;
+
+}
+
 int image_allocate_data_default(image_t * img, size_t size, void *data_array) {
 	int i;
 	if (img == (image_t *) NULL) {

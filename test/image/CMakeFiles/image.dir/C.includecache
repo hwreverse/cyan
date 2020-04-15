@@ -6,3 +6,21 @@
 
 #IncludeRegexTransform: 
 
+/home/sf/Prog/cyan/test/image/image.c
+stdio.h
+-
+cyan/image/image.h
+-
+
+include/cyan/color/color.h
+stddef.h
+-
+
+include/cyan/config/cyan.h
+
+include/cyan/image/image.h
+cyan/config/cyan.h
+-
+cyan/color/color.h
+-
+
