@@ -60,20 +60,31 @@ void image_free(image_t * img) {
 
 
 //Concatenates two image horizontally
-//img_left and img_right must have the same number of rows
+//img_left and img_right do not need to have the same number of rows
 int image_cat_hor( image_t ** dst, image_t * img_left, image_t * img_right ){
 	if(dst == NULL || img_left == NULL ||img_right == NULL){
 		fprintf(stderr, "ERR : image_cat_hor : an argument is NULL.\n");
 		return -1;
 	}
-	if(img_left->rows != img_right->rows){
-		if(img_left->rows > img_right->rows){
-	
-			; 
-
+	int rows_diff = img_left->rows - img_right->rows;
+	image_t * backup = NULL;
+	if(rows_diff){
+		image_t * fill_image = NULL;
+			
+		image_t * filled_image = NULL;
+		
+		if(rows_diff > 0){
+			fill_image = image_new_empty(img_right->cols, abs(rows_diff));
+			image_cat_ver( &filled_image, img_right, fill_image);
+			backup = img_right;
+			img_right = filled_image;
+		}else{
+			fill_image = image_new_empty(img_left->cols, abs(rows_diff));
+			image_cat_ver( &filled_image, img_left, fill_image);
+			backup = img_left;
+			img_left = filled_image;
 		}
-		fprintf(stderr, "ERR: image_cat_hor : img_left and img_right do not have the same number of rows ( resp. %d\t%d) \n", img_left->rows, img_right->rows);
-		return -1;
+		image_free( fill_image );
 	}
 	
 	if(*dst == NULL){
@@ -98,6 +109,16 @@ int image_cat_hor( image_t ** dst, image_t * img_left, image_t * img_right ){
 		memcpy( &((*dst)->Y[i*(*dst)->cols + img_left->cols]), &(img_right->Y[i*img_right->cols]), img_right->cols*sizeof(double)); 
 		memcpy( &((*dst)->Z[i*(*dst)->cols + img_left->cols]), &(img_right->Z[i*img_right->cols]), img_right->cols*sizeof(double)); 
 	}
+	if(rows_diff){
+		if(rows_diff > 0){
+			image_free(img_right);
+			img_right = backup;
+		}else{
+			image_free(img_left);
+			img_left = backup;
+		}
+	}
+
 
 	fprintf(stdout, "image_cat_hor : Success\n");
 
@@ -110,10 +131,27 @@ int image_cat_ver( image_t ** dst, image_t * img_up, image_t * img_bot ){
 		fprintf(stderr, "ERR : image_cat_ver : an argument is NULL.\n");
 		return -1;
 	}
-	if(img_up->cols != img_bot->rows){
-		fprintf(stderr, "ERR: image_cat_ver : img_up and img_bot do not have the same number of cols ( resp. %d\t%d) \n", img_up->cols, img_bot->cols);
-		return -1;
+	int cols_diff = img_up->cols - img_bot->cols;
+	image_t * backup = NULL;
+	if(cols_diff){
+		image_t * fill_image = NULL;	
+		image_t * filled_image = NULL;
+		
+		if(cols_diff > 0){
+			fill_image = image_new_empty(abs(cols_diff), img_bot->rows);
+			image_cat_hor( &filled_image, img_bot, fill_image);
+			backup = img_bot;
+			img_bot = filled_image;
+		}else{
+			fill_image = image_new_empty(abs(cols_diff), img_up->rows);
+			image_cat_hor( &filled_image, img_up, fill_image);
+			backup = img_up;
+			img_up = filled_image;
+		}
+		image_free( fill_image );
 	}
+	
+	
 	
 	if(*dst == NULL){
 		fprintf(stdout, "image_cat_ver : dst is pointing to a NULL, allocating new image (size : %d).\n", (img_up->cols) * (img_up->rows + img_bot->rows) * sizeof(double) );
@@ -139,6 +177,16 @@ int image_cat_ver( image_t ** dst, image_t * img_up, image_t * img_bot ){
 		memcpy( &((*dst)->Y[(i + img_up->rows)*(*dst)->cols]), &(img_bot->Y[i*img_bot->cols]), img_bot->cols*sizeof(double)); 
 		memcpy( &((*dst)->Z[(i + img_up->rows)*(*dst)->cols]), &(img_bot->Z[i*img_bot->cols]), img_bot->cols*sizeof(double)); 
 	}
+	if(cols_diff){
+		if(cols_diff > 0){
+			image_free(img_bot);
+			img_bot = backup;
+		}else{
+			image_free(img_up);
+			img_up = backup;
+		}
+	}
+
 
 	fprintf(stdout, "image_cat_ver : Success\n");
 
