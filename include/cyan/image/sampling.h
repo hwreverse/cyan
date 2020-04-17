@@ -19,6 +19,8 @@ int cart_array_through_window( complex_cart_t ** ret, complex_cart_t * array, in
 int arb_array_through_window( void ** ret, void * array, int number_elem, size_t elem_size, double (*window)(double, int), int (*assign)(void *, void *), int (*mult)( void *, double) );
 int cart_array_through_window_arb( complex_cart_t ** ret, complex_cart_t * array, int N, double (*)(double, int) );
 
+int double_array_through_real_fct( double ** ret, int N, double (*fct)(double, int) );
+
 int array_2d_through_window_arb( void *** dst, void ** src, int N, int M, size_t elem_size, 
 	       			double (*window)(double, int), int (*mult)(void *, double));
 

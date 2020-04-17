@@ -28,6 +28,19 @@ image_t* image_new(int cols, int rows) {
 	return tmp;
 }
 
+image_t * image_new_empty( int cols, int rows){
+	image_t * ret =NULL;
+	ret = image_new( cols, rows );
+	if(!ret){
+		fprintf(stderr, "image_new_empty : allocation error\n");
+		return NULL;
+	}
+	memset(ret->X, 0, rows * cols * sizeof(double));
+	memset(ret->Y, 0, rows * cols * sizeof(double));
+	memset(ret->Z, 0, rows * cols * sizeof(double));
+	return ret;
+}
+
 void image_free(image_t * img) {
 	if (img->pixel_data != (void *) NULL) {
 		free(img->pixel_data);
@@ -54,6 +67,11 @@ int image_cat_hor( image_t ** dst, image_t * img_left, image_t * img_right ){
 		return -1;
 	}
 	if(img_left->rows != img_right->rows){
+		if(img_left->rows > img_right->rows){
+	
+			; 
+
+		}
 		fprintf(stderr, "ERR: image_cat_hor : img_left and img_right do not have the same number of rows ( resp. %d\t%d) \n", img_left->rows, img_right->rows);
 		return -1;
 	}
@@ -71,14 +89,11 @@ int image_cat_hor( image_t ** dst, image_t * img_left, image_t * img_right ){
 	int i = 0;
 
 	for(i = 0; i < (*dst)->rows; i++){
-		fprintf(stdout, "copying left... %d/%d \n", i, (*dst)->rows);
 		//Copying left image
-		memcpy( &((*dst)->X[i*(*dst)->cols]), &(img_left->X[i * img_left->cols]), img_left->cols*sizeof(double)  );
-		memcpy( &((*dst)->Y[i*(*dst)->cols]), &(img_left->Y[i * img_left->cols]), img_left->cols*sizeof(double)  );
-		memcpy( &((*dst)->Z[i*(*dst)->cols]), &(img_left->Z[i * img_left->cols]), img_left->cols*sizeof(double)  );
+		memcpy( &((*dst)->X[i*(*dst)->cols]), &(img_left->X[i * img_left->cols]), img_left->cols*sizeof(double) );
+		memcpy( &((*dst)->Y[i*(*dst)->cols]), &(img_left->Y[i * img_left->cols]), img_left->cols*sizeof(double) );
+		memcpy( &((*dst)->Z[i*(*dst)->cols]), &(img_left->Z[i * img_left->cols]), img_left->cols*sizeof(double) );
 
-		fprintf(stdout, "copying right... %d/%d \n", i, img_left->rows);
-		//Copying right image
 		memcpy( &((*dst)->X[i*(*dst)->cols + img_left->cols]), &(img_right->X[i*img_right->cols]), img_right->cols*sizeof(double)); 
 		memcpy( &((*dst)->Y[i*(*dst)->cols + img_left->cols]), &(img_right->Y[i*img_right->cols]), img_right->cols*sizeof(double)); 
 		memcpy( &((*dst)->Z[i*(*dst)->cols + img_left->cols]), &(img_right->Z[i*img_right->cols]), img_right->cols*sizeof(double)); 
@@ -109,19 +124,17 @@ int image_cat_ver( image_t ** dst, image_t * img_up, image_t * img_bot ){
 		}	
 	}
 
-
 	int i = 0;
-
 	for(i = 0; i < img_up->rows; i++){
-		fprintf(stdout, "copying up... %d/%d \n", i, (*dst)->rows);
-		//Copying left image
+
+		//Copying upper image
 		memcpy( &((*dst)->X[i*(*dst)->cols]), &(img_up->X[i * img_up->cols]), img_up->cols*sizeof(double)  );
 		memcpy( &((*dst)->Y[i*(*dst)->cols]), &(img_up->Y[i * img_up->cols]), img_up->cols*sizeof(double)  );
 		memcpy( &((*dst)->Z[i*(*dst)->cols]), &(img_up->Z[i * img_up->cols]), img_up->cols*sizeof(double)  );
 	}
 	for( i = 0; i < img_bot->rows; i++ ){
-		fprintf(stdout,  "copying bot... %d/%d \n", i, (*dst)->rows);
-		//Copying right image
+
+		//Copying bottom image
 		memcpy( &((*dst)->X[(i + img_up->rows)*(*dst)->cols]), &(img_bot->X[i*img_bot->cols]), img_bot->cols*sizeof(double)); 
 		memcpy( &((*dst)->Y[(i + img_up->rows)*(*dst)->cols]), &(img_bot->Y[i*img_bot->cols]), img_bot->cols*sizeof(double)); 
 		memcpy( &((*dst)->Z[(i + img_up->rows)*(*dst)->cols]), &(img_bot->Z[i*img_bot->cols]), img_bot->cols*sizeof(double)); 
@@ -131,6 +144,51 @@ int image_cat_ver( image_t ** dst, image_t * img_up, image_t * img_bot ){
 
 	return 0;	
 }
+
+//"Crops" an image horizontally
+//Stores in dst an image with last_row - first_row rows and src->cols columns
+//image_crop_rows doesn't make a copy, data is the same in dst and src, except that the data pointed by dst has an offset from src
+//with the appropriate change of value for (*dst)->rows
+//It's only a zoomed image
+//Do not use free_image on dst, use it on src instead (just use free() on dst)
+int image_crop_rows(image_t ** dst, image_t * src, int first_row, int last_row){
+	
+	int new_rows = last_row - first_row;
+	if( dst == NULL || src == NULL || new_rows <= 0 || first_row < 0){
+		fprintf(stdout, "image_crop_rows : NULL pointer or unappropriate row values were given as arguments.\n");
+		return -1;
+	}
+	if( last_row > src->rows){
+		fprintf(stdout , "image_crop_rows : number of rows to crop is larger than the number of rows in src.\n");
+		return -1;
+	}
+	*dst = (image_t * )malloc(sizeof(image_t) );
+	if(*dst == NULL){
+		fprintf(stderr, "image_crop_row : allocation error\n");
+		return -1;
+	}
+	(*dst)->cols = src->cols;
+	(*dst)->rows = new_rows;
+	
+	(*dst)->pixel_data_size = src->pixel_data_size;
+	//An error might happen here if pixel_data_size is not zero and not enough (or no space at all) has been allocated to data
+	//Hence, we check if src->pixel_data is NULL to prevent errors 
+	//If pixel_data has not been initialized to NULL, the function is not safe
+	if( !src->pixel_data){
+		(*dst)->pixel_data = src->pixel_data + first_row * src->cols * (*dst)->pixel_data_size;
+	}else{
+		(*dst)->pixel_data = NULL;
+	}
+	(*dst)->monochrome = src->monochrome;
+
+	(*dst)->X = src->X + first_row * src->cols;
+	(*dst)->Y = src->Y + first_row * src->cols;
+	(*dst)->Z = src->Z + first_row * src->cols;
+	
+	
+	return 0;
+}
+
 int image_allocate_data_default(image_t * img, size_t size, void *data_array) {
 	int i;
 	if (img == (image_t *) NULL) {

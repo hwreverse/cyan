@@ -116,7 +116,15 @@ int cart_array_through_window_arb( complex_cart_t ** ret, complex_cart_t * array
 					mult_scalar_complex_cart );
 
 }
-
+int double_array_through_real_fct( double ** ret, int N, double (*fct)(double, int) ){
+	double  * ones =  malloc( N *sizeof(double) );
+	int i = 0;
+	for(i = 0; i < N; i++)
+		ones[i] = 1.0f;
+	int temp = arb_array_through_window( (void **) ret, ones, N, sizeof(double), fct, assign_double, mult_double); 
+	free(ones);
+	return temp;
+}
 int array_2d_through_window_arb( void *** dst, void ** src, int N, int M, size_t elem_size, 
 	       			double (*window)(double, int), int (*mult)(void *, double)){
  	
