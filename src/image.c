@@ -90,6 +90,47 @@ int image_cat_hor( image_t ** dst, image_t * img_left, image_t * img_right ){
 
 }
 
+int image_cat_ver( image_t ** dst, image_t * img_up, image_t * img_bot ){
+	if(dst == NULL || img_up == NULL ||img_bot == NULL){
+		fprintf(stderr, "ERR : image_cat_ver : an argument is NULL.\n");
+		return -1;
+	}
+	if(img_up->cols != img_bot->rows){
+		fprintf(stderr, "ERR: image_cat_ver : img_up and img_bot do not have the same number of cols ( resp. %d\t%d) \n", img_up->cols, img_bot->cols);
+		return -1;
+	}
+	
+	if(*dst == NULL){
+		fprintf(stdout, "image_cat_ver : dst is pointing to a NULL, allocating new image (size : %d).\n", (img_up->cols) * (img_up->rows + img_bot->rows) * sizeof(double) );
+		*dst = image_new( img_up->cols, img_up->rows + img_bot->rows);
+		if( *dst == NULL){
+			fprintf(stderr, "ERR: image_cat_ver: Image allocation failed.\n");
+			return -1;
+		}	
+	}
+
+
+	int i = 0;
+
+	for(i = 0; i < img_up->rows; i++){
+		fprintf(stdout, "copying up... %d/%d \n", i, (*dst)->rows);
+		//Copying left image
+		memcpy( &((*dst)->X[i*(*dst)->cols]), &(img_up->X[i * img_up->cols]), img_up->cols*sizeof(double)  );
+		memcpy( &((*dst)->Y[i*(*dst)->cols]), &(img_up->Y[i * img_up->cols]), img_up->cols*sizeof(double)  );
+		memcpy( &((*dst)->Z[i*(*dst)->cols]), &(img_up->Z[i * img_up->cols]), img_up->cols*sizeof(double)  );
+	}
+	for( i = 0; i < img_bot->rows; i++ ){
+		fprintf(stdout,  "copying bot... %d/%d \n", i, (*dst)->rows);
+		//Copying right image
+		memcpy( &((*dst)->X[(i + img_up->rows)*(*dst)->cols]), &(img_bot->X[i*img_bot->cols]), img_bot->cols*sizeof(double)); 
+		memcpy( &((*dst)->Y[(i + img_up->rows)*(*dst)->cols]), &(img_bot->Y[i*img_bot->cols]), img_bot->cols*sizeof(double)); 
+		memcpy( &((*dst)->Z[(i + img_up->rows)*(*dst)->cols]), &(img_bot->Z[i*img_bot->cols]), img_bot->cols*sizeof(double)); 
+	}
+
+	fprintf(stdout, "image_cat_ver : Success\n");
+
+	return 0;	
+}
 int image_allocate_data_default(image_t * img, size_t size, void *data_array) {
 	int i;
 	if (img == (image_t *) NULL) {
