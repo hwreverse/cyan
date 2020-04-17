@@ -21,6 +21,11 @@ int cart_array_through_window_arb( complex_cart_t ** ret, complex_cart_t * array
 
 int double_array_through_real_fct( double ** ret, int N, double (*fct)(double, int) );
 
+int max_index_in_double_array(double * array, int len);
+int min_index_in_double_array(double * array, int len);
+double max_val_in_double_array(double * array, int len);
+double min_val_in_double_array(double * array, int len);
+
 int array_2d_through_window_arb( void *** dst, void ** src, int N, int M, size_t elem_size, 
 	       			double (*window)(double, int), int (*mult)(void *, double));
 

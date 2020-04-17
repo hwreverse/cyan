@@ -125,6 +125,59 @@ int double_array_through_real_fct( double ** ret, int N, double (*fct)(double, i
 	free(ones);
 	return temp;
 }
+//Return index number of max value in array
+int max_index_in_double_array(double * array, int len){
+	if(array == NULL){
+		fprintf(stderr, "max_in_double_array : array is NULL\n");
+		return -1;
+	}
+
+	int index_max = 0;
+	double max = array[index_max]; //max is used to avoid retrieving data in array in each loop
+	int i = 1;
+	for( ; i < len; i++){
+		if(array[i] > max){
+			max = array[i];
+			index_max = i;
+		}
+	}
+
+	return index_max;
+}
+int min_index_in_double_array(double * array, int len){
+	if(array == NULL){
+		fprintf(stderr, "min_in_double_array : array is NULL\n");
+		return -1;
+	}
+	int index_min = 0;
+	int min = array[0];
+	int i = 1;
+	for( ; i < len; i++){
+		if(array[i] < min){
+			min = array[i];
+			index_min = i;
+		}
+	}
+	return index_min;
+}
+
+double max_val_in_double_array(double * array, int len){
+	int index = max_index_in_double_array(array, len);
+	if(index == -1){
+		fprintf(stderr, "max_val_in_double_array : couldn't get max value, array is NULL\n");
+		return 0.0f;
+	}
+	return array[index];
+}
+double min_val_in_double_array(double * array, int len){
+	int index = min_index_in_double_array(array, len);
+	if(index == -1){
+		fprintf(stderr, "min_val_in_double_array : couldn't get min value, array is NULL\n");
+		return 0.0f;
+	}
+	return array[index];
+}
+
 int array_2d_through_window_arb( void *** dst, void ** src, int N, int M, size_t elem_size, 
 	       			double (*window)(double, int), int (*mult)(void *, double)){
  	

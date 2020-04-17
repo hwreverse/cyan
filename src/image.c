@@ -27,7 +27,7 @@ image_t* image_new(int cols, int rows) {
 	tmp->pixel_data = (void *) NULL;
 	return tmp;
 }
-
+//image_new_empty is like image_new if it had a calloc memory allocation call
 image_t * image_new_empty( int cols, int rows){
 	image_t * ret =NULL;
 	ret = image_new( cols, rows );
