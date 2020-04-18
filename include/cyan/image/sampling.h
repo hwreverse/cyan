@@ -1,6 +1,8 @@
 #ifndef SAMPLING_H
 #define SAMPLING_H
 
+#include "complex.h"
+
 int sub_sampling_step( void **, void *, int, int, size_t, void (*)(void *, void * ) );
 int sub_sampling_step_polar(complex_polar_t **, complex_polar_t *, int, int);
 int sub_sampling_step_cart(complex_cart_t **, complex_cart_t *, int, int);
@@ -25,6 +27,10 @@ int max_index_in_double_array(double * array, int len);
 int min_index_in_double_array(double * array, int len);
 double max_val_in_double_array(double * array, int len);
 double min_val_in_double_array(double * array, int len);
+
+int mult_double_array(double * array, int len, double mult);
+int add_double_array(double * array, int len, double add);
+int normalize_and_scale_double_array(double * array, int len, double scale);
 
 int array_2d_through_window_arb( void *** dst, void ** src, int N, int M, size_t elem_size, 
 	       			double (*window)(double, int), int (*mult)(void *, double));

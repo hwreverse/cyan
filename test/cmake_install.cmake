@@ -42,6 +42,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/sf/Prog/cyan/test/image/cmake_install.cmake")
   include("/home/sf/Prog/cyan/test/fourier1D/cmake_install.cmake")
   include("/home/sf/Prog/cyan/test/color/cmake_install.cmake")
+  include("/home/sf/Prog/cyan/test/test1D/cmake_install.cmake")
 
 endif()
 

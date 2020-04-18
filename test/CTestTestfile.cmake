@@ -7,3 +7,4 @@
 subdirs("image")
 subdirs("fourier1D")
 subdirs("color")
+subdirs("test1D")

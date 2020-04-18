@@ -135,7 +135,7 @@ int max_index_in_double_array(double * array, int len){
 	int index_max = 0;
 	double max = array[index_max]; //max is used to avoid retrieving data in array in each loop
 	int i = 1;
-	for( ; i < len; i++){
+	for( ; i < len; ++i){
 		if(array[i] > max){
 			max = array[i];
 			index_max = i;
@@ -152,7 +152,7 @@ int min_index_in_double_array(double * array, int len){
 	int index_min = 0;
 	int min = array[0];
 	int i = 1;
-	for( ; i < len; i++){
+	for( ; i < len; ++i){
 		if(array[i] < min){
 			min = array[i];
 			index_min = i;
@@ -177,6 +177,53 @@ double min_val_in_double_array(double * array, int len){
 	}
 	return array[index];
 }
+
+int normalize_and_scale_double_array(double * array, int len, double scale){
+	if(array == NULL){
+		fprintf(stderr, "normalize_and_scale_double_array : array is NULL\n");
+		return -1;
+	}
+	int i = 0;
+	double min = min_val_in_double_array(array, len);
+	double normalizer = fabs( max_val_in_double_array(array, len) - min);
+	fprintf(stdout, "norm : %f\n", normalizer);
+	if(normalizer == 0.0f){
+		fprintf(stdout, "normalize_and_scale_double_array : array contains constant values, setting them to scale.\n");
+		for(i = 0; i < len; i++){
+			array[i] = scale;
+		}
+		return len;
+	}
+	add_double_array( array, len, - min);  //Maps all values to [0, max - min ]
+	normalizer = scale / normalizer;
+
+	fprintf(stdout, "norm : %f\n", normalizer);
+	return mult_double_array(array, len, normalizer);	//Maps all values to [0, scale]
+}
+int mult_double_array(double * array, int len, double mult){
+	if( array == NULL){
+		fprintf(stdout, "normalize_double_array : array is NULL. \n");
+		return -1;
+	}
+	int i = 0;
+	for(i = 0; i < len; i++){
+		array[i] *= mult;
+	}
+	return len;
+}
+
+int add_double_array(double * array, int len, double add){
+	if( array == NULL){
+		fprintf(stdout, "add_double_array : array is NULL\n");
+		return -1;
+	}
+	int i = 0;
+	for(i = 0; i < len; i++){
+		array[i] += add;
+	}
+	return len;
+}
+
 
 int array_2d_through_window_arb( void *** dst, void ** src, int N, int M, size_t elem_size, 
 	       			double (*window)(double, int), int (*mult)(void *, double)){
