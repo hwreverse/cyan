@@ -2,6 +2,16 @@
 #define CYAN_COLOR_H
 
 #include <stddef.h>
+typedef struct {
+	double  X ;                         // XYZ as defined in CIE 1976
+	double  Y ;
+	double  Z ;
+
+	enum cyan_refwhite illuminant ;     // Default to CYAN_D50
+	int monochrome ;                    // if set to zero (remark : isn't it the opposite ?, Leo) , only the Y plane will be used
+				
+} color_t ;
+
 
 enum cyan_colorspace {
     CYAN_XYZ        =0,
