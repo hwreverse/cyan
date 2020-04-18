@@ -224,6 +224,24 @@ int add_double_array(double * array, int len, double add){
 	return len;
 }
 
+int double_array_to_int_array(int ** dst, double * src, int len){
+	if(dst == NULL || src == NULL){
+		fprintf(stdout, "double_array_to_int_array : dst or src is NULL\n");
+		return -1;
+	}
+	*dst = malloc(len * sizeof(int));
+	if(*dst == NULL){
+		fprintf(stdout, "double_array_to_int_array : allocation error\n");
+		return -1;
+	}
+	
+	int i = 0;
+	for( ; i < len; i++){
+		(*dst)[i] = (int) src[i];
+	}
+	return len;
+
+}
 
 int array_2d_through_window_arb( void *** dst, void ** src, int N, int M, size_t elem_size, 
 	       			double (*window)(double, int), int (*mult)(void *, double)){
