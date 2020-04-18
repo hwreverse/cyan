@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include <cyan/image/image.h>
+#include <cyan/color/color.h>
 
 image_t* image_new(int cols, int rows) {
 	image_t *tmp;
@@ -235,6 +236,33 @@ int image_crop_rows(image_t ** dst, image_t * src, int first_row, int last_row){
 	
 	
 	return 0;
+}
+int image_set_color_to_coordinates(image_t * img, color_t color, int * y_coord, int step){
+	
+	if(img == NULL || y_coord == NULL){
+		fprintf(stderr, "image_set_color_to_coordinates: a NULL pointer was passed\n");
+		return -1;
+	}
+	if(step <= 0){
+		fprintf(stderr, "image_set_color_to_coordinates: step doesn't have a correct value (<= 0)\n");
+		return -1;
+	}
+
+	int i = 0;
+	int temp_y_coord;
+	for( i = 0; i < img->cols; i+= step){
+		temp_y_coord = y_coord[i];
+		//following conditions to ensure values are in range
+		if(temp_y_coord > img->rows){
+			temp_y_coord = img->rows;
+		}else if(temp_y_coord < 0){
+			temp_y_coord = 0;
+		}
+		img->X[ img->cols*(img->rows - temp_y_coord) + i ] = color.X;
+		img->Y[ img->cols*(img->rows - temp_y_coord) + i ] = color.Y;
+		img->Z[ img->cols*(img->rows - temp_y_coord) + i ] = color.Z;
+	}
+	return i;
 }
 
 int image_allocate_data_default(image_t * img, size_t size, void *data_array) {

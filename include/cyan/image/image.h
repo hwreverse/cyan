@@ -25,6 +25,7 @@ int image_cat_hor( image_t ** dst, image_t * img_left, image_t * img_right );
 int image_cat_ver( image_t ** dst, image_t * img_up, image_t * img_bot );
 
 int image_crop_rows(image_t ** dst, image_t * src, int first_row, int last_row);
+int image_set_color_to_coordinates(image_t * img, color_t color, int * y_coord, int step);
 
 int image_allocate_data_default  ( image_t*, size_t size, void* default_data ) ;
 int image_allocate_data_fct( image_t*, 

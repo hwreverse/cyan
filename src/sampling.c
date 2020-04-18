@@ -186,7 +186,7 @@ int normalize_and_scale_double_array(double * array, int len, double scale){
 	int i = 0;
 	double min = min_val_in_double_array(array, len);
 	double normalizer = fabs( max_val_in_double_array(array, len) - min);
-	fprintf(stdout, "norm : %f\n", normalizer);
+	
 	if(normalizer == 0.0f){
 		fprintf(stdout, "normalize_and_scale_double_array : array contains constant values, setting them to scale.\n");
 		for(i = 0; i < len; i++){
@@ -197,7 +197,6 @@ int normalize_and_scale_double_array(double * array, int len, double scale){
 	add_double_array( array, len, - min);  //Maps all values to [0, max - min ]
 	normalizer = scale / normalizer;
 
-	fprintf(stdout, "norm : %f\n", normalizer);
 	return mult_double_array(array, len, normalizer);	//Maps all values to [0, scale]
 }
 int mult_double_array(double * array, int len, double mult){

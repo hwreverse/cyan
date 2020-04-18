@@ -7,11 +7,13 @@ typedef struct {
 	double  Y ;
 	double  Z ;
 
-	enum cyan_refwhite illuminant ;     // Default to CYAN_D50
 	int monochrome ;                    // if set to zero (remark : isn't it the opposite ?, Leo) , only the Y plane will be used
 				
 } color_t ;
+//---------------------------------------------------------
+int color_assign( color_t * dst, double X, double Y, double Z, int monochrome ); 
 
+//---------------------------------------------------------
 
 enum cyan_colorspace {
     CYAN_XYZ        =0,
