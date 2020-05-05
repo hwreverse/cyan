@@ -1,7 +1,7 @@
 #ifndef CYAN_IMAGE_H
 #define CYAN_IMAGE_H
 
-#include <cyan/config/cyan.h>
+#include <cyan/common/config.h>
 #include <cyan/color/color.h>
 
 typedef struct {
@@ -32,8 +32,9 @@ int image_get_data_pointer  ( image_t*, int i, int j, void** ) ;
 int image_clone ( image_t*, image_t** ) ;
 int image_resize ( image_t*, int rows, int cols, void* default_pixel_data ) ;  
 
-
-int image_save(image_t* img, char* filename ) ;         // TODO
-image_t* image_load(char* filename , int* result ) ;    // TODO
+#if HAVE_LIBTIRPC 
+    int image_save(image_t* img, char* filename ) ;         // TODO
+    image_t* image_load(char* filename , int* result ) ;    // TODO
+#endif
 
 #endif
