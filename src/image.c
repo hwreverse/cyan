@@ -5,6 +5,8 @@
 #include "cyan/common/error.h"
 #include "cyan/image/image.h"
 
+#define MIN(x,y) (x<y)?X:Y
+
 image_t* image_new(int cols, int rows) {
 	image_t *tmp;
 	tmp = (image_t *) malloc(sizeof(image_t));
@@ -140,3 +142,106 @@ int image_clone(image_t * img, image_t** dest) {
 	return ERR_OK ;
 }
 
+int image_resize( image_t* img, int rows, int cols, void* default_pixel_data ) {
+    
+    double* new_X = NULL ;
+    double* new_Y = NULL ;
+    double* new_Z = NULL ;
+    void*   new_pixel_data = NULL ;
+    void*   src_ptr = NULL ;
+    void*   dst_ptr = NULL ;
+    int i ;
+    int j ;
+   
+    // Verification des arguments
+
+    if ( (img == NULL) || (rows<0) || (cols<0) ) {
+		CYAN_ERROR( ERR_INVALID_ARG ) ;
+        return ERR_INVALID_ARG ;
+    }
+
+    if ( (img->pixel_data != NULL ) && ( default_pixel_data == NULL ) ) {
+		CYAN_ERROR( ERR_INVALID_ARG ) ;
+        return ERR_INVALID_ARG ;
+    }
+
+    // Allocation des nouveaux tableaux
+    
+    new_Y = (double*) malloc( rows*cols*sizeof(double) ) ;
+	if ( new_Y == NULL) {
+		CYAN_ERROR( ERR_MALLOC ) ;
+        return ERR_MALLOC ;
+	}
+    if ( !img->monochrome ) {
+        new_X = (double*) malloc( rows*cols*sizeof(double) ) ;
+        if ( new_X == NULL) {
+            CYAN_ERROR( ERR_MALLOC ) ;
+            return ERR_MALLOC ;
+        }
+        new_Z = (double*) malloc( rows*cols*sizeof(double) ) ;
+        if ( new_Z == NULL) {
+            CYAN_ERROR( ERR_MALLOC ) ;
+            return ERR_MALLOC ;
+        }
+    }
+    if ( img->pixel_data != NULL ) {
+        new_pixel_data = (void*) malloc( rows*cols*img->pixel_data_size ) ;
+        if ( new_pixel_data == NULL) {
+            CYAN_ERROR( ERR_MALLOC ) ;
+            return ERR_MALLOC ;
+        }
+    }
+    
+    // Recopie du plan Y
+
+   for (i=0; i<cols ; i++ ) {
+       for ( j=0; j<rows ; j++ ) {
+           if ( (i<img->cols) && (j<img->rows) )
+                new_Y[i+j*cols] = img->Y[i+j*img->cols] ;
+           else
+                new_Y[i+j*cols] = 0.0 ;
+       }
+    } 
+    free( img->Y ) ;
+    img->Y = new_Y ;
+
+    // Recopie des plans X et Z
+
+    if ( !img->monochrome ) {
+        for (i=0; i<cols ; i++ ) {
+            for ( j=0; j<rows ; j++ ) {
+                if ( (i<img->cols) && (j<img->rows) ) {
+                    new_X[i+j*cols] = img->X[i+j*img->cols] ;
+                    new_Z[i+j*cols] = img->Z[i+j*img->cols] ;
+                } else {
+                    new_X[i+j*cols] = 0.0 ;
+                    new_Z[i+j*cols] = 0.0 ;
+                }
+            }
+        } 
+        free( img->X ) ;
+        img->X = new_X ;
+        free( img->Z ) ;
+        img->Z = new_Z ;
+    }
+    
+    // Recopie des metadata pixel
+
+    if ( img->pixel_data != NULL ) {
+        for (i=0; i<cols ; i++ ) {
+            for ( j=0; j<rows ; j++ ) {
+                dst_ptr = new_pixel_data + (i+j*cols)*img->pixel_data_size ;
+                if ( (i<img->cols) && (j<img->rows) ) {
+                    src_ptr = img->pixel_data + (i+j*img->cols)*img->pixel_data_size ;
+                    memcpy( dst_ptr, src_ptr, img->pixel_data_size ) ;
+                } else {
+
+                    memcpy( dst_ptr, default_pixel_data, img->pixel_data_size ) ;
+                }
+            }
+        }
+        free( img->pixel_data ) ;
+        img->pixel_data = new_pixel_data ;
+    }
+    return ERR_OK ;
+}
