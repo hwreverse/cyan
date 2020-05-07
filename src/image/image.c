@@ -5,7 +5,6 @@
 #include "cyan/common/error.h"
 #include "cyan/image/image.h"
 
-#define MIN(x,y) (x<y)?X:Y
 
 image_t* image_new(int cols, int rows) {
 	image_t *tmp;
@@ -98,7 +97,7 @@ int image_allocate_data_fct(image_t * img, size_t size, int (*fill_fct) (image_t
 		for (i = 0; i < img->cols; i++) {
 			ret += fill_fct(img, i, j, context);
 		}
-	return ERR_OK ;
+	return ret ;
 }
 
 int image_import_data(image_t * img, size_t data_size, void *data) {
