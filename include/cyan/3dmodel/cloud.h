@@ -49,7 +49,7 @@ int cloud_add_point( cloud_t* cloud,
                         double color_x, double color_y, double color_z,
                         void* data ) ; 
 
-int cloud_del_point ( cloud_t* cloud, int point ) ;                 // TODO
+int cloud_del_point ( cloud_t* cloud, int point ) ; 
 
 void cloud_strip_color ( cloud_t*) ; 
 void cloud_strip_data   ( cloud_t*) ; 
