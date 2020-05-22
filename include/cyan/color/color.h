@@ -72,11 +72,12 @@ void XYZ_to_Lab( enum cyan_refwhite white,
                     double X, double Y, double Z,
                     double* L, double* a, double* b ) ;
 
-void LCHab_to_Lab() ;    // TODO
-void Lab_to_LCHab() ;    // TODO
-
-void Lab_to_XYZ() ;      // TODO
-void XYZ_to_Lab() ;      // TODO
+void LCHab_to_XYZ( enum cyan_refwhite white, 
+                    double L, double C, double H, 
+                    double* X, double* Y, double* Z) ;
+void XYZ_to_LCHab( enum cyan_refwhite white, 
+                    double X, double Y, double Z,
+                    double* L, double* C, double* H ) ;
 
 void Luv_to_XYZ() ;      // TODO
 void XYZ_to_Luv() ;      // TODO
