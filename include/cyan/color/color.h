@@ -79,17 +79,18 @@ void XYZ_to_LCHab( enum cyan_refwhite white,
                     double X, double Y, double Z,
                     double* L, double* C, double* H ) ;
 
-void Luv_to_XYZ() ;      // TODO
-void XYZ_to_Luv() ;      // TODO
+void Luv_to_XYZ( enum cyan_refwhite white, 
+                    double L, double u, double u, 
+                    double* X, double* Y, double* Z) ;
+void XYZ_to_Luv( enum cyan_refwhite white, 
+                    double X, double Y, double Z,
+                    double* L, double* u, double* v ) ;
 
-void LCHuv_to_Luv() ;    // TODO
-void Luv_to_LCHuv() ;    // TODO
 
-void Luv_to_XYZ() ;      // TODO
-void XYZ_to_Luv() ;      // TODO
+void LCHuv_to_XYZ() ;    // TODO
+void XYZ_to_LCHuv() ;    // TODO
 
 void spectrum_to_XYZ() ;    // TODO
-void XYZ_to_spectrum() ;    // TODO 
 
 // ---------------------------------------------------------------------------
 
