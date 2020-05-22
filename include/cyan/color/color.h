@@ -65,7 +65,9 @@ void xyY_to_XYZ( double xyY_x, double xyY_y, double xyY_Y,
 void XYZ_to_xyY( double X, double Y, double Z,
                     double* xyY_x, double* xyY_y, double* xyY_Y) ; 
 
-void Lab_to_XYZ() ;      // TODO
+void Lab_to_XYZ( enum cyan_refwhite white, 
+                    double L, double a, double b, 
+                    double* X, double* Y, double* Z) {
 void XYZ_to_Lab() ;      // TODO
 
 void LCHab_to_Lab() ;    // TODO
