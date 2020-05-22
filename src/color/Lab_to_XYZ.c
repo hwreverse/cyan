@@ -11,7 +11,7 @@ void Lab_to_XYZ( enum cyan_refwhite white,
 
     double Xr, Yr, Zr ;
     double fx, fy, fz ;
-    double xr, yr, zr : 
+    double xr, yr, zr ; 
     refwhite_get_xyz( white, &Xr, &Yr, &Zr) ;
 
     fy = ( L + 16.0 ) / 116.0 ;
