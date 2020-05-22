@@ -59,8 +59,10 @@ void XYZ_to_RGB( enum cyan_rgb_workspace RGB_space,
                     double X, double Y, double Z, 
                     double* R, double* G, double* B ) ;  
 
-void xyY_to_XYZ() ;      // TODO
-void XYZ_to_xyY() ;      // TODO
+void xyY_to_XYZ( double xyY_x, double xyY_y, double xyY_Y, 
+                    double* X, double* Y, double* Z ) ;
+void XYZ_to_xyY( double X, double Y, double Z,
+                    double* xyY_x, double* xyY_y, double* xyY_Y) ; 
 
 void Lab_to_XYZ() ;      // TODO
 void XYZ_to_Lab() ;      // TODO
