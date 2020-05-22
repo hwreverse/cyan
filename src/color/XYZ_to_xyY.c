@@ -5,7 +5,7 @@
 // to the chromaticity coordinates of your reference white.
 
 void XYZ_to_xyY( double X, double Y, double Z,
-                    double* xyY_x, double* xyY_y, double* xyY_Y) ;
+                    double* xyY_x, double* xyY_y, double* xyY_Y) {
 
     *xyY_x = X / ( X+Y+Z ) ;
     
