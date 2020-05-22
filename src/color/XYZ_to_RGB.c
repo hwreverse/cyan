@@ -212,5 +212,3 @@ void XYZ_to_RGB( enum cyan_rgb_workspace RGB_space,
     }
 }
 
-
-}
