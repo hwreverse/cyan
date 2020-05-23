@@ -28,6 +28,8 @@ const char* error_get_text ( int error_code ) {
             return _("NULL pointer was given") ;
         case ERR_INVALID_ARG:
             return _("Given argument is invalid or has wrong value") ;
+        case ERR_NOT_IMPLEMENTED:
+            return _("Sorry ... this is not implemented yet :( ") ;
     }
     return _("Unknown error") ;
 }

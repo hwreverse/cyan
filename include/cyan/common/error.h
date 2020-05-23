@@ -19,10 +19,11 @@
 // Les codes erreurs doivent être négatifs
 //
 
-#define ERR_OK              0 
-#define ERR_MALLOC         -1
-#define ERR_NULL           -2
-#define ERR_INVALID_ARG    -3
+#define ERR_OK               0 
+#define ERR_MALLOC          -1
+#define ERR_NULL            -2
+#define ERR_INVALID_ARG     -3
+#define ERR_NOT_IMPLEMENTED -4
 
 #if CYAN_CFG_VERBOSE_ERRORS
     #define CYAN_ERROR(ERROR_CODE) \
