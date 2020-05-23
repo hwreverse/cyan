@@ -183,18 +183,18 @@ void XYZ_to_RGB( enum cyan_rgb_workspace RGB_space,
             if (r<= 0.0031308) {
                 *R=12.92*r ;
             } else {
-                *R = pow(1.055*r,1.0/2.4) - 0.055 ;
+                *R = 1.055*pow(r,1.0/2.4) - 0.055 ;
             }
             if (g<= 0.0031308) {
                 *G=12.92*g ;
             } else {
-                *G = pow(1.055*g,1.0/2.4) - 0.055 ;
+                *G = 1.055*pow(g,1.0/2.4) - 0.055 ;
             }
             if (b<= 0.0031308) {
                 *B=12.92*b ;
             } else {
-                *B = pow(1.055*b,1.0/2.4) - 0.055 ;
-            }
+                *B = 1.055*pow(b,1.0/2.4) - 0.055 ;
+            } 
             break;
         case CYAN_RGB_WIDE_GAMUT:
             // Gamma : 2.2
