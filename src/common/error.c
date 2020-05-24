@@ -30,6 +30,8 @@ const char* error_get_text ( int error_code ) {
             return _("Given argument is invalid or has wrong value") ;
         case ERR_NOT_IMPLEMENTED:
             return _("Sorry ... this is not implemented yet :( ") ;
+        case ERR_FILE:
+            return _("Could not open/read or write file. Oops. ") ;
     }
     return _("Unknown error") ;
 }

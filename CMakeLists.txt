@@ -79,7 +79,8 @@ file( GLOB src  "src/*.c"
                 "src/3dmodel/*.c"
                 "src/color/*.c"
                 "src/common/*.c" 
-                "src/image/*.c" )
+                "src/image/*.c"
+                "src/file/*.c" )
 
 file( GLOB hdr         "include/cyan/*.h"  )
 file( GLOB hdr_image   "include/cyan/image/*.h"  )

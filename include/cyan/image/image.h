@@ -7,12 +7,12 @@
 typedef struct {
 	int rows ; 
 	int cols ; 
+    int monochrome ;                    // if set to zero, only the Y plane will be used
 	double* X ;                         // XYZ as defined in CIE 1976
-    	double* Y ;
-    	double* Z ;
-    	enum cyan_refwhite illuminant ;     // Default to CYAN_D50
-    	int monochrome ;                    // if set to zero, only the Y plane will be used
-    	size_t pixel_data_size ;
+    double* Y ;
+    double* Z ;
+    enum cyan_refwhite illuminant ;     // Default to CYAN_D50
+    size_t pixel_data_size ;
 	void*  pixel_data ;
 } image_t ;
 
