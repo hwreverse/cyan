@@ -8,7 +8,7 @@ int main( int argc, char** argv, char* envv ) {
     image_t* image ; 
    
     for (k=0;k<1000;k++) {
-        image = image_new(1280, 1024) ;
+        image = image_new(1280, 1024, 0) ;
         if ( image == NULL ) {
             fprintf(stderr,"image allocation failed\n") ;
             return -2 ;

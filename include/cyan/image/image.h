@@ -32,10 +32,8 @@ int image_get_data_pointer  ( image_t*, int i, int j, void** ) ;
 int image_clone ( image_t*, image_t** ) ;
 int image_resize ( image_t*, int cols, int rows, int monochrome, void* default_pixel_data ) ;  
 
-#if HAVE_LIBTIRPC 
-    int image_save(image_t* img, char* filename ) ;         // TODO
-    image_t* image_load(char* filename , int* result ) ;    // TODO
-#endif
+int image_save(image_t* img, char* filename ) ;         // TODO
+image_t* image_load(char* filename , int* result ) ;    // TODO
 
 int image_strip_data(image_t*) ;
 

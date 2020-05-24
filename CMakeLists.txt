@@ -33,11 +33,9 @@ endforeach()
 
 ### Options ###
 
-option(ENABLE_TIRPC   "Use the tirpc library for file saving/loading" ON)
 option(ENABLE_GETTEXT "Use the gettext library for int18n" ON)
-
 option(BUILD_TOOLS  "Build and install cyan tools" ON)
-option(BUILD_TEST   "Build cyan tests" OFF)
+option(BUILD_TEST   "Build cyan tests" ON)
 
 option(CFG_VERBOSE_ERRORS   "Error output on stderr" ON)
 
@@ -48,22 +46,6 @@ if (CFG_VERBOSE_ERRORS)
 else()
     set ( CYAN_CFG_VERBOSE_ERRORS 0)
 endif()
-
-### Search for tirpc
-
-if (ENABLE_TIRPC)
-    find_package(tirpc)
-    if (LIBTIRPC_FOUND)
-        set ( HAVE_LIBTIRPC 1)
-    else()
-        set ( HAVE_LIBTIRPC 0)
-        message( FATAL_ERROR "Cannot find tirpc lib.")
-    endif()
-else()
-    message("Not using tirpc lib. Load/save functions will not be available")
-    set ( HAVE_TIRPC 0 )
-endif()
-
 
 ### Search for gettext
 
@@ -90,10 +72,6 @@ configure_file ( "${PROJECT_SOURCE_DIR}/config.h.in"
 include_directories( "${CMAKE_CURRENT_SOURCE_DIR}/include/"
 	                 "${CMAKE_CURRENT_BINARY_DIR}" 
                       )
-
-if (LIBNETPBM_FOUND)
-    include_directories( "${LIBNETPBM_INCLUDE_DIR}" )
-endif()
 
 ### File lists
 
@@ -187,7 +165,6 @@ MESSAGE(STATUS "*********************************************************")
 MESSAGE(STATUS "")
 MESSAGE(STATUS "Build type:        " ${CMAKE_BUILD_TYPE})
 MESSAGE(STATUS "")
-MESSAGE(STATUS "ENABLE_TIRPC:      " ${ENABLE_TIRPC})
 MESSAGE(STATUS "ENABLE_GETTTEXT:   " ${ENABLE_GETTEXT})
 MESSAGE(STATUS "BUILD_TOOLS:       " ${BUILD_TOOLS})
 MESSAGE(STATUS "BUILD_TEST:        " ${BUILD_TEST})
