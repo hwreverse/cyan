@@ -37,4 +37,6 @@ int image_resize ( image_t*, int cols, int rows, int monochrome, void* default_p
     image_t* image_load(char* filename , int* result ) ;    // TODO
 #endif
 
+int image_strip_data(image_t*) ;
+
 #endif

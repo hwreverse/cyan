@@ -259,3 +259,13 @@ int image_resize( image_t* img, int cols, int rows, int monochrome, void* defaul
     img->monochrome = monochrome ;
     return ERR_OK ;
 }
+
+
+int image_strip_data(image_t* img) {
+    if ( img->pixel_data != NULL ) {
+        free( img->pixel_data ) ;
+        img->pixel_data = NULL ;
+        img->pixel_data_size = (size_t) 0 ;
+    }   
+    return ERR_OK ;
+}
