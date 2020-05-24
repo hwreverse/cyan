@@ -16,7 +16,7 @@ typedef struct {
 	void*  pixel_data ;
 } image_t ;
 
-image_t* image_new( int cols, int rows ) ;
+image_t* image_new( int cols, int rows, int monochrome ) ;
 void     image_free( image_t* ) ;
 
 int image_allocate_data_default  ( image_t*, size_t size, void* default_data ) ;
@@ -30,7 +30,7 @@ int image_import_data   ( image_t*, size_t data_size, void* data ) ;
 int image_get_data_pointer  ( image_t*, int i, int j, void** ) ;
 
 int image_clone ( image_t*, image_t** ) ;
-int image_resize ( image_t*, int rows, int cols, void* default_pixel_data ) ;  
+int image_resize ( image_t*, int cols, int rows, int monochrome, void* default_pixel_data ) ;  
 
 #if HAVE_LIBTIRPC 
     int image_save(image_t* img, char* filename ) ;         // TODO

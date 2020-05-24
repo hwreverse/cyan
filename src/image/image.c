@@ -6,7 +6,7 @@
 #include "cyan/image/image.h"
 
 
-image_t* image_new(int cols, int rows) {
+image_t* image_new(int cols, int rows, int monochrome) {
 	image_t *tmp;
 	tmp = (image_t *) malloc(sizeof(image_t));
 	if (tmp == NULL) {
@@ -15,20 +15,25 @@ image_t* image_new(int cols, int rows) {
 	}
 	tmp->rows = rows;
 	tmp->cols = cols;
-    tmp->monochrome = 0 ;
+    tmp->monochrome = monochrome ;
     tmp->illuminant = CYAN_D50 ;
-	tmp->X = (double *) malloc(rows * cols * sizeof(double));
-    if ( tmp->X == NULL ) {
-        CYAN_ERROR( ERR_MALLOC ) ;
-        return NULL ;
+	if ( monochrome ) {
+        tmp->X = NULL ;
+        tmp->Z = NULL ;
+    } else {
+        tmp->X = (double *) malloc(rows * cols * sizeof(double));
+        if ( tmp->X == NULL ) {
+            CYAN_ERROR( ERR_MALLOC ) ;
+            return NULL ;
+        }
+        tmp->Z = (double *) malloc(rows * cols * sizeof(double));
+        if ( tmp->Z == NULL ) {
+            CYAN_ERROR( ERR_MALLOC ) ;
+            return NULL ;
+        }
     }
-	tmp->Y = (double *) malloc(rows * cols * sizeof(double));
+    tmp->Y = (double *) malloc(rows * cols * sizeof(double));
     if ( tmp->Y == NULL ) {
-        CYAN_ERROR( ERR_MALLOC ) ;
-        return NULL ;
-    }
-	tmp->Z = (double *) malloc(rows * cols * sizeof(double));
-    if ( tmp->Z == NULL ) {
         CYAN_ERROR( ERR_MALLOC ) ;
         return NULL ;
     }
@@ -124,7 +129,7 @@ int image_get_data_pointer(image_t * img, int i, int j, void** data_ptr) {
 }
 
 int image_clone(image_t * img, image_t** dest) {
-	*dest = image_new(img->cols, img->rows);
+	*dest = image_new(img->cols, img->rows, img->monochrome);
     (*dest)->monochrome = img->monochrome ;
     (*dest)->illuminant = img->illuminant ;
     memcpy((*dest)->Y, img->Y, img->rows * img->cols * sizeof(double));
@@ -141,7 +146,7 @@ int image_clone(image_t * img, image_t** dest) {
 	return ERR_OK ;
 }
 
-int image_resize( image_t* img, int rows, int cols, void* default_pixel_data ) {
+int image_resize( image_t* img, int cols, int rows, int monochrome, void* default_pixel_data ) {
     
     double* new_X = NULL ;
     double* new_Y = NULL ;
@@ -171,7 +176,7 @@ int image_resize( image_t* img, int rows, int cols, void* default_pixel_data ) {
 		CYAN_ERROR( ERR_MALLOC ) ;
         return ERR_MALLOC ;
 	}
-    if ( !img->monochrome ) {
+    if ( !monochrome ) {
         new_X = (double*) malloc( rows*cols*sizeof(double) ) ;
         if ( new_X == NULL) {
             CYAN_ERROR( ERR_MALLOC ) ;
@@ -206,7 +211,7 @@ int image_resize( image_t* img, int rows, int cols, void* default_pixel_data ) {
 
     // Recopie des plans X et Z
 
-    if ( !img->monochrome ) {
+    if ( (!img->monochrome) && (!monochrome) ) {
         for (i=0; i<cols ; i++ ) {
             for ( j=0; j<rows ; j++ ) {
                 if ( (i<img->cols) && (j<img->rows) ) {
@@ -222,6 +227,15 @@ int image_resize( image_t* img, int rows, int cols, void* default_pixel_data ) {
         img->X = new_X ;
         free( img->Z ) ;
         img->Z = new_Z ;
+    }
+
+    if ((img->monochrome)&&(!monochrome)) {
+        for (i=0; i<cols ; i++ ) {
+            for ( j=0; j<rows ; j++ ) {
+                    new_X[i+j*cols] = 0.0 ;
+                    new_Z[i+j*cols] = 0.0 ;
+            }
+        }
     }
     
     // Recopie des metadata pixel
@@ -242,5 +256,6 @@ int image_resize( image_t* img, int rows, int cols, void* default_pixel_data ) {
         free( img->pixel_data ) ;
         img->pixel_data = new_pixel_data ;
     }
+    img->monochrome = monochrome ;
     return ERR_OK ;
 }

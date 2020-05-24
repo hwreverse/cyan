@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Cyan 0.1\n"
-"Report-Msgid-Bugs-To: seb@homedruon.com\n"
-"POT-Creation-Date: 2020-03-12 10:43+0100\n"
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-05-24 20:37+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,21 +18,30 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:14
+#: /home/seb/devel/cyan.git/src/common/error.c:30
 msgid "Given argument is invalid or has wrong value"
 msgstr ""
 
 #: /home/seb/devel/cyan.git/src/common/error.c:10
+#: /home/seb/devel/cyan.git/src/common/error.c:26
 msgid "Memory allocation failed"
 msgstr ""
 
 #: /home/seb/devel/cyan.git/src/common/error.c:12
+#: /home/seb/devel/cyan.git/src/common/error.c:28
 msgid "NULL pointer was given"
 msgstr ""
 
 #: /home/seb/devel/cyan.git/src/common/error.c:8
+#: /home/seb/devel/cyan.git/src/common/error.c:24
 msgid "OK"
 msgstr ""
 
+#: /home/seb/devel/cyan.git/src/common/error.c:32
+msgid "Sorry ... this is not implemented yet :( "
+msgstr ""
+
 #: /home/seb/devel/cyan.git/src/common/error.c:16
+#: /home/seb/devel/cyan.git/src/common/error.c:34
 msgid "Unknown error"
 msgstr ""
