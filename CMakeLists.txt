@@ -36,6 +36,7 @@ endforeach()
 option(ENABLE_GETTEXT "Use the gettext library for int18n" ON)
 option(BUILD_TOOLS  "Build and install cyan tools" ON)
 option(BUILD_TEST   "Build cyan tests" ON)
+option(INSTALL_DATASETS  "Install Datasets" ON)
 
 option(CFG_VERBOSE_ERRORS   "Error output on stderr" ON)
 
@@ -141,6 +142,12 @@ install( FILES ${hdr_common}
 	    DESTINATION ${INSTALL_HEADERS_PATH}/cyan/common/${name}
 	    COMPONENT main )
 
+# Datasets
+
+if (INSTALL_DATASETS)
+    add_subdirectory(datasets)
+endif()
+
 # Build Tools
 
 if (BUILD_TOOLS)
@@ -169,6 +176,7 @@ MESSAGE(STATUS "")
 MESSAGE(STATUS "ENABLE_GETTTEXT:   " ${ENABLE_GETTEXT})
 MESSAGE(STATUS "BUILD_TOOLS:       " ${BUILD_TOOLS})
 MESSAGE(STATUS "BUILD_TEST:        " ${BUILD_TEST})
+MESSAGE(STATUS "INSTALL_DATASETS:  " ${INSTALL_DATASETS})
 MESSAGE(STATUS "")
 MESSAGE(STATUS "CYAN_CFG_VERBOSE_ERRORS:        " ${CFG_VERBOSE_ERRORS})
 MESSAGE(STATUS "")
