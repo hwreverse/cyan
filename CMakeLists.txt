@@ -37,7 +37,6 @@ option(ENABLE_GETTEXT "Use the gettext library for int18n" ON)
 option(BUILD_TOOLS  "Build and install cyan tools" ON)
 option(BUILD_TEST   "Build cyan tests" ON)
 option(INSTALL_DATASETS  "Install Datasets" ON)
-
 option(CFG_VERBOSE_ERRORS   "Error output on stderr" ON)
 
 ### Cyan options processing
