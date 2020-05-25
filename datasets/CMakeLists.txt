@@ -1,4 +1,4 @@
 file( GLOB images "images/*"  )
 
 
-install(FILES ${images} DESTINATION "share/cyan/datasets/images/" )
+install(FILES ${images} DESTINATION "${INSTALL_DATASETS_PATH}/images" )  

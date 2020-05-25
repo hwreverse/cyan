@@ -21,10 +21,11 @@ set ( INSTALL_BIN_PATH bin )
 set ( INSTALL_LIB_PATH lib )
 set ( INSTALL_AR_PATH  lib )
 set ( INSTALL_HEADERS_PATH include )
+set ( INSTALL_DATASETS_PATH share/cyan/datasets )
 
 # Make relative paths absolute (needed later on)
 
-foreach(p LIB BIN HEADERS AR)
+foreach(p LIB BIN HEADERS AR DATASETS)
         set(var INSTALL_${p}_PATH)
         if(NOT IS_ABSOLUTE "${${var}}")
                 set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
