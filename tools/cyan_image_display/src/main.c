@@ -4,6 +4,7 @@
 
 int main( int argc, char** argv, char* envv ) {
 
+    char name[50] ;
     int ret ;
     image_t* image = NULL ; 
     
@@ -19,9 +20,12 @@ int main( int argc, char** argv, char* envv ) {
         return 0 ;
     }
 
+    refwhite_get_name( image->illuminant  , name, 50 ) ;
+    
     printf("\tRows: %d \n", image->rows ) ;
     printf("\tCols: %d \n", image->cols ) ;
     printf("\tMonochrome: %s \n", (image->monochrome)?"yes":"no" ) ;
+    printf("\tReference White : %s \n", name ) ;
     printf("\tPixel Data size : %d \n", (int) image->pixel_data_size ) ;
    
     return 0 ;
