@@ -1,4 +1,4 @@
-### CMake file for cyan_imageviewer 
+### CMake file for cyan_cyan_image_display 
 ###
 ###     Author : glaconbleu@codices.org
 ###
@@ -6,11 +6,11 @@
 
 cmake_minimum_required (VERSION 2.6)
 
-project (cyan_imageviewer)
-set (cyan_imageviewer_VERSION_MAJOR 0)
-set (cyan_imageviewer_VERSION_MINOR 1)
-set (cyan_imageviewer_VERSION_PATCH 1)
-set (cyan_imageviewer_VERSION_STRING ${cyan_imageviewer_VERSION_MAJOR}.${cyan_imageviewer_VERSION_MINOR}.${cyan_imageviewer_VERSION_PATCH} )
+project (cyan_cyan_image_display)
+set (cyan_cyan_image_display_VERSION_MAJOR 0)
+set (cyan_cyan_image_display_VERSION_MINOR 1)
+set (cyan_cyan_image_display_VERSION_PATCH 1)
+set (cyan_cyan_image_display_VERSION_STRING ${cyan_cyan_image_display_VERSION_MAJOR}.${cyan_cyan_image_display_VERSION_MINOR}.${cyan_cyan_image_display_VERSION_PATCH} )
 
 # set( CMAKE_LIBRARY_PATH ${CMAKE_LIBRARY_PATH} /lib /usr/lib )
 # set( CMAKE_INCLUDE_PATH ${CMAKE_INCLUDE_PATH} /usr/include )
@@ -44,16 +44,16 @@ file( GLOB src "src/*.c"  )
 
 ### Targets
 
-add_executable( "cyan_imageviewer" ${src} ${hdr} ) 
+add_executable( "cyan_cyan_image_display" ${src} ${hdr} ) 
 
 ### Linking
 
-target_link_libraries( "cyan_imageviewer" "m" )
-target_link_libraries( "cyan_imageviewer" "cyan" )
+target_link_libraries( "cyan_cyan_image_display" "m" )
+target_link_libraries( "cyan_cyan_image_display" "cyan" )
 
 ### Install 
 
-install( TARGETS "cyan_imageviewer"
+install( TARGETS "cyan_cyan_image_display"
 	    RUNTIME DESTINATION ${INSTALL_BIN_PATH}  COMPONENT main
 	    LIBRARY DESTINATION ${INSTALL_LIB_PATH}  COMPONENT main
         ARCHIVE DESTINATION ${INSTALL_AR_PATH}   COMPONENT main )
