@@ -1,7 +1,7 @@
 #ifndef CYAN_ERROR_H
 #define CYAN_ERROR_H
 
-#include <stderr.h>
+#include <stdio.h>
 #include "cyan/common/config.h"
 
 // Codes erreur utilisés pour le retour des fonctions
