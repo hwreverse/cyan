@@ -27,6 +27,7 @@
 #define ERR_FILE            -5
 #define ERR_FULL            -6
 #define ERR_EMPTY           -7
+#define ERR_PLUGIN          -8
 
 #if CYAN_CFG_VERBOSE_ERRORS
     #define CYAN_ERROR(ERROR_CODE) \

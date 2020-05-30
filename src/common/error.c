@@ -36,6 +36,8 @@ const char* error_get_text ( int error_code ) {
             return _("Structure is full") ;
         case ERR_EMPTY: 
             return _("Structure is empty") ;
+        case ERR_PLUGIN: 
+            return _("Plugin could not be loaded") ;
     }
     return _("Unknown error") ;
 }
