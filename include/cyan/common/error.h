@@ -1,7 +1,7 @@
 #ifndef CYAN_ERROR_H
 #define CYAN_ERROR_H
 
-
+#include <stderr.h>
 #include "cyan/common/config.h"
 
 // Codes erreur utilisés pour le retour des fonctions
@@ -25,6 +25,8 @@
 #define ERR_INVALID_ARG     -3
 #define ERR_NOT_IMPLEMENTED -4
 #define ERR_FILE            -5
+#define ERR_FULL            -6
+#define ERR_EMPTY           -7
 
 #if CYAN_CFG_VERBOSE_ERRORS
     #define CYAN_ERROR(ERROR_CODE) \

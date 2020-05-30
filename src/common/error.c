@@ -29,9 +29,13 @@ const char* error_get_text ( int error_code ) {
         case ERR_INVALID_ARG:
             return _("Given argument is invalid or has wrong value") ;
         case ERR_NOT_IMPLEMENTED:
-            return _("Sorry ... this is not implemented yet :( ") ;
+            return _("Sorry ... this is not implemented yet :(") ;
         case ERR_FILE:
-            return _("Could not open/read or write file. Oops. ") ;
+            return _("Could not open/read or write file. Oops.") ;
+        case ERR_FULL:
+            return _("Structure is full") ;
+        case ERR_EMPTY: 
+            return _("Structure is empty") ;
     }
     return _("Unknown error") ;
 }
