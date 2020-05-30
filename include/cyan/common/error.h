@@ -32,8 +32,11 @@
 #if CYAN_CFG_VERBOSE_ERRORS
     #define CYAN_ERROR(ERROR_CODE) \
         fprintf(stderr, "Cyan Error: \t %s:%d %s\n", __FILE__, __LINE__, error_get_text( ERROR_CODE ) ) 
+    #define CYAN_ERROR_MSG(MSG) \
+        fprintf(stderr, "Cyan Error: \t %s:%d %s\n", __FILE__, __LINE__, MSG ) 
 #else
     #define CYAN_ERROR(ERROR_CODE) 
+    #define CYAN_ERROR_MSG(MSG) 
 #endif
 
 const char* error_get_text ( int error_code ) ;
