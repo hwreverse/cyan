@@ -22,6 +22,8 @@ const char* error_get_text ( int error_code ) {
     switch ( error_code ) {
         case ERR_OK:
             return _("OK") ;
+        case ERR_NOPE:
+            return _("NOPE (╯°□°）╯︵ ┻━┻") ;
         case ERR_MALLOC:
             return _("Memory allocation failed") ;    
         case ERR_NULL:

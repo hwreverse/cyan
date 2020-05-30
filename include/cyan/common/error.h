@@ -20,14 +20,15 @@
 //
 
 #define ERR_OK               0 
-#define ERR_MALLOC          -1
-#define ERR_NULL            -2
-#define ERR_INVALID_ARG     -3
-#define ERR_NOT_IMPLEMENTED -4
-#define ERR_FILE            -5
-#define ERR_FULL            -6
-#define ERR_EMPTY           -7
-#define ERR_PLUGIN          -8
+#define ERR_NOPE            -1
+#define ERR_MALLOC          -2
+#define ERR_NULL            -3
+#define ERR_INVALID_ARG     -4
+#define ERR_NOT_IMPLEMENTED -5
+#define ERR_FILE            -6
+#define ERR_FULL            -7
+#define ERR_EMPTY           -8
+#define ERR_PLUGIN          -9
 
 #if CYAN_CFG_VERBOSE_ERRORS
     #define CYAN_ERROR(ERROR_CODE) \
