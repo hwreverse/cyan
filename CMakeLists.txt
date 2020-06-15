@@ -23,15 +23,6 @@ set ( INSTALL_AR_PATH  lib )
 set ( INSTALL_HEADERS_PATH include )
 set ( INSTALL_DATASETS_PATH share/cyan/datasets )
 
-# Make relative paths absolute (needed later on)
-
-foreach(p LIB BIN HEADERS AR DATASETS)
-        set(var INSTALL_${p}_PATH)
-        if(NOT IS_ABSOLUTE "${${var}}")
-                set(${var} "${CMAKE_INSTALL_PREFIX}/${${var}}")
-        endif()
-endforeach()
-
 ### Options ###
 
 option(ENABLE_GETTEXT "Use the gettext library for int18n" ON)
@@ -166,6 +157,11 @@ endif()
 if (ENABLE_GETTEXT)
     add_subdirectory(po)
 endif()
+
+
+# Cpack specifics
+
+include(CPack)
 
 ### Pretty Display :
 
