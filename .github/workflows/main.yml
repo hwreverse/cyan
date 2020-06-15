@@ -53,3 +53,7 @@ jobs:
         name: id_rsa # optional
         known_hosts: ${{ secrets.SSH_KNOWNHOSTS }}
 
+    - name: Generate Package
+      working-directory: ${{runner.workspace}}/build
+      shell: bash
+      run: scp cyan*.zip ${{secrets.SSH_USER}}@{{secrets.SSH_HOST}:./
