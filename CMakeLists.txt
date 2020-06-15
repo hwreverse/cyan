@@ -161,6 +161,7 @@ endif()
 
 # Cpack specifics
 
+set (CPACK_PACKAGE_CONTACT "seb@homedruon.com")
 include(CPack)
 
 ### Pretty Display :
