@@ -53,4 +53,4 @@ jobs:
           remote: cyan.zip
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
-          privateKey: ${{ secrets.SSH_PRIVATEKEY }}
+          privateKey: $${{ secrets.SSH_PRIVATEKEY }}
