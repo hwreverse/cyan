@@ -56,4 +56,4 @@ jobs:
     - name: Generate Package
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: scp cyan*.zip ${{secrets.SSH_USER}}@{{secrets.SSH_HOST}:./
+      run: scp cyan*.zip ${{secrets.SSH_USER}}@{{secrets.SSH_HOST}}:./
