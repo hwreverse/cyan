@@ -1,4 +1,4 @@
-name: CMake-CI
+name: cyan
 
 on:
   push:
@@ -44,4 +44,4 @@ jobs:
     - name: Generate Package
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: cpack -G ZIP
+      run: sudo cpack -G ZIP
