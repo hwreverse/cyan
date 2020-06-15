@@ -45,3 +45,12 @@ jobs:
       working-directory: ${{runner.workspace}}/build
       shell: bash
       run: sudo cpack -G ZIP
+
+    - name: Copy single file to remote
+      uses: garygrossgarten/github-action-scp@release
+      with:
+          local: build/*.zip
+          remote: cyan.zip
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          privateKey: ${{ secrets.SSH_PRIVATEKEY }}
