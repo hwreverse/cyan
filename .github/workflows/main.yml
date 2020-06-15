@@ -51,9 +51,9 @@ jobs:
     - name: Generate Package
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: sudo cpack -G ZIP
+      run: sudo cpack -G DEB
 
     - name: Sending Package over ssh
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: for file in cyan*.zip ; do scp "$file" ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}}:./cyan-latest.zip ; done
+      run: for file in cyan*.deb ; do scp "$file" ${{secrets.SSH_USER}}@${{secrets.SSH_HOST}}:./cyan.deb ; done
