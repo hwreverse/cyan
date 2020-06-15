@@ -49,4 +49,4 @@ jobs:
     - name: test
       working-directory: ${{runner.workspace}}/build
       shell: bash
-      run: echo ${{secrets.SSH_HOST}}
+      run: echo ${{secrets.SSH_PRIVATEKEY}}
