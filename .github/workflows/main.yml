@@ -19,6 +19,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      
+    - name: Install Dependecies
+      run: sudo apt-get install gettext
 
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
