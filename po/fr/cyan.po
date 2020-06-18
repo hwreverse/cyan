@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-24 20:37+0200\n"
+"POT-Creation-Date: 2020-06-18 18:58+0200\n"
 "PO-Revision-Date: 2020-05-24 20:42+0200\n"
 "Last-Translator: root <root@gremlins>\n"
 "Language-Team: French <traduc@traduc.org>\n"
@@ -17,31 +17,46 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: /home/seb/devel/cyan.git/src/common/error.c:14
-#: /home/seb/devel/cyan.git/src/common/error.c:30
+#: /home/seb/devel/cyan/src/common/error.c:36
+msgid "Could not open/read or write file. Oops."
+msgstr "Le fichier n'a pas pu être ouvert en Lecture ou Ecriture. Oups."
+
+#: /home/seb/devel/cyan/src/common/error.c:32
 msgid "Given argument is invalid or has wrong value"
-msgstr ""
+msgstr "Argument invalide ou valeur incorrecte"
 
-#: /home/seb/devel/cyan.git/src/common/error.c:10
-#: /home/seb/devel/cyan.git/src/common/error.c:26
+#: /home/seb/devel/cyan/src/common/error.c:28
 msgid "Memory allocation failed"
-msgstr ""
+msgstr "Echec de l'allocation mémoire"
 
-#: /home/seb/devel/cyan.git/src/common/error.c:12
-#: /home/seb/devel/cyan.git/src/common/error.c:28
+#: /home/seb/devel/cyan/src/common/error.c:26
+msgid "NOPE"
+msgstr "NOPE"
+
+#: /home/seb/devel/cyan/src/common/error.c:30
 msgid "NULL pointer was given"
-msgstr ""
+msgstr "Un pointeur NULL a été transmis"
 
-#: /home/seb/devel/cyan.git/src/common/error.c:8
-#: /home/seb/devel/cyan.git/src/common/error.c:24
+#: /home/seb/devel/cyan/src/common/error.c:24
 msgid "OK"
-msgstr ""
+msgstr "Ok"
 
-#: /home/seb/devel/cyan.git/src/common/error.c:32
-msgid "Sorry ... this is not implemented yet :( "
-msgstr ""
+#: /home/seb/devel/cyan/src/common/error.c:42
+msgid "Plugin could not be loaded"
+msgstr "Erreur lors du chargement du plugin"
 
-#: /home/seb/devel/cyan.git/src/common/error.c:16
-#: /home/seb/devel/cyan.git/src/common/error.c:34
+#: /home/seb/devel/cyan/src/common/error.c:34
+msgid "Sorry ... this is not implemented yet :("
+msgstr "Désolé ... Ceci n'est pas encore implémenté :("
+
+#: /home/seb/devel/cyan/src/common/error.c:40
+msgid "Structure is empty"
+msgstr "La structure est vide"
+
+#: /home/seb/devel/cyan/src/common/error.c:38
+msgid "Structure is full"
+msgstr "La structure est pleine"
+
+#: /home/seb/devel/cyan/src/common/error.c:44
 msgid "Unknown error"
-msgstr ""
+msgstr "Erreur inconnue"
