@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-24 20:37+0200\n"
 "PO-Revision-Date: 2020-05-24 20:42+0200\n"
-"Last-Translator: root <root@gremlins>\n"
+"Last-Translator: alexx \n"
 "Language-Team: Russian <gnu@d07.ru>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -21,28 +21,28 @@ msgstr ""
 #: /home/seb/devel/cyan.git/src/common/error.c:14
 #: /home/seb/devel/cyan.git/src/common/error.c:30
 msgid "Given argument is invalid or has wrong value"
-msgstr ""
+msgstr "Данный параметр недействителен или имеет неверное значение"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:10
 #: /home/seb/devel/cyan.git/src/common/error.c:26
 msgid "Memory allocation failed"
-msgstr ""
+msgstr "ыделение памяти не удалось"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:12
 #: /home/seb/devel/cyan.git/src/common/error.c:28
 msgid "NULL pointer was given"
-msgstr ""
+msgstr "Нулевой указатель был передан"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:8
 #: /home/seb/devel/cyan.git/src/common/error.c:24
 msgid "OK"
-msgstr ""
+msgstr "OK"
 
 #: /home/seb/devel/cyan.git/src/common/error.c:32
 msgid "Sorry ... this is not implemented yet :( "
-msgstr ""
+msgstr "звините ... это ещё не реализовано :("
 
 #: /home/seb/devel/cyan.git/src/common/error.c:16
 #: /home/seb/devel/cyan.git/src/common/error.c:34
 msgid "Unknown error"
-msgstr ""
+msgstr "Неизвестная ошибка"
